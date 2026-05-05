@@ -4,7 +4,7 @@ USE todotabla;
 
 
 
-DROP TABLE IF EXISTS miembro,
+DROP TABLE IF EXISTS usuario,
                      proyecto,
                      integrante,
                      tarea,
@@ -17,7 +17,7 @@ CREATE TABLE estado (
 	color 			VARCHAR(7)		NOT NULL
 );
 
-CREATE TABLE miembro (
+CREATE TABLE usuario (
 	id				INT				AUTO_INCREMENT		PRIMARY KEY,
     nombre			VARCHAR(30)		NOT NULL,
     apellidos 		VARCHAR(45) 	NOT NULL,
@@ -35,20 +35,20 @@ CREATE TABLE proyecto (
 
 CREATE TABLE integrante (
 	id				INT				AUTO_INCREMENT		PRIMARY KEY,
-    rol				VARCHAR(45)		NOT NULL			DEFAULT "miembro",
+    rol				VARCHAR(45)		NOT NULL			DEFAULT "usuario",
     fecha_entrada 	DATE			NOT NULL,
     fecha_salida	VARCHAR(45),
-    miembro_id		INT,
+    usuario_id		INT,
     proyecto_id		INT,
     
-    FOREIGN KEY (miembro_id) REFERENCES miembro(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE,
     FOREIGN KEY (proyecto_id) REFERENCES proyecto(id) ON DELETE CASCADE
 );
 
 CREATE TABLE tarea (
 	id 				INT 			AUTO_INCREMENT		PRIMARY KEY,
     nombre 			VARCHAR(45) 	NOT NULL,
-    miembro_ID 		INT,
+    usuario_ID 		INT,
     prioridad 		INT 			NOT NULL 			DEFAULT 0,
     estado 			VARCHAR(10),
     fecha_asignacion DATE,
@@ -56,7 +56,7 @@ CREATE TABLE tarea (
     proyecto_ID 	INT,
     
     CONSTRAINT proyecto_tarea_FK FOREIGN KEY (proyecto_ID) REFERENCES proyecto(id) ON DELETE CASCADE,
-    CONSTRAINT Miembro_Tarea_FK FOREIGN KEY (miembro_ID) REFERENCES miembro(id) ON DELETE CASCADE,
+    CONSTRAINT usuario_Tarea_FK FOREIGN KEY (usuario_ID) REFERENCES usuario(id) ON DELETE CASCADE,
     CONSTRAINT estado_Tarea_FK FOREIGN KEY (estado) REFERENCES estado(nombre) ON DELETE CASCADE
 );
 
@@ -91,16 +91,16 @@ INSERT INTO estado (nombre, color) VALUES ('Done',       '#10B981');
 
 
 -- ============================================================
--- MIEMBRO (8)
+-- usuario (8)
 -- ============================================================
-INSERT INTO miembro (nombre, apellidos, email) VALUES ('Carlos',    'García López',     'carlos.garcia@empresa.com');
-INSERT INTO miembro (nombre, apellidos, email) VALUES ('María',     'Fernández Ruiz',   'maria.fernandez@empresa.com');
-INSERT INTO miembro (nombre, apellidos, email) VALUES ('Alejandro', 'Martínez Sanz',    'alejandro.martinez@empresa.com');
-INSERT INTO miembro (nombre, apellidos, email) VALUES ('Laura',     'Pérez Jiménez',    'laura.perez@empresa.com');
-INSERT INTO miembro (nombre, apellidos, email) VALUES ('Pablo',     'Rodríguez Moreno', 'pablo.rodriguez@empresa.com');
-INSERT INTO miembro (nombre, apellidos, email) VALUES ('Sara',      'López Navarro',    'sara.lopez@empresa.com');
-INSERT INTO miembro (nombre, apellidos, email) VALUES ('Diego',     'Sánchez Torres',   'diego.sanchez@empresa.com');
-INSERT INTO miembro (nombre, apellidos, email) VALUES ('Ana',       'Gómez Herrera',    'ana.gomez@empresa.com');
+INSERT INTO usuario (nombre, apellidos, email) VALUES ('Carlos',    'García López',     'carlos.garcia@empresa.com');
+INSERT INTO usuario (nombre, apellidos, email) VALUES ('María',     'Fernández Ruiz',   'maria.fernandez@empresa.com');
+INSERT INTO usuario (nombre, apellidos, email) VALUES ('Alejandro', 'Martínez Sanz',    'alejandro.martinez@empresa.com');
+INSERT INTO usuario (nombre, apellidos, email) VALUES ('Laura',     'Pérez Jiménez',    'laura.perez@empresa.com');
+INSERT INTO usuario (nombre, apellidos, email) VALUES ('Pablo',     'Rodríguez Moreno', 'pablo.rodriguez@empresa.com');
+INSERT INTO usuario (nombre, apellidos, email) VALUES ('Sara',      'López Navarro',    'sara.lopez@empresa.com');
+INSERT INTO usuario (nombre, apellidos, email) VALUES ('Diego',     'Sánchez Torres',   'diego.sanchez@empresa.com');
+INSERT INTO usuario (nombre, apellidos, email) VALUES ('Ana',       'Gómez Herrera',    'ana.gomez@empresa.com');
 
 
 -- ============================================================
@@ -113,28 +113,28 @@ INSERT INTO proyecto (titulo, fecha_creacion, fecha_final) VALUES ('Portal Web B
 
 -- ============================================================
 -- INTEGRANTE (12)
--- Proyecto 1 (ERP):    miembros 1, 2, 3, 4
--- Proyecto 2 (App):    miembros 1, 5, 6, 7
--- Proyecto 3 (Portal): miembros 2, 3, 7, 8
+-- Proyecto 1 (ERP):    usuarios 1, 2, 3, 4
+-- Proyecto 2 (App):    usuarios 1, 5, 6, 7
+-- Proyecto 3 (Portal): usuarios 2, 3, 7, 8
 -- ============================================================
 
 -- Proyecto 1: ERP Corporativo
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Project Manager', '2024-01-15', NULL, 1, 1);
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Desarrollador',   '2024-01-15', NULL, 2, 1);
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Desarrollador',   '2024-01-15', NULL, 3, 1);
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Tester',          '2024-01-20', NULL, 4, 1);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Project Manager', '2024-01-15', NULL, 1, 1);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Desarrollador',   '2024-01-15', NULL, 2, 1);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Desarrollador',   '2024-01-15', NULL, 3, 1);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Tester',          '2024-01-20', NULL, 4, 1);
 
 -- Proyecto 2: App Móvil Clientes
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Project Manager', '2024-03-01', NULL, 1, 2);
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Desarrollador',   '2024-03-01', NULL, 5, 2);
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Diseñador',       '2024-03-01', NULL, 6, 2);
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Desarrollador',   '2024-03-05', NULL, 7, 2);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Project Manager', '2024-03-01', NULL, 1, 2);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Desarrollador',   '2024-03-01', NULL, 5, 2);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Diseñador',       '2024-03-01', NULL, 6, 2);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Desarrollador',   '2024-03-05', NULL, 7, 2);
 
 -- Proyecto 3: Portal Web B2B
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Project Manager', '2024-02-01', NULL, 2, 3);
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Desarrollador',   '2024-02-01', NULL, 3, 3);
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Desarrollador',   '2024-02-05', NULL, 7, 3);
-INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_id) VALUES ('Diseñador',       '2024-02-05', NULL, 8, 3);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Project Manager', '2024-02-01', NULL, 2, 3);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Desarrollador',   '2024-02-01', NULL, 3, 3);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Desarrollador',   '2024-02-05', NULL, 7, 3);
+INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_id) VALUES ('Diseñador',       '2024-02-05', NULL, 8, 3);
 
 
 -- ============================================================
@@ -143,57 +143,57 @@ INSERT INTO integrante (rol, fecha_entrada, fecha_salida, miembro_id, proyecto_i
 -- ============================================================
 
 -- Proyecto 1: ERP Corporativo
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Análisis de requisitos',      1, 3, 'Done',       '2024-01-20', '2024-02-10', 1);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Diseño de base de datos',     2, 3, 'Done',       '2024-02-11', '2024-03-01', 1);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Módulo de facturación',       3, 3, 'Done',       '2024-03-05', '2024-04-30', 1);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Módulo de inventario',        4, 2, 'InReview',  '2024-04-01',  NULL,        1);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Módulo de RRHH',              2, 2, 'InProgress', '2024-04-15',  NULL,        1);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Integración con contabilidad',3, 1, 'Ready',      '2024-05-01',  NULL,        1);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Panel de administración',     1, 2, 'Backlog',    '2024-05-10',  NULL,        1);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Testing y QA global',         4, 1, 'Backlog',     NULL,         NULL,        1);
 
 -- Proyecto 2: App Móvil Clientes
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Wireframes y prototipo',      5, 3, 'Done',       '2024-03-05', '2024-03-25', 2);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Diseño UI/UX',               6, 3, 'Done',       '2024-03-20', '2024-04-15', 2);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Autenticación de usuarios',   7, 3, 'Done',       '2024-04-01', '2024-04-30', 2);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Catálogo de productos',       5, 2, 'InReview',  '2024-04-20',  NULL,        2);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Carrito de compras',          7, 2, 'InProgress', '2024-05-01',  NULL,        2);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Pasarela de pagos',           6, 3, 'InProgress', '2024-05-01',  NULL,        2);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Notificaciones push',         5, 1, 'Ready',      '2024-05-10',  NULL,        2);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Testing en dispositivos',     6, 1, 'Backlog',     NULL,         NULL,        2);
 
 -- Proyecto 3: Portal Web B2B
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Definición de arquitectura',  2, 3, 'Done',       '2024-02-05', '2024-02-28', 3);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Diseño visual y branding',    8, 2, 'Done',       '2024-03-01', '2024-03-31', 3);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Sistema de autenticación',    3, 3, 'Done',       '2024-03-15', '2024-04-20', 3);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Gestión de pedidos',          7, 3, 'InReview',  '2024-04-10',  NULL,        3);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Dashboard de métricas',       8, 2, 'InProgress', '2024-04-25',  NULL,        3);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Integración API proveedores', 3, 2, 'InProgress', '2024-05-01',  NULL,        3);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Módulo de reportes',          8, 1, 'Ready',      '2024-05-05',  NULL,        3);
-INSERT INTO tarea (nombre, miembro_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
+INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
   VALUES ('Optimización SEO',            2, 1, 'Backlog',     NULL,         NULL,        3);
 
 
