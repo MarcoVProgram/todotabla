@@ -28,7 +28,7 @@ CREATE TABLE proyecto (
 	id 				INT				AUTO_INCREMENT,
     titulo 			VARCHAR(45)		NOT NULL			UNIQUE,
     fecha_creacion 	DATE			NOT NULL,
-    fecha_final 	DATE,
+    fecha_cierre 	DATE,
     
     CONSTRAINT Proyecto_PK PRIMARY KEY (id)
 );
@@ -48,15 +48,11 @@ CREATE TABLE integrante (
 CREATE TABLE tarea (
 	id 				INT 			AUTO_INCREMENT		PRIMARY KEY,
     nombre 			VARCHAR(45) 	NOT NULL,
-    usuario_ID 		INT,
     prioridad 		INT 			NOT NULL 			DEFAULT 0,
     estado 			VARCHAR(10),
-    fecha_asignacion DATE,
-    fecha_fin 		DATE,
     proyecto_ID 	INT,
     
     CONSTRAINT proyecto_tarea_FK FOREIGN KEY (proyecto_ID) REFERENCES proyecto(id) ON DELETE CASCADE,
-    CONSTRAINT usuario_Tarea_FK FOREIGN KEY (usuario_ID) REFERENCES usuario(id) ON DELETE CASCADE,
     CONSTRAINT estado_Tarea_FK FOREIGN KEY (estado) REFERENCES estado(nombre) ON DELETE CASCADE
 );
 
@@ -68,6 +64,17 @@ CREATE TABLE historial_tareas (
     
 	FOREIGN KEY (estado) REFERENCES estado(nombre) ON DELETE CASCADE,
 	FOREIGN KEY (tarea_id) REFERENCES tarea(id) ON DELETE CASCADE
+);
+
+CREATE TABLE asignacion (
+	id 				INT 			AUTO_INCREMENT 		PRIMARY KEY,
+    usuario_ID		INT,
+    tarea_ID		INT,
+	fecha_asignacion DATE			NOT NULL,
+    fecha_fin 		DATE,
+    
+    CONSTRAINT usuario_Asignacion_FK FOREIGN KEY (usuario_ID) REFERENCES usuario(id) ON DELETE CASCADE,
+    CONSTRAINT tarea_Asignacion_FK FOREIGN KEY (tarea_ID) REFERENCES tarea(id) ON DELETE CASCADE
 );
 
 -- ============================================================
@@ -106,9 +113,9 @@ INSERT INTO usuario (nombre, apellidos, email) VALUES ('Ana',       'Gómez Herr
 -- ============================================================
 -- PROYECTO (3)
 -- ============================================================
-INSERT INTO proyecto (titulo, fecha_creacion, fecha_final) VALUES ('ERP Corporativo',    '2024-01-15', '2024-12-31');
-INSERT INTO proyecto (titulo, fecha_creacion, fecha_final) VALUES ('App Móvil Clientes', '2024-03-01', '2024-09-30');
-INSERT INTO proyecto (titulo, fecha_creacion, fecha_final) VALUES ('Portal Web B2B',     '2024-02-01', '2024-11-30');
+INSERT INTO proyecto (titulo, fecha_creacion, fecha_cierre) VALUES ('ERP Corporativo',    '2024-01-15', '2024-12-31');
+INSERT INTO proyecto (titulo, fecha_creacion, fecha_cierre) VALUES ('App Móvil Clientes', '2024-03-01', '2024-09-30');
+INSERT INTO proyecto (titulo, fecha_creacion, fecha_cierre) VALUES ('Portal Web B2B',     '2024-02-01', '2024-11-30');
 
 
 -- ============================================================
@@ -142,59 +149,134 @@ INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_i
 -- prioridad: 0=ninguna · 1=baja · 2=media · 3=alta
 -- ============================================================
 
+-- ============================================================
+-- TAREA (24) — esquema actualizado
+-- Eliminadas: miembro_ID, fecha_asignacion, fecha_fin
+-- La asignación de miembros se gestiona ahora en tabla asignacion
+-- ============================================================
+
 -- Proyecto 1: ERP Corporativo
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Análisis de requisitos',      1, 3, 'Done',       '2024-01-20', '2024-02-10', 1);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Diseño de base de datos',     2, 3, 'Done',       '2024-02-11', '2024-03-01', 1);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Módulo de facturación',       3, 3, 'Done',       '2024-03-05', '2024-04-30', 1);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Módulo de inventario',        4, 2, 'InReview',  '2024-04-01',  NULL,        1);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Módulo de RRHH',              2, 2, 'InProgress', '2024-04-15',  NULL,        1);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Integración con contabilidad',3, 1, 'Ready',      '2024-05-01',  NULL,        1);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Panel de administración',     1, 2, 'Backlog',    '2024-05-10',  NULL,        1);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Testing y QA global',         4, 1, 'Backlog',     NULL,         NULL,        1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Análisis de requisitos',       3, 'Done',       1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Diseño de base de datos',      3, 'Done',       1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de facturación',        3, 'Done',       1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de inventario',         2, 'InReview',  1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de RRHH',               2, 'InProgress', 1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Integración con contabilidad', 1, 'Ready',      1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Panel de administración',      2, 'Backlog',    1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Testing y QA global',          1, 'Backlog',    1);
 
 -- Proyecto 2: App Móvil Clientes
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Wireframes y prototipo',      5, 3, 'Done',       '2024-03-05', '2024-03-25', 2);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Diseño UI/UX',               6, 3, 'Done',       '2024-03-20', '2024-04-15', 2);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Autenticación de usuarios',   7, 3, 'Done',       '2024-04-01', '2024-04-30', 2);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Catálogo de productos',       5, 2, 'InReview',  '2024-04-20',  NULL,        2);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Carrito de compras',          7, 2, 'InProgress', '2024-05-01',  NULL,        2);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Pasarela de pagos',           6, 3, 'InProgress', '2024-05-01',  NULL,        2);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Notificaciones push',         5, 1, 'Ready',      '2024-05-10',  NULL,        2);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Testing en dispositivos',     6, 1, 'Backlog',     NULL,         NULL,        2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Wireframes y prototipo',    3, 'Done',       2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Diseño UI/UX',              3, 'Done',       2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Autenticación de usuarios', 3, 'Done',       2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Catálogo de productos',     2, 'InReview',  2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Carrito de compras',        2, 'InProgress', 2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Pasarela de pagos',         3, 'InProgress', 2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Notificaciones push',       1, 'Ready',      2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Testing en dispositivos',   1, 'Backlog',    2);
 
 -- Proyecto 3: Portal Web B2B
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Definición de arquitectura',  2, 3, 'Done',       '2024-02-05', '2024-02-28', 3);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Diseño visual y branding',    8, 2, 'Done',       '2024-03-01', '2024-03-31', 3);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Sistema de autenticación',    3, 3, 'Done',       '2024-03-15', '2024-04-20', 3);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Gestión de pedidos',          7, 3, 'InReview',  '2024-04-10',  NULL,        3);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Dashboard de métricas',       8, 2, 'InProgress', '2024-04-25',  NULL,        3);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Integración API proveedores', 3, 2, 'InProgress', '2024-05-01',  NULL,        3);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Módulo de reportes',          8, 1, 'Ready',      '2024-05-05',  NULL,        3);
-INSERT INTO tarea (nombre, usuario_ID, prioridad, estado, fecha_asignacion, fecha_fin, proyecto_ID)
-  VALUES ('Optimización SEO',            2, 1, 'Backlog',     NULL,         NULL,        3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Definición de arquitectura',  3, 'Done',       3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Diseño visual y branding',    2, 'Done',       3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Sistema de autenticación',    3, 'Done',       3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Gestión de pedidos',          3, 'InReview',  3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Dashboard de métricas',       2, 'InProgress', 3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Integración API proveedores', 2, 'InProgress', 3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de reportes',          1, 'Ready',      3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Optimización SEO',            1, 'Backlog',    3);
+
+
+-- ============================================================
+-- ASIGNACION (28)
+-- 24 asignaciones base (una por tarea) +
+--  4 extra en tareas colaborativas de alta prioridad
+--
+-- usuario_ID referencia los mismos IDs que miembro:
+--   1-Carlos · 2-María · 3-Alejandro · 4-Laura
+--   5-Pablo  · 6-Sara  · 7-Diego    · 8-Ana
+-- ============================================================
+
+-- ── Proyecto 1: ERP Corporativo ─────────────────────────────
+
+-- Tarea 1 — Análisis de requisitos (Done)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (1, 1,  '2024-01-20', '2024-02-10');
+
+-- Tarea 2 — Diseño de base de datos (Done)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (2, 2,  '2024-02-11', '2024-03-01');
+
+-- Tarea 3 — Módulo de facturación (Done) [colaborativa: Alejandro + Carlos como revisor]
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (3, 3,  '2024-03-05', '2024-04-30');
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (1, 3,  '2024-04-10', '2024-04-30');
+
+-- Tarea 4 — Módulo de inventario (InReview)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (4, 4,  '2024-04-01',  NULL);
+
+-- Tarea 5 — Módulo de RRHH (InProgress)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (2, 5,  '2024-04-15',  NULL);
+
+-- Tarea 6 — Integración con contabilidad (Ready)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (3, 6,  '2024-05-01',  NULL);
+
+-- Tarea 7 — Panel de administración (Backlog)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (1, 7,  '2024-05-10',  NULL);
+
+-- Tarea 8 — Testing y QA global (Backlog)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (4, 8,  '2024-05-15',  NULL);
+
+-- ── Proyecto 2: App Móvil Clientes ──────────────────────────
+
+-- Tarea 9 — Wireframes y prototipo (Done)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (5, 9,  '2024-03-05', '2024-03-25');
+
+-- Tarea 10 — Diseño UI/UX (Done)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (6, 10, '2024-03-20', '2024-04-15');
+
+-- Tarea 11 — Autenticación de usuarios (Done) [colaborativa: Diego + Pablo como apoyo]
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (7, 11, '2024-04-01', '2024-04-30');
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (5, 11, '2024-04-15', '2024-04-30');
+
+-- Tarea 12 — Catálogo de productos (InReview)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (5, 12, '2024-04-20',  NULL);
+
+-- Tarea 13 — Carrito de compras (InProgress)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (7, 13, '2024-05-01',  NULL);
+
+-- Tarea 14 — Pasarela de pagos (InProgress)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (6, 14, '2024-05-01',  NULL);
+
+-- Tarea 15 — Notificaciones push (Ready)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (5, 15, '2024-05-10',  NULL);
+
+-- Tarea 16 — Testing en dispositivos (Backlog)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (6, 16, '2024-05-15',  NULL);
+
+-- ── Proyecto 3: Portal Web B2B ───────────────────────────────
+
+-- Tarea 17 — Definición de arquitectura (Done)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (2, 17, '2024-02-05', '2024-02-28');
+
+-- Tarea 18 — Diseño visual y branding (Done)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (8, 18, '2024-03-01', '2024-03-31');
+
+-- Tarea 19 — Sistema de autenticación (Done) [colaborativa: Alejandro + Diego como apoyo]
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (3, 19, '2024-03-15', '2024-04-20');
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (7, 19, '2024-04-01', '2024-04-20');
+
+-- Tarea 20 — Gestión de pedidos (InReview) [colaborativa: Diego + Alejandro como revisor]
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (7, 20, '2024-04-10',  NULL);
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (3, 20, '2024-04-25',  NULL);
+
+-- Tarea 21 — Dashboard de métricas (InProgress)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (8, 21, '2024-04-25',  NULL);
+
+-- Tarea 22 — Integración API proveedores (InProgress)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (3, 22, '2024-05-01',  NULL);
+
+-- Tarea 23 — Módulo de reportes (Ready)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (8, 23, '2024-05-05',  NULL);
+
+-- Tarea 24 — Optimización SEO (Backlog)
+INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUES (2, 24, '2024-05-10',  NULL);
 
 
 -- ============================================================
@@ -214,7 +296,7 @@ INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',   
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      3, '2024-03-05 08:30:00');
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       3, '2024-04-30 16:00:00');
 
--- Tarea 4 (In Review) — Módulo de inventario
+-- Tarea 4 (InReview) — Módulo de inventario
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 4, '2024-04-01 09:00:00');
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InReview',  4, '2024-04-25 11:00:00');
 
@@ -246,7 +328,7 @@ INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',   
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 11, '2024-04-01 09:00:00');
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       11, '2024-04-30 18:00:00');
 
--- Tarea 12 (In Review) — Catálogo de productos
+-- Tarea 12 (InReview) — Catálogo de productos
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      12, '2024-04-20 09:00:00');
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InReview',  12, '2024-05-05 14:00:00');
 
@@ -278,7 +360,7 @@ INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',   
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      19, '2024-03-15 09:00:00');
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       19, '2024-04-20 17:30:00');
 
--- Tarea 20 (In Review) — Gestión de pedidos
+-- Tarea 20 (InReview) — Gestión de pedidos
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 20, '2024-04-10 09:00:00');
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InReview',  20, '2024-04-30 14:00:00');
 
