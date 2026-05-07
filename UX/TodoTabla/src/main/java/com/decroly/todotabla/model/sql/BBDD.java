@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 
 public class BBDD {
@@ -37,7 +38,7 @@ public class BBDD {
         return conexion;
     }
 
-    public static Connection getConnection(boolean restart)  {
+    public static Connection getConnection(boolean restart) throws Exception {
         try {
             if (conexion != null) {
                 if (restart || conexion.isValid(7200)) {
@@ -47,9 +48,10 @@ public class BBDD {
                 return getConnection();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new Exception("Fallo al acceder a la base de datos",e);
+            // return null;
         }
         return conexion;
     }
+
 }
