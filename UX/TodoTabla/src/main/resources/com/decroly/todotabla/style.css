@@ -1,0 +1,104 @@
+.root {
+    -fx-background-color: #0d1117;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* TOPBAR */
+.topbar {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-width: 0 0 1 0;
+}
+
+.logo {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.breadcrumb {
+    -fx-text-fill: #5a92d7;
+}
+
+
+.icon {
+    -fx-text-fill: #c9d1d9;
+}
+
+/* NOTICE */
+.notice-blue {
+    -fx-background-color: #1f6feb;
+}
+
+.notice-text {
+    -fx-text-fill: white;
+}
+
+/* TITLE */
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+/* INPUT */
+.search, .search-large {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #8b949e;
+}
+
+.search-large {
+    -fx-padding: 8 12;
+}
+
+/* BUTTON */
+.btn {
+    -fx-background-color: #21262d;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+}
+
+.btn:hover {
+    -fx-background-color: #30363d;
+}
+
+/* BOARD */
+.scroll {
+    -fx-background: #0d1117;
+}
+
+.board {
+    -fx-padding: 20;
+}
+
+/* COLUMN */
+.column {
+    -fx-min-width: 260;
+    -fx-spacing: 6;
+}
+
+.column-title {
+    -fx-text-fill: #c9d1d9;
+    -fx-font-weight: bold;
+}
+
+.column-desc {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 12px;
+}
+
+/* DOT COLORS */
+.dot-green { -fx-fill: #3fb950; }
+.dot-blue { -fx-fill: #58a6ff; }
+.dot-yellow { -fx-fill: #d29922; }
+.dot-purple { -fx-fill: #a371f7; }
+.dot-red { -fx-fill: #f85149; }
+
+/* AVATAR */
+.avatar {
+    -fx-fill: #30363d;
+}
