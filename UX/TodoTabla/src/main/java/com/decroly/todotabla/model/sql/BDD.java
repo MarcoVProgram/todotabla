@@ -7,17 +7,16 @@ import java.io.FileReader;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 
-public class BBDD {
+public class BDD {
     private static Connection conexion = null;
 
     private static String url;
     private static String user;
     private static String password;
 
-    private static final URL configURL = BBDD.class.getResource("config.dat");
+    private static final URL configURL = BDD.class.getResource("config.dat");
 
     private static Connection getConnection() throws Exception {
         Class.forName("com.mysql.jdbc");
