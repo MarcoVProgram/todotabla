@@ -3,14 +3,20 @@ package com.decroly.todotabla.model;
 import java.time.LocalDate;
 
 public class Proyecto {
-    private static int cont;
+
     private int id;
     private String titulo;
     private LocalDate fechaCreacion;
     private LocalDate fechaCierre;
 
+    public Proyecto(int id, String titulo, LocalDate fechaCreacion, LocalDate fechaCierre) {
+        this.id = id;
+        this.titulo = titulo;
+        this.fechaCreacion = fechaCreacion;
+        this.fechaCierre = fechaCierre;
+    }
+
     public Proyecto(String titulo, LocalDate fechaCreacion, LocalDate fechaCierre) {
-        this.id = cont++;
         this.titulo = titulo;
         this.fechaCreacion = fechaCreacion;
         this.fechaCierre = fechaCierre;

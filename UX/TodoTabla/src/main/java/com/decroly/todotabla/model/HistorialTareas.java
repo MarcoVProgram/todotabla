@@ -3,14 +3,20 @@ package com.decroly.todotabla.model;
 import java.time.LocalDateTime;
 
 public class HistorialTareas {
-    private static int cont;
+
     private int id;
     private Estado estado;
     private Tarea idTarea;
     private LocalDateTime fechaCambio;
 
+    public HistorialTareas(int id, Estado estado, Tarea idTarea, LocalDateTime fechaCambio) {
+        this.id = id;
+        this.estado = estado;
+        this.idTarea = idTarea;
+        this.fechaCambio = fechaCambio;
+    }
+
     public HistorialTareas(Estado estado, Tarea idTarea, LocalDateTime fechaCambio) {
-        this.id = cont++;
         this.estado = estado;
         this.idTarea = idTarea;
         this.fechaCambio = fechaCambio;

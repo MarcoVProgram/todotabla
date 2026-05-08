@@ -3,7 +3,7 @@ package com.decroly.todotabla.model;
 import java.time.LocalDate;
 
 public class Tarea {
-    private static int cont;
+
     private int id;
     private String nombre;
     private Miembro idMiembro;
@@ -13,8 +13,18 @@ public class Tarea {
     private LocalDate fechaFin;
     private Proyecto idProyecto;
 
+    public Tarea(int id, String nombre, Miembro idMiembro, int prioridad, Estado estado, LocalDate fechaAsignacion, LocalDate fechaFin, Proyecto idProyecto) {
+        this.id = id;
+        this.nombre = nombre;
+        this.idMiembro = idMiembro;
+        this.prioridad = prioridad;
+        this.estado = estado;
+        this.fechaAsignacion = fechaAsignacion;
+        this.fechaFin = fechaFin;
+        this.idProyecto = idProyecto;
+    }
+
     public Tarea(String nombre, Miembro idMiembro, int prioridad, Estado estado, LocalDate fechaAsignacion, LocalDate fechaFin, Proyecto idProyecto) {
-        this.id = cont++;
         this.nombre = nombre;
         this.idMiembro = idMiembro;
         this.prioridad = prioridad;
