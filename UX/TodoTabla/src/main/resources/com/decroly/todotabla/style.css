@@ -54,6 +54,11 @@
     -fx-padding: 8 12;
 }
 
+.descTarea{
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #8b949e;
+}
+
 /* BUTTON */
 .btn {
     -fx-background-color: #21262d;
@@ -62,8 +67,32 @@
     -fx-padding: 6 12;
 }
 
+.btnAdd {
+    -fx-background-color: #21262d;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-transition: -fx-background-color 0.3s ease;
+}
+
+.btnRemove {
+    -fx-background-color: #21262d;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-transition: -fx-background-color 0.3s ease;
+}
+
 .btn:hover {
     -fx-background-color: #30363d;
+}
+
+.btnAdd:hover{
+    -fx-background-color: #013e06;
+}
+
+.btnRemove:hover{
+    -fx-background-color: #451003;
 }
 
 /* BOARD */

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane prefHeight="720.0" prefWidth="720.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
+   <top>
+      <VBox>
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="topbar">
+               <padding>
+                  <Insets left="16" right="16" />
+               </padding>
+               <children>
+                  <Label styleClass="icon" text="☰" />
+                  <Label styleClass="logo" text="GitHub" />
+                  <Label styleClass="breadcrumb" text="MarcoVProgram / Projects / Todotabla" textFill="#5a92d7" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Circle radius="14" styleClass="avatar" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" spacing="343.0" styleClass="filter-bar">
+               <padding>
+                  <Insets bottom="12" left="16" right="16" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" styleClass="scroll" vbarPolicy="NEVER">
+         <content>
+            <HBox spacing="24" styleClass="board">
+               <children>
+                  <VBox prefHeight="865.0" prefWidth="1000.0" styleClass="board">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <TextField fx:id="nombreTarea" prefHeight="23.0" prefWidth="454.0" promptText="Descripción tarea" style="-fx-background-color: #2c2c2c;" styleClass="descTarea">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </TextField>
+                              <ComboBox fx:id="comboBoxPrioridadTarea" prefHeight="23.0" prefWidth="125.0" promptText="Prioridad" style="-fx-prompt-text-fill: #8b949e;">
+                                 <HBox.margin>
+                                    <Insets left="50.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <DatePicker fx:id="fechaAsignacionTarea" prefHeight="23.0" prefWidth="343.0" promptText="Fecha Inicio" />
+                              <DatePicker fx:id="fechaFinTarea" prefHeight="23.0" prefWidth="343.0" promptText="Fecha Fin">
+                                 <HBox.margin>
+                                    <Insets left="50.0" />
+                                 </HBox.margin>
+                              </DatePicker>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="25.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <ListView fx:id="listViewTareas" prefHeight="557.0" prefWidth="1382.0" style="-fx-background-color: #2c2c2c;">
+                           <VBox.margin>
+                              <Insets top="100.0" />
+                           </VBox.margin>
+                        </ListView>
+                        <HBox alignment="TOP_RIGHT" prefHeight="74.0" prefWidth="1342.0">
+                           <children>
+                              <Button styleClass="btnAdd" text="Add task" />
+                              <Button alignment="TOP_LEFT" styleClass="btnRemove" text="Remove task" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>

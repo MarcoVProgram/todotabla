@@ -5,13 +5,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="1000.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="1000.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
 
     <!-- ================= HEADER ================= -->
     <top>
@@ -20,11 +23,15 @@
             <!-- TOPBAR -->
             <HBox alignment="CENTER_LEFT" spacing="12" styleClass="topbar">
                 <padding><Insets left="16" right="16" /></padding>
-
-                <Label styleClass="icon" text="☰" />
-                <Label styleClass="logo" text="GitHub" />
-
-                <Label styleClass="breadcrumb" text="MarcoVProgram / Projects / Todotabla" textFill="#5a92d7" />
+            <ImageView fitHeight="64.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../../../../../Downloads/ChatGPT_Image_8_may_2026__09_31_56-removebg-preview.png" />
+               </image>
+            </ImageView>
+                <Label styleClass="logo" text="TodoTabla">
+               <font>
+                  <Font size="27.0" />
+               </font></Label>
 
                 <Region HBox.hgrow="ALWAYS" />
                 <Circle radius="14" styleClass="avatar" />
@@ -35,14 +42,13 @@
                 <padding><Insets bottom="12" left="16" top="12" /></padding>
 
                 <Label styleClass="icon" text="🔒" />
-                <Label styleClass="title" text="Todotabla">
+                <Label fx:id="nombreProyecto" prefHeight="28.0" prefWidth="292.0" styleClass="title">
                <HBox.margin>
-                  <Insets right="1000.0" />
+                  <Insets right="800.0" />
                </HBox.margin></Label>
 
-                <Button styleClass="btn" text="Create task" />
-                <Button styleClass="btn" text="Task filter" />
-                <Button styleClass="btn" text="View" />
+                <Button fx:id="addTarea" onMouseClicked="#abrirVentanaSecundaria" styleClass="btn" text="Create task" />
+                <Button fx:id="filterTarea" styleClass="btn" text="Task filter" />
             </HBox>
 
             <!-- FILTER BAR -->
@@ -51,7 +57,7 @@
 
                 <TextField prefHeight="33.0" prefWidth="1000.0" promptText="Filter by keyword or by field" styleClass="search-large" HBox.hgrow="ALWAYS" />
 
-                <Button styleClass="btn" text="Search" />
+                <Button fx:id="buscarTarea" prefHeight="27.0" prefWidth="89.0" styleClass="btn" text="Search" />
             </HBox>
 
         </VBox>
