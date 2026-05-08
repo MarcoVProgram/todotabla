@@ -296,4 +296,4 @@ INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',  
 
 -- Tarea 24 (Backlog) — Optimización SEO
 INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    24, '2024-05-10 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    24, '2024-05-13 09:00:00');
+
