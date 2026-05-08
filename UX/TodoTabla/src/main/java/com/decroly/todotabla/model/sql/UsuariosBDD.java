@@ -143,7 +143,7 @@ public class UsuariosBDD {
         } catch (Exception e) {
             throw new SQLException(e);
         }
-
-        // TODO Si es necesario hay que agregaer otra forma de otener los miembros al buscar.
     }
+
+    // TODO Si es necesario hay que agregaer otra forma de otener los miembros al buscar.
 }
