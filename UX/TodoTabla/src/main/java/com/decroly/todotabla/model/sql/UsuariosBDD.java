@@ -35,7 +35,6 @@ public class UsuariosBDD {
                  PreparedStatement stmnt = conexion.prepareStatement(
                          "UPDATE `todotabla`.`usuario` " +
                                  "SET " +
-                                 "`id` = ?, " +
                                  "`nombre` = ?, " +
                                  "`apellidos` = ?, " +
                                  "`email` = ? " +
