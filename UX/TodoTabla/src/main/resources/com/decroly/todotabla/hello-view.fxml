@@ -23,10 +23,21 @@
             <!-- TOPBAR -->
             <HBox alignment="CENTER_LEFT" spacing="12" styleClass="topbar">
                 <padding><Insets left="16" right="16" /></padding>
-            <ImageView fitHeight="64.0" fitWidth="83.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="returnBtn" fitHeight="27.0" fitWidth="51.0" onMouseClicked="#returnToMain" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../../../../../Downloads/ChatGPT%20Image%208%20may%202026,%2010_52_19.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="-10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="64.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../../../../../../../Downloads/ChatGPT_Image_8_may_2026__09_31_56-removebg-preview.png" />
                </image>
+               <HBox.margin>
+                  <Insets left="15.0" />
+               </HBox.margin>
             </ImageView>
                 <Label styleClass="logo" text="TodoTabla">
                <font>
