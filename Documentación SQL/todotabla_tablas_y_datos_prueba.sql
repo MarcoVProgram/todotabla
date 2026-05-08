@@ -35,7 +35,7 @@ CREATE TABLE proyecto (
 
 CREATE TABLE integrante (
 	id				INT				AUTO_INCREMENT		PRIMARY KEY,
-    rol				VARCHAR(45)		NOT NULL			DEFAULT "usuario",
+    rol				VARCHAR(45)		NOT NULL			DEFAULT "miembro",
     fecha_entrada 	DATE			NOT NULL,
     fecha_salida	VARCHAR(45),
     usuario_id		INT,
