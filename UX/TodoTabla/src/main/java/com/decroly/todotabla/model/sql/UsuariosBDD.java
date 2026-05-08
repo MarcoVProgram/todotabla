@@ -2,18 +2,14 @@ package com.decroly.todotabla.model.sql;
 
 import com.decroly.todotabla.model.Miembro;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.sql.*;
+import java.util.*;
 
 public class UsuariosBDD {
     public static boolean insertar(Miembro m) throws SQLException{
         boolean estado = false;
 
-        try (Connection conexion = BDD.getConnection(true);
+        try (Connection conexion = BDD.getConnection(false);
              PreparedStatement stmnt = conexion.prepareStatement(
             "INSERT INTO usuarios VALUES (NULL, ?, ?, ?)"
              )
@@ -35,7 +31,7 @@ public class UsuariosBDD {
         boolean estado = false;
 
         if (m != null) {
-            try (Connection conexion = BDD.getConnection(true);
+            try (Connection conexion = BDD.getConnection(false);
                  PreparedStatement stmnt = conexion.prepareStatement(
                          "UPDATE `todotabla`.`usuario` " +
                                  "SET " +
@@ -69,11 +65,15 @@ public class UsuariosBDD {
         return estado;
     }
 
+    public static boolean archivar(Miembro m) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
     public static boolean borrar(Miembro m) throws Exception {
         boolean estado = false;
 
         if (m != null) {
-            try (Connection conexion = BDD.getConnection(true);
+            try (Connection conexion = BDD.getConnection(false);
             PreparedStatement stmnt = conexion.prepareStatement(
                 "DELETE FROM usuario WHERE id = ?"
             )) {
@@ -94,16 +94,57 @@ public class UsuariosBDD {
         return estado;
     }
 
-    public static Set<Miembro> obtnerAll() throws SQLException{
-        LinkedHashSet miembros = new LinkedHashSet();
+    public static Map<Integer, Miembro> getUsuarios() throws SQLException{
+        Map<Integer, Miembro> miembros = new HashMap<>();
 
-        try (Connection conexion = BDD.getConnection(true);
-            PreparedStatement stmnt = conexion.prepareStatement("" +
-                    "TABLE usuario;")
-        ) {
+        try (Statement stmnt = BDD.getConnection(false).createStatement()) {
+            ResultSet table = stmnt.executeQuery("TABLE usuario;");
+
+            while (table.next()) {
+                Miembro uzer = new Miembro(table.getInt("id"),
+                        table.getString("nombre"),
+                        table.getString("apellidos"),
+                        table.getString("email")
+                );
+
+                miembros.put(uzer.getId(), uzer);
+            }
 
         } catch (Exception e) {
             throw new SQLException(e);
         }
+
+        return miembros;
+    }
+
+    public static Map<Integer, Miembro> getUsuario() throws SQLException{
+        return getUsuarios();
+    }
+
+    public static Miembro getUsuario(int id) throws SQLException {
+        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement(
+                "SELECT * FROM usuario WHERE id = ?;"
+        )) {
+            ResultSet table = stmnt.executeQuery();
+
+            table.next();
+            Miembro uzer = new Miembro(table.getInt("id"),
+                    table.getString("nombre"),
+                    table.getString("apellidos"),
+                    table.getString("email")
+            );
+
+            if (table.next()) {
+                throw new Exception("Esto no me lo esperaba. (demasiados miembros)");
+            }
+
+            return uzer;
+
+
+        } catch (Exception e) {
+            throw new SQLException(e);
+        }
+
+        // TODO Si es necesario hay que agregaer otra forma de otener los miembros al buscar.
     }
 }
