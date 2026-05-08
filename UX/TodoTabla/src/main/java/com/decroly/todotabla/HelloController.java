@@ -1,5 +1,6 @@
 package com.decroly.todotabla;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,6 +40,13 @@ public class HelloController {
         Stage principal = (Stage) panelKanbanBtn.getScene().getWindow();
 
         principal.close();
+    }
+
+    @FXML
+    private void cerrarMain(){
+        Stage main = (Stage) returnBtn.getScene().getWindow();
+
+        main.close();
     }
 
     private Stage ventanaSecundaria;
@@ -107,9 +115,39 @@ public class HelloController {
         }
     }
 
+    private Stage main;
+
+    @FXML
+    private void abrirVentanaPrincipal() {
+        try {
+
+            if(main != null && main.isShowing()){
+                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                return;
+            }
+
+            // Cargar el archivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("main-view.fxml"));
+            Parent root = loader.load();
+
+            // Crear una nueva ventana (Stage)
+            main = new Stage();
+            main.setTitle("Bienvenido a TodoTabla");
+            main.setScene(new Scene(root));
+
+            main.setResizable(false);
+
+            // Mostrar la ventana
+            main.show();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void returnToMain(){
-        Stage principal = (Stage) panelKanbanBtn.getScene().getWindow();
-        principal.show();
+        abrirVentanaPrincipal();
     }
 }
