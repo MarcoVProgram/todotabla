@@ -1,19 +1,34 @@
 package com.decroly.todotabla;
 
+import com.decroly.todotabla.model.Tarea;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
 
 public class HelloController {
 
+    
+    //pestaña inicio
+    @FXML
+    private Button panelKanbanBtn;
+
+    @FXML
+    private Node root;
+    
+    //pestaña kanban
+    @FXML
+    private ImageView returnBtn;
+
+    //pestaña tarea
     @FXML
     private Button addTarea;
 
@@ -24,35 +39,48 @@ public class HelloController {
     private Button buscarTarea;
 
     @FXML
-    private Button panelKanbanBtn;
-
-    @FXML
-    private ImageView returnBtn;
+    public Label nombreProyecto;
 
 
+    public TextField nombreTarea;
+
+    public ComboBox<String> comboBoxPrioridadTarea;
+
+    public DatePicker fechaAsignacionTarea;
+    
+    public DatePicker fechaFinTarea;
+
+    public ListView<Tarea> listViewTareas;
+
+    //variables aux
+    private Stage ventanaSecundaria;
+
+    private Stage ventanaKanban;
+
+    private Stage main;
+    
+    
 
     @FXML
     private void initialize(){
     }
 
-    @FXML
-    private void cerrarPrincipal(){
-        Stage principal = (Stage) panelKanbanBtn.getScene().getWindow();
+    
 
-        principal.close();
+    @FXML
+    private void cerrarPrincipal() {
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.close();
     }
-
+    
     @FXML
-    private void cerrarMain(){
+    private void cerrarKanBan(){
         Stage main = (Stage) returnBtn.getScene().getWindow();
-
         main.close();
     }
 
-    private Stage ventanaSecundaria;
-
     @FXML
-    private void abrirVentanaSecundaria() {
+    private void abrirVentanaTarea() { //panel tarea
         try {
 
             if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
@@ -75,19 +103,16 @@ public class HelloController {
             // Mostrar la ventana
             ventanaSecundaria.show();
 
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private Stage ventanaKanban;
+    
 
     @FXML
-    private void abrirVentanaMain() {
+    private void abrirVentanaPrincipal() { //panel kanban
         try {
-
             if(ventanaKanban != null && ventanaKanban.isShowing()){
                 System.out.println("No se puede volver a abrir, hay una sesion existente");
                 return;
@@ -109,16 +134,15 @@ public class HelloController {
             // Mostrar la ventana
             ventanaKanban.show();
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private Stage main;
+    
 
     @FXML
-    private void abrirVentanaPrincipal() {
+    private void abrirVentanaMain() { //panel principal botones
         try {
 
             if(main != null && main.isShowing()){
@@ -148,6 +172,7 @@ public class HelloController {
 
     @FXML
     private void returnToMain(){
-        abrirVentanaPrincipal();
+        cerrarKanBan();
+        abrirVentanaMain();
     }
 }

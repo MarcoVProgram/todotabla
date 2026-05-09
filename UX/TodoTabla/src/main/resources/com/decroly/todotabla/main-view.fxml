@@ -4,14 +4,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.effect.Blend?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="800.0" prefWidth="1000.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
+<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1000.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
    <top>
       <VBox />
    </top>
@@ -22,7 +20,7 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="758.0" prefWidth="124.0" spacing="100.0">
                      <children>
-                        <Button fx:id="panelKanbanBtn" mnemonicParsing="false" onMouseClicked="#abrirVentanaMain" prefHeight="60.0" prefWidth="120.0" styleClass="btn" text="Panel kanban" />
+                        <Button fx:id="panelKanbanBtn" mnemonicParsing="false" onMouseClicked="#abrirVentanaPrincipal" prefHeight="60.0" prefWidth="120.0" styleClass="btn" text="Panel kanban" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
@@ -35,11 +33,11 @@
                               <Blend />
                            </effect>
                         </Label>
-                        <ImageView fitHeight="167.0" fitWidth="337.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../../../../Downloads/ChatGPT_Image_8_may_2026__09_31_56-removebg-preview.png" />
-                           </image>
-                        </ImageView>
+<!--                        <ImageView fitHeight="167.0" fitWidth="337.0" pickOnBounds="true" preserveRatio="true">-->
+<!--                           <image>-->
+<!--                              <Image url="" />-->
+<!--                           </image>-->
+<!--                        </ImageView>-->
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="100.0">

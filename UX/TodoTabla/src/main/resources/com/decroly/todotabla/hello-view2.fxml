@@ -25,7 +25,7 @@
                <children>
                   <Label styleClass="icon" text="☰" />
                   <Label styleClass="logo" text="GitHub" />
-                  <Label styleClass="breadcrumb" text="MarcoVProgram / Projects / Todotabla" textFill="#5a92d7" />
+                  <Label styleClass="breadcrumb" textFill="#5a92d7" />
                   <Region HBox.hgrow="ALWAYS" />
                   <Circle radius="14" styleClass="avatar" />
                </children>
