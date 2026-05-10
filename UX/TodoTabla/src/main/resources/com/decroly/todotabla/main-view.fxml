@@ -23,9 +23,9 @@
                         <Button fx:id="panelKanbanBtn" mnemonicParsing="false" onMouseClicked="#abrirVentanaPrincipal" prefHeight="60.0" prefWidth="120.0" styleClass="btn" text="Panel kanban" />
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                  <VBox alignment="CENTER" prefHeight="758.0" prefWidth="142.0">
                      <children>
-                        <Label contentDisplay="TOP" lineSpacing="20.0" styleClass="logo" text="TodoTabla" textAlignment="CENTER">
+                        <Label alignment="CENTER" contentDisplay="TOP" lineSpacing="20.0" prefHeight="28.0" prefWidth="136.0" styleClass="logo" text="TodoTabla" textAlignment="CENTER">
                            <font>
                               <Font size="27.0" />
                            </font>

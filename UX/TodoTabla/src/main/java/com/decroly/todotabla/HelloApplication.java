@@ -1,6 +1,5 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.WindowWatcher;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -18,8 +17,6 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 1500, 800);
         stage.setTitle("Bienvenido a TodoTabla!");
         stage.setScene(scene);
-
-        Platform.setImplicitExit(false); //hacer que no se cierre auto al cerrar escenas
 
         stage.setResizable(false);//hacer que no se pueda cambiar tamaño de la ventana
         stage.show();

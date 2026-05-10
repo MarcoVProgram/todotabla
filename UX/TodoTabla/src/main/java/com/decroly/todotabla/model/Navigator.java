@@ -13,6 +13,12 @@ public class Navigator { //para cambiar entre escenas de manera fácil
         FXMLLoader loader = new FXMLLoader(Navigator.class.getResource(fxml));
         Parent root = loader.load();
 
-        current.setScene(new Scene(root));
+        Scene scene = current.getScene();
+
+        if (scene == null) {
+            current.setScene(new Scene(root));
+        } else {
+            scene.setRoot(root);
+        }
     }
 }
