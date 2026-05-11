@@ -1,14 +1,20 @@
 package com.decroly.todotabla.model;
 
 public class Miembro {
-    private static int cont;
+
     private int id;
     private String nombre;
     private String apellidos;
     private String email;
 
+    public Miembro(int id, String nombre, String apellidos, String email) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.email = email;
+    }
+
     public Miembro(String nombre, String apellidos, String email) {
-        this.id = cont++;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;
