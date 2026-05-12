@@ -1,0 +1,174 @@
+.root {
+    -fx-background-color: #0d1117;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* TOPBAR */
+.topbar {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-width: 0 0 1 0;
+}
+
+.logo {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.breadcrumb {
+    -fx-text-fill: #5a92d7;
+}
+
+
+.icon {
+    -fx-text-fill: #c9d1d9;
+}
+
+/* NOTICE */
+.notice-blue {
+    -fx-background-color: #1f6feb;
+}
+
+.notice-text {
+    -fx-text-fill: white;
+}
+
+/* TITLE */
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+/* INPUT */
+.search, .search-large {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #8b949e;
+}
+
+.search-large {
+    -fx-padding: 8 12;
+}
+
+.descTarea{
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #8b949e;
+}
+
+/* BUTTON */
+.btn {
+    -fx-background-color: #21262d;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+}
+
+.btnAdd {
+    -fx-background-color: #21262d;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-transition: -fx-background-color 0.3s ease;
+}
+
+.btnRemove {
+    -fx-background-color: #21262d;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-transition: -fx-background-color 0.3s ease;
+}
+
+.btn:hover {
+    -fx-background-color: #30363d;
+}
+
+.btnAdd:hover{
+    -fx-background-color: #013e06;
+}
+
+.btnRemove:hover{
+    -fx-background-color: #451003;
+}
+
+/* BOARD */
+.scroll {
+    -fx-background: #0d1117;
+}
+
+.board {
+    -fx-padding: 20;
+}
+
+/* COLUMN */
+.column {
+    -fx-min-width: 260;
+    -fx-spacing: 6;
+}
+
+.column-title {
+    -fx-text-fill: #c9d1d9;
+    -fx-font-weight: bold;
+}
+
+.column-desc {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 12px;
+}
+
+/* DOT COLORS */
+.dot-green { -fx-fill: #3fb950; }
+.dot-blue { -fx-fill: #58a6ff; }
+.dot-yellow { -fx-fill: #d29922; }
+.dot-purple { -fx-fill: #a371f7; }
+.dot-red { -fx-fill: #f85149; }
+
+/* AVATAR */
+.avatar {
+    -fx-fill: #30363d;
+}
+
+.title-bar {
+}
+
+.filter-bar {
+}
+
+/*tareas kanban*/
+.kanban-list {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+.kanban-list .viewport {
+    -fx-background-color: transparent;
+}
+
+.kanban-list .list-cell {
+    -fx-background-color: #2b2d31;
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+
+    -fx-border-radius: 12;
+    -fx-border-color: #3c3f45;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0, 0, 2);
+
+    -fx-pref-width: 220;
+
+    -fx-cursor: hand;
+}
+
+.kanban-list .list-cell:hover {
+    -fx-background-color: #36393f;
+}
+
+.kanban-list .list-cell:selected {
+    -fx-background-color: #5865f2;
+}

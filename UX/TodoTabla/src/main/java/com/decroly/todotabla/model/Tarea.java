@@ -3,24 +3,27 @@ package com.decroly.todotabla.model;
 import java.time.LocalDate;
 
 public class Tarea {
-    private static int cont;
+
     private int id;
     private String nombre;
-    private Miembro idMiembro;
     private int prioridad;
     private Estado estado;
-    private LocalDate fechaAsignacion;
-    private LocalDate fechaFin;
     private Proyecto idProyecto;
 
-    public Tarea(String nombre, Miembro idMiembro, int prioridad, Estado estado, LocalDate fechaAsignacion, LocalDate fechaFin, Proyecto idProyecto) {
-        this.id = cont++;
+    public Tarea(int id, String nombre, int prioridad, Estado estado, Proyecto idProyecto) {
+        this.id = id;
         this.nombre = nombre;
-        this.idMiembro = idMiembro;
+
         this.prioridad = prioridad;
         this.estado = estado;
-        this.fechaAsignacion = fechaAsignacion;
-        this.fechaFin = fechaFin;
+
+        this.idProyecto = idProyecto;
+    }
+
+    public Tarea(String nombre, int prioridad, Estado estado, Proyecto idProyecto) {
+        this.nombre = nombre;
+        this.prioridad = prioridad;
+        this.estado = estado;
         this.idProyecto = idProyecto;
     }
 
@@ -36,13 +39,6 @@ public class Tarea {
         this.nombre = nombre;
     }
 
-    public Miembro getIdMiembro() {
-        return idMiembro;
-    }
-
-    public void setIdMiembro(Miembro idMiembro) {
-        this.idMiembro = idMiembro;
-    }
 
     public int getPrioridad() {
         return prioridad;
@@ -60,22 +56,6 @@ public class Tarea {
         this.estado = estado;
     }
 
-    public LocalDate getFechaAsignacion() {
-        return fechaAsignacion;
-    }
-
-    public void setFechaAsignacion(LocalDate fechaAsignacion) {
-        this.fechaAsignacion = fechaAsignacion;
-    }
-
-    public LocalDate getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(LocalDate fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
     public Proyecto getIdProyecto() {
         return idProyecto;
     }
@@ -89,12 +69,9 @@ public class Tarea {
         return "Tarea{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", idMiembro=" + idMiembro +
                 ", prioridad=" + prioridad +
                 ", estado=" + estado +
-                ", fechaAsignacion=" + fechaAsignacion +
-                ", fechaFin=" + fechaFin +
-                ", idProyecto=" + idProyecto +
+                ", idProyecto=" + idProyecto.getId() +
                 '}';
     }
 }
