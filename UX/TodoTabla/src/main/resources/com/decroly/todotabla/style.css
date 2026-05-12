@@ -54,6 +54,11 @@
     -fx-padding: 8 12;
 }
 
+.descTarea{
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #8b949e;
+}
+
 /* BUTTON */
 .btn {
     -fx-background-color: #21262d;
@@ -62,8 +67,32 @@
     -fx-padding: 6 12;
 }
 
+.btnAdd {
+    -fx-background-color: #21262d;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-transition: -fx-background-color 0.3s ease;
+}
+
+.btnRemove {
+    -fx-background-color: #21262d;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-transition: -fx-background-color 0.3s ease;
+}
+
 .btn:hover {
     -fx-background-color: #30363d;
+}
+
+.btnAdd:hover{
+    -fx-background-color: #013e06;
+}
+
+.btnRemove:hover{
+    -fx-background-color: #451003;
 }
 
 /* BOARD */
@@ -101,4 +130,45 @@
 /* AVATAR */
 .avatar {
     -fx-fill: #30363d;
+}
+
+.title-bar {
+}
+
+.filter-bar {
+}
+
+/*tareas kanban*/
+.kanban-list {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+.kanban-list .viewport {
+    -fx-background-color: transparent;
+}
+
+.kanban-list .list-cell {
+    -fx-background-color: #2b2d31;
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+
+    -fx-border-radius: 12;
+    -fx-border-color: #3c3f45;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0, 0, 2);
+
+    -fx-pref-width: 220;
+
+    -fx-cursor: hand;
+}
+
+.kanban-list .list-cell:hover {
+    -fx-background-color: #36393f;
+}
+
+.kanban-list .list-cell:selected {
+    -fx-background-color: #5865f2;
 }

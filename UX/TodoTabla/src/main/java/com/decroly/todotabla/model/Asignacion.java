@@ -65,8 +65,8 @@ public class Asignacion {
     public String toString() {
         return "Asignacion{" +
                 "id=" + id +
-                ", idMiembro=" + idMiembro +
-                ", idTarea=" + idTarea +
+                ", idMiembro=" + idMiembro.getId() +
+                ", idTarea=" + idTarea.getId() +
                 ", fechaAsignacion=" + fechaAsignacion +
                 ", fechaFin=" + fechaFin +
                 '}';

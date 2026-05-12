@@ -49,4 +49,14 @@ public class HistorialTareas {
     public void setFechaCambio(LocalDateTime fechaCambio) {
         this.fechaCambio = fechaCambio;
     }
+
+    @Override
+    public String toString() {
+        return "HistorialTareas{" +
+                "id=" + id +
+                ", estado=" + estado +
+                ", idTarea=" + idTarea.getId() +
+                ", fechaCambio=" + fechaCambio +
+                '}';
+    }
 }
