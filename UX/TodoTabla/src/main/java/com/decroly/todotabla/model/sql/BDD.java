@@ -4,9 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 
@@ -19,7 +23,8 @@ public class BDD {
 
     private static final URL configURL = BDD.class.getResource("config.dat");
 
-    private static Connection getConnection() throws Exception {
+    private static Connection getConnection() throws
+            IOException, SQLException, ClassNotFoundException, URISyntaxException {
         Class.forName("com.mysql.jdbc");
 
         if (configURL != null) {

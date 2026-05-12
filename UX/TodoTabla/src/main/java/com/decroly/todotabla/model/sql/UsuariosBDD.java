@@ -6,12 +6,12 @@ import java.sql.*;
 import java.util.*;
 
 public class UsuariosBDD {
-    public static boolean insertar(Miembro m) throws SQLException{
+    public static boolean insertar(Miembro m){
         boolean estado = false;
 
         try (Connection conexion = BDD.getConnection(false);
              PreparedStatement stmnt = conexion.prepareStatement(
-            "INSERT INTO usuarios VALUES (NULL, ?, ?, ?)"
+            "INSERT INTO usuario VALUES (NULL, ?, ?, ?)"
              )
         ) {
             stmnt.setString(1, m.getNombre());
@@ -20,14 +20,15 @@ public class UsuariosBDD {
 
             estado = (stmnt.executeUpdate() == 1);
 
-        } catch (Exception e) {
-            throw new SQLException(e);
+        }  catch (Exception e) {
+            return false;
         }
+
 
         return estado;
     }
 
-    public static boolean actualizar(Miembro m) throws SQLException {
+    public static boolean actualizar(Miembro m) {
         boolean estado = false;
 
         if (m != null) {
@@ -56,9 +57,10 @@ public class UsuariosBDD {
                 } else {
                     conexion.nativeSQL("ROLLBACK;");
                 }
-            } catch (Exception e) {
-                throw new SQLException(e);
+            }  catch (Exception e) {
+                return false;
             }
+
         }
 
         return estado;
@@ -68,7 +70,7 @@ public class UsuariosBDD {
         throw new UnsupportedOperationException();
     }
 
-    public static boolean borrar(Miembro m) throws Exception {
+    public static boolean borrar(Miembro m)  {
         boolean estado = false;
 
         if (m != null) {
@@ -86,14 +88,14 @@ public class UsuariosBDD {
                    conexion.nativeSQL("ROLLBACK;");
                }
             } catch (Exception e) {
-                throw new SQLException(e);
+                return false;
             }
         }
 
         return estado;
     }
 
-    public static Map<Integer, Miembro> getUsuarios() throws SQLException{
+    public static Map<Integer, Miembro> getUsuarios() {
         Map<Integer, Miembro> miembros = new HashMap<>();
 
         try (Statement stmnt = BDD.getConnection(false).createStatement()) {
@@ -110,13 +112,13 @@ public class UsuariosBDD {
             }
 
         } catch (Exception e) {
-            throw new SQLException(e);
+            return null;
         }
 
         return miembros;
     }
 
-    public static Map<Integer, Miembro> getUsuario() throws SQLException{
+    public static Map<Integer, Miembro> getUsuario() {
         return getUsuarios();
     }
 
@@ -141,9 +143,10 @@ public class UsuariosBDD {
 
 
         } catch (Exception e) {
-            throw new SQLException(e);
+            return null;
         }
+
     }
 
-    // TODO Si es necesario hay que agregaer otra forma de otener los miembros al buscar.
+    // TODO Si es necesario hay que agregaer otra forma de obtener los miembros al buscar.
 }
