@@ -3,15 +3,19 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="1000.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
 
     <!-- ================= HEADER ================= -->
     <top>
@@ -20,11 +24,29 @@
             <!-- TOPBAR -->
             <HBox alignment="CENTER_LEFT" spacing="12" styleClass="topbar">
                 <padding><Insets left="16" right="16" /></padding>
-
-                <Label styleClass="icon" text="☰" />
-                <Label styleClass="logo" text="GitHub" />
-
-                <Label styleClass="breadcrumb" text="MarcoVProgram / Projects / Todotabla" textFill="#5a92d7" />
+            <ImageView fx:id="returnBtn" fitHeight="33.0" fitWidth="67.0" onMouseClicked="#returnToMain" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/return.png" />
+               </image>
+            </ImageView>
+            
+<!--            <ImageView fitHeight="64.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">-->
+<!--               <image>-->
+<!--                  <Image url=""/>-->
+<!--               </image>-->
+<!--               <HBox.margin>-->
+<!--                  <Insets left="15.0" />-->
+<!--               </HBox.margin>-->
+<!--            </ImageView>-->
+                <Label styleClass="logo" text="TodoTabla">
+               <font>
+                  <Font size="27.0" />
+               </font></Label>
+            <ImageView fitHeight="32.0" fitWidth="65.0" onMouseClicked="#returnToMain" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/logo.png" />
+               </image>
+            </ImageView>
 
                 <Region HBox.hgrow="ALWAYS" />
                 <Circle radius="14" styleClass="avatar" />
@@ -35,14 +57,13 @@
                 <padding><Insets bottom="12" left="16" top="12" /></padding>
 
                 <Label styleClass="icon" text="🔒" />
-                <Label styleClass="title" text="Todotabla">
+                <Label fx:id="nombreProyecto" prefHeight="28.0" prefWidth="292.0" styleClass="title">
                <HBox.margin>
-                  <Insets right="1000.0" />
+                  <Insets right="800.0" />
                </HBox.margin></Label>
 
-                <Button styleClass="btn" text="Create task" />
-                <Button styleClass="btn" text="Task filter" />
-                <Button styleClass="btn" text="View" />
+                <Button fx:id="addTarea" onMouseClicked="#abrirVentanaTarea" styleClass="btn" text="Create task" />
+                <Button fx:id="filterTarea" styleClass="btn" text="Task filter" />
             </HBox>
 
             <!-- FILTER BAR -->
@@ -51,7 +72,7 @@
 
                 <TextField prefHeight="33.0" prefWidth="1000.0" promptText="Filter by keyword or by field" styleClass="search-large" HBox.hgrow="ALWAYS" />
 
-                <Button styleClass="btn" text="Search" />
+                <Button fx:id="buscarTarea" prefHeight="27.0" prefWidth="89.0" styleClass="btn" text="Search" />
             </HBox>
 
         </VBox>
@@ -71,6 +92,7 @@
                     </HBox>
 
                     <Label styleClass="column-desc" text="This item hasn't been started" />
+               <ListView fx:id="listViewBacklog" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
@@ -79,6 +101,7 @@
                         <Label styleClass="column-title" text="Ready 0/0" />
                     </HBox>
                     <Label styleClass="column-desc" text="This is ready to be picked up" />
+               <ListView fx:id="listViewReady" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
@@ -87,6 +110,7 @@
                         <Label styleClass="column-title" text="In progress 0/0" />
                     </HBox>
                     <Label styleClass="column-desc" text="This is actively being worked on" />
+               <ListView fx:id="listViewProgress" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
@@ -95,6 +119,7 @@
                         <Label styleClass="column-title" text="In review 0/0" />
                     </HBox>
                     <Label styleClass="column-desc" text="This item is in review" />
+               <ListView fx:id="listViewReview" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
@@ -103,6 +128,7 @@
                         <Label styleClass="column-title" text="Done 0/0" />
                     </HBox>
                     <Label styleClass="column-desc" text="This has been completed" />
+               <ListView fx:id="listViewDone" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
             </HBox>
