@@ -68,7 +68,6 @@ public class ProyetosBDD {
         }
 
         return estado;
-        throw new UnsupportedOperationException();
     }
     public static boolean archivar(Proyecto p) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
