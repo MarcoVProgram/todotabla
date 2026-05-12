@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 DELIMITER $$
 CREATE TRIGGER guardarHistorial AFTER UPDATE ON tarea FOR EACH ROW 
 BEGIN 
@@ -10,7 +9,6 @@ DELIMITER $$
 CREATE TRIGGER guardarHistorialCambio AFTER UPDATE ON tarea FOR EACH ROW 
 BEGIN 
 	INSERT INTO historial_tareas(estado, tarea_id, fecha_cambio) VALUES (NEW.estado, NEW.id, NOW());
->>>>>>> ko
 END $$
 DELIMITER ;
 
