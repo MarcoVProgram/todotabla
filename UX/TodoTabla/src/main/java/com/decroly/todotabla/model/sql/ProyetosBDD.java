@@ -1,13 +1,12 @@
 package com.decroly.todotabla.model.sql;
 
-import com.decroly.todotabla.model.Miembro;
+import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.Proyecto;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Map;
 
 public class ProyetosBDD {
@@ -95,15 +94,15 @@ public class ProyetosBDD {
         return false;
     }
 
-    public static Map<Integer, Miembro> getProyectos() {
+    public static Map<Integer, Usuario> getProyectos() {
         throw new UnsupportedOperationException();
     }
 
-    public static Map<Integer, Miembro> getProyecto() {
+    public static Map<Integer, Usuario> getProyecto() {
         return getProyectos();
     }
 
-    public static Miembro getProyecto(int id) {
+    public static Usuario getProyecto(int id) {
         throw new UnsupportedOperationException();
     }
 

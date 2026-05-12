@@ -1,17 +1,13 @@
 package com.decroly.todotabla.model.sql;
 
 import com.decroly.todotabla.model.Estado;
-import com.decroly.todotabla.model.Miembro;
-import com.decroly.todotabla.model.Proyecto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class EstadosBDD {
     public static boolean insertar(Estado e) throws SQLException {

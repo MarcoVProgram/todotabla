@@ -1,12 +1,12 @@
 package com.decroly.todotabla.model.sql;
 
-import com.decroly.todotabla.model.Miembro;
+import com.decroly.todotabla.model.Usuario;
 
 import java.sql.*;
 import java.util.*;
 
 public class UsuariosBDD {
-    public static boolean insertar(Miembro m){
+    public static boolean insertar(Usuario m){
         boolean estado = false;
 
         try (Connection conexion = BDD.getConnection(false);
@@ -28,7 +28,7 @@ public class UsuariosBDD {
         return estado;
     }
 
-    public static boolean actualizar(Miembro m) {
+    public static boolean actualizar(Usuario m) {
         boolean estado = false;
 
         if (m != null) {
@@ -66,11 +66,11 @@ public class UsuariosBDD {
         return estado;
     }
 
-    public static boolean archivar(Miembro m) throws UnsupportedOperationException {
+    public static boolean archivar(Usuario m) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    public static boolean borrar(Miembro m)  {
+    public static boolean borrar(Usuario m)  {
         boolean estado = false;
 
         if (m != null) {
@@ -95,14 +95,14 @@ public class UsuariosBDD {
         return estado;
     }
 
-    public static Map<Integer, Miembro> getUsuarios() {
-        Map<Integer, Miembro> miembros = new HashMap<>();
+    public static Map<Integer, Usuario> getUsuarios() {
+        Map<Integer, Usuario> miembros = new HashMap<>();
 
         try (Statement stmnt = BDD.getConnection(false).createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE usuario;");
 
             while (table.next()) {
-                Miembro uzer = new Miembro(table.getInt("id"),
+                Usuario uzer = new Usuario(table.getInt("id"),
                         table.getString("nombre"),
                         table.getString("apellidos"),
                         table.getString("email")
@@ -118,18 +118,18 @@ public class UsuariosBDD {
         return miembros;
     }
 
-    public static Map<Integer, Miembro> getUsuario() {
+    public static Map<Integer, Usuario> getUsuario() {
         return getUsuarios();
     }
 
-    public static Miembro getUsuario(int id) throws SQLException {
+    public static Usuario getUsuario(int id) throws SQLException {
         try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement(
                 "SELECT * FROM usuario WHERE id = ?;"
         )) {
             ResultSet table = stmnt.executeQuery();
 
             table.next();
-            Miembro uzer = new Miembro(table.getInt("id"),
+            Usuario uzer = new Usuario(table.getInt("id"),
                     table.getString("nombre"),
                     table.getString("apellidos"),
                     table.getString("email")

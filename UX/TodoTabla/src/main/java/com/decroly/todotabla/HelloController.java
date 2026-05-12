@@ -1,6 +1,6 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.Miembro;
+import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
 import javafx.collections.FXCollections;
@@ -13,19 +13,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HelloController {
     //lista miembros
-    List<Miembro> miembros = new ArrayList<>();
-    ObservableList<Miembro> obsMiembros = FXCollections.observableList(miembros);
+    List<Usuario> usuarios = new ArrayList<>();
+    ObservableList<Usuario> obsUsuarios = FXCollections.observableList(usuarios);
 
     //lista tareas
     List<Tarea> tareas = new ArrayList<>();

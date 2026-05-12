@@ -5,21 +5,21 @@ import java.time.LocalDate;
 public class Asignacion {
 
     private int id;
-    private Miembro idMiembro;
+    private Usuario idUsuario;
     private Tarea idTarea;
     private LocalDate fechaAsignacion;
     private LocalDate fechaFin;
 
-    public Asignacion(int id, Miembro idMiembro, Tarea idTarea, LocalDate fechaAsignacion, LocalDate fechaFin) {
+    public Asignacion(int id, Usuario idUsuario, Tarea idTarea, LocalDate fechaAsignacion, LocalDate fechaFin) {
         this.id = id;
-        this.idMiembro = idMiembro;
+        this.idUsuario = idUsuario;
         this.idTarea = idTarea;
         this.fechaAsignacion = fechaAsignacion;
         this.fechaFin = fechaFin;
     }
 
-    public Asignacion(Miembro idMiembro, Tarea idTarea, LocalDate fechaAsignacion, LocalDate fechaFin) {
-        this.idMiembro = idMiembro;
+    public Asignacion(Usuario idUsuario, Tarea idTarea, LocalDate fechaAsignacion, LocalDate fechaFin) {
+        this.idUsuario = idUsuario;
         this.idTarea = idTarea;
         this.fechaAsignacion = fechaAsignacion;
         this.fechaFin = fechaFin;
@@ -29,12 +29,12 @@ public class Asignacion {
         return id;
     }
 
-    public Miembro getIdMiembro() {
-        return idMiembro;
+    public Usuario getIdMiembro() {
+        return idUsuario;
     }
 
-    public void setIdMiembro(Miembro idMiembro) {
-        this.idMiembro = idMiembro;
+    public void setIdMiembro(Usuario idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Tarea getIdTarea() {
@@ -65,7 +65,7 @@ public class Asignacion {
     public String toString() {
         return "Asignacion{" +
                 "id=" + id +
-                ", idMiembro=" + idMiembro.getId() +
+                ", idMiembro=" + idUsuario.getId() +
                 ", idTarea=" + idTarea.getId() +
                 ", fechaAsignacion=" + fechaAsignacion +
                 ", fechaFin=" + fechaFin +

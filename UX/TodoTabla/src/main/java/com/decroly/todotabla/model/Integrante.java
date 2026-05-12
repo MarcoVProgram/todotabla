@@ -8,23 +8,23 @@ public class Integrante {
     private String rol;
     private LocalDate fechaEntrada;
     private LocalDate fechaSalida;
-    private Miembro idMiembro;
+    private Usuario idUsuario;
     private Proyecto idProyecto;
 
-    public Integrante(int id, String rol, LocalDate fechaEntrada, LocalDate fechaSalida, Miembro idMiembro, Proyecto idProyecto) {
+    public Integrante(int id, String rol, LocalDate fechaEntrada, LocalDate fechaSalida, Usuario idUsuario, Proyecto idProyecto) {
         this.id = id;
         this.rol = rol;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
-        this.idMiembro = idMiembro;
+        this.idUsuario = idUsuario;
         this.idProyecto = idProyecto;
     }
 
-    public Integrante(String rol, LocalDate fechaEntrada, LocalDate fechaSalida, Miembro idMiembro, Proyecto idProyecto) {
+    public Integrante(String rol, LocalDate fechaEntrada, LocalDate fechaSalida, Usuario idUsuario, Proyecto idProyecto) {
         this.rol = rol;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
-        this.idMiembro = idMiembro;
+        this.idUsuario = idUsuario;
         this.idProyecto = idProyecto;
     }
 
@@ -56,12 +56,12 @@ public class Integrante {
         this.fechaSalida = fechaSalida;
     }
 
-    public Miembro getIdMiembro() {
-        return idMiembro;
+    public Usuario getIdMiembro() {
+        return idUsuario;
     }
 
-    public void setIdMiembro(Miembro idMiembro) {
-        this.idMiembro = idMiembro;
+    public void setIdMiembro(Usuario idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Proyecto getIdProyecto() {
@@ -79,7 +79,7 @@ public class Integrante {
                 ", rol='" + rol + '\'' +
                 ", fechaEntrada=" + fechaEntrada +
                 ", fechaSalida=" + fechaSalida +
-                ", idMiembro=" + idMiembro.getId() +
+                ", idMiembro=" + idUsuario.getId() +
                 ", idProyecto=" + idProyecto.getId() +
                 '}';
     }
