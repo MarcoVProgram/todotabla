@@ -26,10 +26,6 @@ public class HelloController {
     //lista miembros
     List<Miembro> miembros = new ArrayList<>();
     ObservableList<Miembro> obsMiembros = FXCollections.observableList(miembros);
-
-    //lista tareas
-    List<Tarea> tareas = new ArrayList<>();
-    ObservableList<Tarea> obsTareas = FXCollections.observableList(tareas);
     
     //lista proyectos
     List<Proyecto> proyectos = new ArrayList<>();
@@ -46,45 +42,9 @@ public class HelloController {
     @FXML
     private ImageView returnBtn;
 
-    //PESTAÑA TAREA
-    @FXML
-    private Button addTarea;
 
-    @FXML
-    private Button filterTarea;
 
-    @FXML
-    private Button buscarTarea;
 
-    @FXML
-    public Label nombreProyecto;
-
-    @FXML
-    public TextField nombreTarea;
-    
-    @FXML
-    public ComboBox<Integer> comboBoxPrioridadTarea;
-
-    @FXML
-    public ListView<Tarea> listViewTareas;
-
-    //LISTAS
-    @FXML
-    public ListView<Tarea> listViewBacklog;
-        List<Tarea> tareasBacklog = new ArrayList<>();
-        ObservableList<Tarea> obstareasBacklog = FXCollections.observableList(tareasBacklog);
-    @FXML
-    public ListView<Tarea> listViewProgress;
-        List<Tarea> tareasInProgress = new ArrayList<>();
-        ObservableList<Tarea> obstareasInProgress = FXCollections.observableList(tareasInProgress);
-    @FXML
-    public ListView<Tarea> listViewReview;
-        List<Tarea> tareasInReview = new ArrayList<>();
-        ObservableList<Tarea> obstareasInReview = FXCollections.observableList(tareasInReview);
-    @FXML
-    public ListView<Tarea> listViewDone;
-        List<Tarea> tareasDone = new ArrayList<>();
-        ObservableList<Tarea> obstareasDone = FXCollections.observableList(tareasDone);
 
     //VARIABLES AUXILIARES
     private Stage ventanaSecundaria;
@@ -133,106 +93,6 @@ public class HelloController {
     private void abrirVentanaPrincipal() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/kanban-view.fxml");
-
-        //listView tareas backlog
-//        listViewBacklog.setItems(obstareasBacklog);
-//        listViewBacklog.setCellFactory(tareaListView -> new ListCell<Tarea>() {
-//
-//            @Override
-//            protected void updateItem(Tarea tarea, boolean empty) {
-//                super.updateItem(tarea, empty);
-//
-//                if (empty || tarea == null) {
-//                    setGraphic(null);
-//                } else {
-//
-//                    Label titulo = new Label(tarea.getNombre());
-//                    titulo.getStyleClass().add("titulo-tarea");
-//
-//                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-//
-//                    VBox card = new VBox(8, titulo, prioridad);
-//                    card.getStyleClass().add("kanban-list");
-//
-//                    setGraphic(card);
-//                }
-//            }
-//        });
-//
-//        //listView tareas progress
-//        listViewProgress.setItems(obstareasInProgress);
-//        listViewProgress.setCellFactory(obstareasInProgress -> new ListCell<Tarea>() {
-//
-//            @Override
-//            protected void updateItem(Tarea tarea, boolean empty) {
-//                super.updateItem(tarea, empty);
-//
-//                if (empty || tarea == null) {
-//                    setGraphic(null);
-//                } else {
-//
-//                    Label titulo = new Label(tarea.getNombre());
-//                    titulo.getStyleClass().add("titulo-tarea");
-//
-//                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-//
-//                    VBox card = new VBox(8, titulo, prioridad);
-//                    card.getStyleClass().add("kanban-list");
-//
-//                    setGraphic(card);
-//                }
-//            }
-//        });
-//
-//        //listView tareas review
-//        listViewReview.setItems(obstareasInReview);
-//        listViewReview.setCellFactory(obstareasInReview -> new ListCell<Tarea>() {
-//
-//            @Override
-//            protected void updateItem(Tarea tarea, boolean empty) {
-//                super.updateItem(tarea, empty);
-//
-//                if (empty || tarea == null) {
-//                    setGraphic(null);
-//                } else {
-//
-//                    Label titulo = new Label(tarea.getNombre());
-//                    titulo.getStyleClass().add("titulo-tarea");
-//
-//                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-//
-//                    VBox card = new VBox(8, titulo, prioridad);
-//                    card.getStyleClass().add("kanban-list");
-//
-//                    setGraphic(card);
-//                }
-//            }
-//        });
-//
-//        //listView tareas done
-//        listViewDone.setItems(obstareasDone);
-//        listViewDone.setCellFactory(obstareasDone -> new ListCell<Tarea>() {
-//
-//            @Override
-//            protected void updateItem(Tarea tarea, boolean empty) {
-//                super.updateItem(tarea, empty);
-//
-//                if (empty || tarea == null) {
-//                    setGraphic(null);
-//                } else {
-//
-//                    Label titulo = new Label(tarea.getNombre());
-//                    titulo.getStyleClass().add("titulo-tarea");
-//
-//                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-//
-//                    VBox card = new VBox(8, titulo, prioridad);
-//                    card.getStyleClass().add("kanban-list");
-//
-//                    setGraphic(card);
-//                }
-//            }
-//        });
     }
 
     @FXML
@@ -240,23 +100,4 @@ public class HelloController {
         Stage stage = (Stage) returnBtn.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
     }
-    
-    //--------AGREGAR TAREA-------------
-    @FXML
-    private boolean addTarea(){
-        boolean added = false;
-
-        //obtener valores campos
-        String nombre = nombreTarea.getText();
-        int prioridad = comboBoxPrioridadTarea.getSelectionModel().getSelectedItem();
-
-        //valores extra necesarios
-        Proyecto idProyecto = null;
-
-        Tarea tarea = new Tarea(nombre, prioridad, null, idProyecto);
-        obsTareas.add(tarea);
-
-        return added;
-    }
-
 }
