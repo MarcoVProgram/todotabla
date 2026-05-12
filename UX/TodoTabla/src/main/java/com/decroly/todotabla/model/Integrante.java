@@ -79,8 +79,8 @@ public class Integrante {
                 ", rol='" + rol + '\'' +
                 ", fechaEntrada=" + fechaEntrada +
                 ", fechaSalida=" + fechaSalida +
-                ", idMiembro=" + idMiembro +
-                ", idProyecto=" + idProyecto +
+                ", idMiembro=" + idMiembro.getId() +
+                ", idProyecto=" + idProyecto.getId() +
                 '}';
     }
 }

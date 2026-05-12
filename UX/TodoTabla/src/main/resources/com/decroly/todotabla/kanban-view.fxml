@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -91,6 +92,7 @@
                     </HBox>
 
                     <Label styleClass="column-desc" text="This item hasn't been started" />
+               <ListView fx:id="listViewBacklog" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
@@ -99,6 +101,7 @@
                         <Label styleClass="column-title" text="Ready 0/0" />
                     </HBox>
                     <Label styleClass="column-desc" text="This is ready to be picked up" />
+               <ListView fx:id="listViewReady" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
@@ -107,6 +110,7 @@
                         <Label styleClass="column-title" text="In progress 0/0" />
                     </HBox>
                     <Label styleClass="column-desc" text="This is actively being worked on" />
+               <ListView fx:id="listViewProgress" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
@@ -115,6 +119,7 @@
                         <Label styleClass="column-title" text="In review 0/0" />
                     </HBox>
                     <Label styleClass="column-desc" text="This item is in review" />
+               <ListView fx:id="listViewReview" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
@@ -123,6 +128,7 @@
                         <Label styleClass="column-title" text="Done 0/0" />
                     </HBox>
                     <Label styleClass="column-desc" text="This has been completed" />
+               <ListView fx:id="listViewDone" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
                 </VBox>
 
             </HBox>

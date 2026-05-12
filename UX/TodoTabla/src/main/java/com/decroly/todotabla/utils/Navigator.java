@@ -1,4 +1,4 @@
-package com.decroly.todotabla.model;
+package com.decroly.todotabla.utils;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
