@@ -25,14 +25,14 @@ public class BDD {
 
     private static Connection getConnection() throws
             IOException, SQLException, ClassNotFoundException, URISyntaxException {
-        Class.forName("com.mysql.jdbc");
+        Class.forName("com.mysql.cj.jdbc.Driver");
 
         if (configURL != null) {
 
             FileReader configFile = new FileReader(new File(configURL.toURI()));
             BufferedReader configReader = new BufferedReader(configFile);
 
-            url = "jdbc:mysql:" + "//" + configReader.readLine() + "/" + configReader.readLine();
+            url = "jdbc:mysql://" + configReader.readLine() + "/" + configReader.readLine();
             user = configReader.readLine();
             password = configReader.readLine();
 
@@ -53,6 +53,7 @@ public class BDD {
                 return getConnection();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("Fallo al acceder a la base de datos",e);
             // return null;
         }
