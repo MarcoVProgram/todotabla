@@ -94,7 +94,8 @@ public class TareasBDD {
     public static Map<Integer, Tarea> getTareas() {
         Map<Integer, Tarea> tareas = new LinkedHashMap<>();
 
-        try (Statement stmnt = BDD.getConnection(false).createStatement()) {
+        try (Connection conexion = BDD.getConnection(false);
+             Statement stmnt = conexion.createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE tarea;");
 
             while (table.next()) {
@@ -119,7 +120,8 @@ public class TareasBDD {
     public static Tarea getTarea(int id) {
         Tarea tarea = null;
 
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM tarea WHERE id = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM tarea WHERE id = ?;")) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 

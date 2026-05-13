@@ -40,7 +40,8 @@ public class HistorialTareasBDD {
     public static Map<Integer, HistorialTareas> getHistorialTareas() {
         Map<Integer, HistorialTareas> historialTareas = new LinkedHashMap<>();
 
-        try (Statement stmnt = BDD.getConnection(false).createStatement()) {
+        try (Connection conexion = BDD.getConnection(false);
+                Statement stmnt = conexion.createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE historial_tareas;");
 
             while (table.next()) {
@@ -63,7 +64,8 @@ public class HistorialTareasBDD {
     public static Map<Integer, HistorialTareas> getHistorialTareas(Tarea tarea_id) {
         Map<Integer, HistorialTareas> historialTareas = new LinkedHashMap<>();
 
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM historial_tareas WHERE tarea_id = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM historial_tareas WHERE tarea_id = ?;")) {
             stmnt.setInt(1, tarea_id.getId());
             ResultSet table = stmnt.executeQuery();
 
@@ -87,7 +89,8 @@ public class HistorialTareasBDD {
     public static HistorialTareas getHistorialTarea(int id) {
         HistorialTareas tareas = null;
 
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM historial_tareas WHERE id = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM historial_tareas WHERE id = ?;")) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 

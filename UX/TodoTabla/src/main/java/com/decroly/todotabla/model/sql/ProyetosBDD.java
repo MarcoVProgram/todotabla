@@ -76,7 +76,8 @@ public class ProyetosBDD {
 
     public static boolean borrar(Proyecto p) {
         if (p != null) {
-            try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("" +
+            try (Connection  conexion = BDD.getConnection(false);
+                    PreparedStatement stmnt = conexion.prepareStatement("" +
                     "DELETE FROM `todotabla`.`proyecto` " +
                     "WHERE id = ?;\n")
             ) {
@@ -93,7 +94,8 @@ public class ProyetosBDD {
     public static Map<Integer, Proyecto> getProyectos() {
         Map<Integer, Proyecto> proyectos = new LinkedHashMap<>();
 
-        try (Statement stmnt = BDD.getConnection(false).createStatement()) {
+        try (Connection conexion = BDD.getConnection(false);
+                Statement stmnt = conexion.createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE proyecto;");
 
             while (table.next()) {
@@ -116,7 +118,8 @@ public class ProyetosBDD {
     public static Proyecto getProyecto(int id) {
         Proyecto proyecto = null;
 
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM proyecto WHERE id = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM proyecto WHERE id = ?;")) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 

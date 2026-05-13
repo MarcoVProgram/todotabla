@@ -95,7 +95,8 @@ public class IntegrantesBDD {
     public static Map<Integer, Integrante> getIntegrantes() {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
-        try (Statement stmnt = BDD.getConnection(false).createStatement()) {
+        try (Connection conexion = BDD.getConnection(false);
+                Statement stmnt = conexion.createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE integrante;");
 
             while (table.next()) {
@@ -121,7 +122,8 @@ public class IntegrantesBDD {
     public static Map<Integer, Integrante> getIntegrantes(Proyecto proyecto_ID) {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM integrante WHERE proyecto_ID = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM integrante WHERE proyecto_ID = ?;")) {
             stmnt.setInt(1, proyecto_ID.getId());
             ResultSet table = stmnt.executeQuery();
 
@@ -147,7 +149,8 @@ public class IntegrantesBDD {
     public static Map<Integer, Integrante> getIntegrantes(Usuario usuario_ID) {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM integrante WHERE usuario_ID = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM integrante WHERE usuario_ID = ?;")) {
             stmnt.setInt(1, usuario_ID.getId());
             ResultSet table = stmnt.executeQuery();
 
@@ -173,7 +176,8 @@ public class IntegrantesBDD {
     public static Integrante getIntegrante(int id) {
         Integrante integrante = null;
 
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM integrante WHERE id = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM integrante WHERE id = ?;")) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 

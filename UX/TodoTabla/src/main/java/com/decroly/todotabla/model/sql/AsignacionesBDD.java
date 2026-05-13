@@ -104,7 +104,8 @@ public class AsignacionesBDD {
     public static Map<Integer, Asignacion> getAsignaciones() {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
 
-        try (Statement stmnt = BDD.getConnection(false).createStatement()) {
+        try (Connection conexion = BDD.getConnection(false);
+                Statement stmnt = conexion.createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE asignacion");
 
             while (table.next()) {
@@ -129,7 +130,8 @@ public class AsignacionesBDD {
     public static Map<Integer, Asignacion> getAsignaciones(Tarea tarea_ID) {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
         
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM asignacion WHERE tarea_ID = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM asignacion WHERE tarea_ID = ?;")) {
             stmnt.setInt(1, tarea_ID.getId());
             ResultSet table = stmnt.executeQuery();
 
@@ -155,7 +157,8 @@ public class AsignacionesBDD {
     public static Map<Integer, Asignacion> getAsignacions(Usuario usuario_ID) {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
         
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM asignacion WHERE usuario_ID = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM asignacion WHERE usuario_ID = ?;")) {
             stmnt.setInt(1, usuario_ID.getId());
             ResultSet table = stmnt.executeQuery();
 
@@ -181,7 +184,8 @@ public class AsignacionesBDD {
     public static Asignacion getAsignacion(int id) {
         Asignacion asignacion = null;
 
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM asignacion WHERE id = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM asignacion WHERE id = ?;")) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 
