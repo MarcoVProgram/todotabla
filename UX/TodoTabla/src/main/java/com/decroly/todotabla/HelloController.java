@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,11 +17,13 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class HelloController {
+public class HelloController implements Initializable {
     //lista miembros
 
     List<Usuario> usuarios = new ArrayList<>();
@@ -61,7 +64,7 @@ public class HelloController {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @FXML
-    private void initialize(){
+    public void initialize(URL url, ResourceBundle rb) {
     }
 
 

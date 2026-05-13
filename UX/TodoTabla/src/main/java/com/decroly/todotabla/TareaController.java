@@ -5,13 +5,16 @@ import com.decroly.todotabla.model.Tarea;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class TareaController {
+public class TareaController implements Initializable {
 
     //PESTAÑA TAREA
     @FXML
@@ -51,7 +54,7 @@ public class TareaController {
     List<Tarea> tareas = new ArrayList<>();
     ObservableList<Tarea> obsTareas = FXCollections.observableList(tareas);
 
-    private void initialize(){
+    public void initialize(URL url, ResourceBundle rb) {
 //        listView tareas backlog
         listViewBacklog.setItems(obsTareasBacklog);
         listViewBacklog.setCellFactory(tareaListView -> new ListCell<Tarea>() {
