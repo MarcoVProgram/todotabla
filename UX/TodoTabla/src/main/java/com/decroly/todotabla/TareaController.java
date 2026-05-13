@@ -35,126 +35,15 @@ public class TareaController implements Initializable {
     @FXML
     public ComboBox<Integer> comboBoxPrioridadTarea;
 
-    @FXML
-    public ListView<Tarea> listViewTareas;
-    @FXML
-    public ListView<Tarea> listViewBacklog;
-    ObservableList<Tarea> obsTareasBacklog = FXCollections.observableArrayList();
-    @FXML
-    public ListView<Tarea> listViewProgress;
-    ObservableList<Tarea> obsTareasProgress = FXCollections.observableArrayList();
-    @FXML
-    public ListView<Tarea> listViewReview;
-    ObservableList<Tarea> obsTareasReview = FXCollections.observableArrayList();
-    @FXML
-    public ListView<Tarea> listViewDone;
-    ObservableList<Tarea> obsTareasDone = FXCollections.observableArrayList();
+
 
     //lista tareas
     List<Tarea> tareas = new ArrayList<>();
     ObservableList<Tarea> obsTareas = FXCollections.observableList(tareas);
 
     public void initialize(URL url, ResourceBundle rb) {
-//        listView tareas backlog
-        listViewBacklog.setItems(obsTareasBacklog);
-        listViewBacklog.setCellFactory(tareaListView -> new ListCell<Tarea>() {
-
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-                } else {
-
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-
-                    VBox card = new VBox(8, titulo, prioridad);
-                    card.getStyleClass().add("kanban-list");
-
-                    setGraphic(card);
-                }
-            }
-        });
-
-        //listView tareas progress
-        listViewProgress.setItems(obsTareasProgress);
-        listViewProgress.setCellFactory(obstareasInProgress -> new ListCell<Tarea>() {
-
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-                } else {
-
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-
-                    VBox card = new VBox(8, titulo, prioridad);
-                    card.getStyleClass().add("kanban-list");
-
-                    setGraphic(card);
-                }
-            }
-        });
-
-        //listView tareas review
-        listViewReview.setItems(obsTareasReview);
-        listViewReview.setCellFactory(obstareasInReview -> new ListCell<Tarea>() {
-
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-                } else {
-
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-
-                    VBox card = new VBox(8, titulo, prioridad);
-                    card.getStyleClass().add("kanban-list");
-
-                    setGraphic(card);
-                }
-            }
-        });
-
-        //listView tareas done
-        listViewDone.setItems(obsTareasDone);
-        listViewDone.setCellFactory(obstareasDone -> new ListCell<Tarea>() {
-
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-                } else {
-
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-
-                    VBox card = new VBox(8, titulo, prioridad);
-                    card.getStyleClass().add("kanban-list");
-
-                    setGraphic(card);
-                }
-            }
-        });
     }
+
     //--------AGREGAR TAREA-------------
     @FXML
     private boolean addTarea(){
@@ -172,5 +61,7 @@ public class TareaController implements Initializable {
 
         return added;
     }
+
+
 
 }

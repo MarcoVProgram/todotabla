@@ -1,57 +1,199 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.utils.Navigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class KanBanController {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @FXML
+    private ImageView returnBtn;
 
     //LISTAS
     @FXML
     public ListView<Tarea> listViewBacklog;
     List<Tarea> tareasBacklog = new ArrayList<>();
-    ObservableList<Tarea> obstareasBacklog = FXCollections.observableList(tareasBacklog);
+    ObservableList<Tarea> obsTareasBacklog = FXCollections.observableList(tareasBacklog);
+
     @FXML
     public ListView<Tarea> listViewProgress;
     List<Tarea> tareasInProgress = new ArrayList<>();
-    ObservableList<Tarea> obstareasInProgress = FXCollections.observableList(tareasInProgress);
+    ObservableList<Tarea> obsTareasProgress = FXCollections.observableList(tareasInProgress);
+
     @FXML
     public ListView<Tarea> listViewReview;
     List<Tarea> tareasInReview = new ArrayList<>();
-    ObservableList<Tarea> obstareasInReview = FXCollections.observableList(tareasInReview);
+    ObservableList<Tarea> obsTareasReview = FXCollections.observableList(tareasInReview);
+
     @FXML
     public ListView<Tarea> listViewDone;
     List<Tarea> tareasDone = new ArrayList<>();
-    ObservableList<Tarea> obstareasDone = FXCollections.observableList(tareasDone);
+    ObservableList<Tarea> obsTareasDone = FXCollections.observableList(tareasDone);
 
+
+    private Stage ventanaSecundaria = getVentanaSecundaria();
+
+    private static Stage getVentanaSecundaria() {
+        return HelloController.getVentanaSecundaria();
+    }
+
+
+    public void initialize(URL url, ResourceBundle rb) {
+//        listView tareas backlog
+        listViewBacklog.setItems(obsTareasBacklog);
+        listViewBacklog.setCellFactory(tareaListView -> new ListCell<Tarea>() {
+
+            @Override
+            protected void updateItem(Tarea tarea, boolean empty) {
+                super.updateItem(tarea, empty);
+
+                if (empty || tarea == null) {
+                    setGraphic(null);
+                } else {
+
+                    Label titulo = new Label(tarea.getNombre());
+                    titulo.getStyleClass().add("titulo-tarea");
+
+                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
+
+                    VBox card = new VBox(8, titulo, prioridad);
+                    card.getStyleClass().add("kanban-list");
+
+                    setGraphic(card);
+                }
+            }
+        });
+
+        //listView tareas progress
+        listViewProgress.setItems(obsTareasProgress);
+        listViewProgress.setCellFactory(obstareasInProgress -> new ListCell<Tarea>() {
+
+            @Override
+            protected void updateItem(Tarea tarea, boolean empty) {
+                super.updateItem(tarea, empty);
+
+                if (empty || tarea == null) {
+                    setGraphic(null);
+                } else {
+
+                    Label titulo = new Label(tarea.getNombre());
+                    titulo.getStyleClass().add("titulo-tarea");
+
+                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
+
+                    VBox card = new VBox(8, titulo, prioridad);
+                    card.getStyleClass().add("kanban-list");
+
+                    setGraphic(card);
+                }
+            }
+        });
+
+        //listView tareas review
+        listViewReview.setItems(obsTareasReview);
+        listViewReview.setCellFactory(obstareasInReview -> new ListCell<Tarea>() {
+
+            @Override
+            protected void updateItem(Tarea tarea, boolean empty) {
+                super.updateItem(tarea, empty);
+
+                if (empty || tarea == null) {
+                    setGraphic(null);
+                } else {
+
+                    Label titulo = new Label(tarea.getNombre());
+                    titulo.getStyleClass().add("titulo-tarea");
+
+                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
+
+                    VBox card = new VBox(8, titulo, prioridad);
+                    card.getStyleClass().add("kanban-list");
+
+                    setGraphic(card);
+                }
+            }
+        });
+
+        //listView tareas done
+        listViewDone.setItems(obsTareasDone);
+        listViewDone.setCellFactory(obstareasDone -> new ListCell<Tarea>() {
+
+            @Override
+            protected void updateItem(Tarea tarea, boolean empty) {
+                super.updateItem(tarea, empty);
+
+                if (empty || tarea == null) {
+                    setGraphic(null);
+                } else {
+
+                    Label titulo = new Label(tarea.getNombre());
+                    titulo.getStyleClass().add("titulo-tarea");
+
+                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
+
+                    VBox card = new VBox(8, titulo, prioridad);
+                    card.getStyleClass().add("kanban-list");
+
+                    setGraphic(card);
+                }
+            }
+        });
+    }
+
+
+
+
+    //----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
+    @FXML
+    private void returnToMain() throws IOException { //abrir pantalla principal (menú)
+        Stage stage = (Stage) returnBtn.getScene().getWindow();
+        Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
+    }
+
+    @FXML
+    private void abrirVentanaTarea() { //panel tarea
+        try {
+
+            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                return;
+            }
+
+            // Cargar el archivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view.fxml"));
+            Parent root = loader.load();
+
+            // Crear una nueva ventana (Stage)
+            ventanaSecundaria = new Stage();
+            ventanaSecundaria.setTitle("Añadir tarea");
+            ventanaSecundaria.setScene(new Scene(root));
+
+            ventanaSecundaria.setResizable(false);
+            ventanaSecundaria.setAlwaysOnTop(true);
+
+//            listViewTareas.setItems(obsTareas);
+
+            // Mostrar la ventana
+            ventanaSecundaria.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
