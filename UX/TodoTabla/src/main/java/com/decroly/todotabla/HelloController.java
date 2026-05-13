@@ -22,17 +22,17 @@ import java.util.List;
 
 public class HelloController {
     //lista miembros
-<<<<<<< HEAD
+
     List<Usuario> usuarios = new ArrayList<>();
     ObservableList<Usuario> obsUsuarios = FXCollections.observableList(usuarios);
 
     //lista tareas
     List<Tarea> tareas = new ArrayList<>();
     ObservableList<Tarea> obsTareas = FXCollections.observableList(tareas);
-=======
-    List<Miembro> miembros = new ArrayList<>();
-    ObservableList<Miembro> obsMiembros = FXCollections.observableList(miembros);
->>>>>>> j
+
+    List<Usuario> miembros = new ArrayList<>();
+    ObservableList<Usuario> obsMiembros = FXCollections.observableList(miembros);
+
     
     //lista proyectos
     List<Proyecto> proyectos = new ArrayList<>();
