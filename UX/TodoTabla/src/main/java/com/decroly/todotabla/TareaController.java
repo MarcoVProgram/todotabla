@@ -2,6 +2,8 @@ package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.sql.EstadosBDD;
+import com.decroly.todotabla.model.sql.ProyetosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -36,6 +38,9 @@ public class TareaController implements Initializable {
     @FXML
     public ComboBox<Integer> comboBoxPrioridadTarea;
 
+    @FXML
+    public ListView<Tarea> listViewTareas;
+
 
 
     //lista tareas
@@ -55,7 +60,10 @@ public class TareaController implements Initializable {
     }
 
     private void actualizarTareas() {
-        obsTareas.addAll(Objects.requireNonNull(TareasBDD.getTareas()).values());
+        Map<Integer, Tarea> todasTareasDelUniverso = TareasBDD.getTareas();
+        if (todasTareasDelUniverso != null) {
+            obsTareas.addAll((TareasBDD.getTareas()).values());
+        }
     }
 
     //--------AGREGAR TAREA-------------
@@ -67,19 +75,19 @@ public class TareaController implements Initializable {
         String nombre = nombreTarea.getText();
         int prioridad = comboBoxPrioridadTarea.getSelectionModel().getSelectedItem();
 
-        //valores extra necesarios
-        Proyecto idProyecto = null;
+        //valores extra necesarios // TODO cambiar esto paraa seleccionar otros proyectos
+        Proyecto idProyecto = ProyetosBDD.getProyecto(1);
 
-        try {TareasBDD.insertar(new Tarea(nombre, prioridad, null, idProyecto));
+        boolean insertarExito = TareasBDD.insertar(new Tarea(nombre, prioridad, EstadosBDD.getEstado("Backlog"), ProyetosBDD.getProyecto(1)));
+        if (insertarExito) {
             this.actualizarTareas();
-        } catch (Exception e) {
-            (new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK)).show();
+        }
+        else {
+            (new Alert(Alert.AlertType.ERROR,"No se pudo añadir", ButtonType.OK)).show();
         }
 
 
         return added;
     }
-
-
 
 }

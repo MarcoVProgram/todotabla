@@ -116,7 +116,8 @@ public class ProyetosBDD {
     public static Proyecto getProyecto(int id) {
         Proyecto proyecto = null;
 
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM proyecto WHERE id = ?;")) {
+        try (Connection conexion = BDD.getConnection(false);
+                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM proyecto WHERE id = ?;")) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 

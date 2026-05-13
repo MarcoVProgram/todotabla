@@ -20,7 +20,7 @@ public class BDD {
 
     private static final URL configURL = BDD.class.getResource("config.dat");
 
-    private static Connection getConnection() throws
+    public static Connection getConnection() throws
             IOException, SQLException, ClassNotFoundException, URISyntaxException {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -42,12 +42,8 @@ public class BDD {
 
     public static Connection getConnection(boolean restart) throws Exception {
         try {
-            if (conexion != null) {
-                if (restart || conexion.isValid(7200)) {
-                    conexion = DriverManager.getConnection(url, user, password);
-                }
-            } else {
-                return getConnection();
+            if ((conexion == null) || restart || !conexion.isValid(7200)) {
+                getConnection();
             }
         } catch (Exception e) {
             e.printStackTrace();

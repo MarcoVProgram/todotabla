@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class KanBanController {
+public class KanBanController implements Initializable {
     @FXML
     private ImageView returnBtn;
 
@@ -185,7 +186,7 @@ public class KanBanController {
             ventanaSecundaria.setScene(new Scene(root));
 
             ventanaSecundaria.setResizable(false);
-            ventanaSecundaria.setAlwaysOnTop(true);
+            ventanaSecundaria.setAlwaysOnTop(false);
 
 //            listViewTareas.setItems(obsTareas);
 
