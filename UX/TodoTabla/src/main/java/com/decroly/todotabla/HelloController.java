@@ -1,8 +1,10 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.sql.BDD;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -60,6 +62,13 @@ public class HelloController implements Initializable {
 
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+        try {
+            BDD.getConnection(true);
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
+            alert.showAndWait();
+            Platform.exit();
+        }
     }
 
 
