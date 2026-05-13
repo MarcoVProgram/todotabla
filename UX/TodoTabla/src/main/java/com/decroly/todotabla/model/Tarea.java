@@ -39,7 +39,6 @@ public class Tarea {
         this.nombre = nombre;
     }
 
-
     public int getPrioridad() {
         return prioridad;
     }
@@ -58,10 +57,6 @@ public class Tarea {
 
     public Proyecto getIdProyecto() {
         return idProyecto;
-    }
-
-    public void setIdProyecto(Proyecto idProyecto) {
-        this.idProyecto = idProyecto;
     }
 
     @Override

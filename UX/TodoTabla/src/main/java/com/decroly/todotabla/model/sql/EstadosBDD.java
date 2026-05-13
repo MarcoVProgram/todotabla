@@ -5,12 +5,11 @@ import com.decroly.todotabla.model.Estado;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class EstadosBDD {
-    public static boolean insertar(Estado e) throws SQLException {
+    public static boolean insertar(Estado e) {
         boolean estado = false;
 
         try (Connection conexion = BDD.getConnection(false);
@@ -24,12 +23,12 @@ public class EstadosBDD {
             estado = (stmnt.executeUpdate() == 1);
 
         } catch (Exception ex) {
-            throw new SQLException(ex);
+            return false;
         }
 
         return estado;
     }
-    public static boolean actualizar(Estado e) throws SQLException {
+    public static boolean actualizar(Estado e) {
         boolean estado = false;
 
         if (e != null) {
@@ -55,14 +54,14 @@ public class EstadosBDD {
                     conexion.nativeSQL("ROLLBACK;");
                 }
             } catch (Exception ex) {
-                throw new SQLException(ex);
+                return false;
             }
         }
 
         return estado;
     }
 
-    public static boolean borrar(Estado e) throws Exception {
+    public static boolean borrar(Estado e) {
         boolean estado = false;
 
         if (e != null) {
@@ -84,14 +83,14 @@ public class EstadosBDD {
                     conexion.nativeSQL("ROLLBACK;");
                 }
             } catch (Exception ex) {
-                throw new SQLException(ex);
+                return false;
             }
         }
 
         return estado;
     }
 
-    public static List<Estado> getEstados() throws SQLException {
+    public static List<Estado> getEstados() {
         List<Estado> estados = new LinkedList<>();
 
         try (Connection conexion = BDD.getConnection(false);
@@ -106,13 +105,13 @@ public class EstadosBDD {
                 estados.add(newEstado);
             }
         } catch (Exception ex) {
-            throw new SQLException(ex);
+            return null;
         }
 
         return estados;
     }
 
-    public static Estado getEstado(String estadoNombre) throws SQLException {
+    public static Estado getEstado(String estadoNombre) {
         Estado estado = null;
 
         try (Connection conexion = BDD.getConnection(false);
@@ -128,7 +127,7 @@ public class EstadosBDD {
             }
 
         } catch (Exception ex) {
-            throw new SQLException(ex);
+            return null;
         }
 
         return estado;

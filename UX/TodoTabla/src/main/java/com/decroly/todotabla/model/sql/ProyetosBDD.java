@@ -1,12 +1,11 @@
 package com.decroly.todotabla.model.sql;
 
-import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.Proyecto;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ProyetosBDD {
@@ -19,7 +18,7 @@ public class ProyetosBDD {
              )
         ) {
             stmnt.setString(1, p.getTitulo());
-            stmnt.setLong(2, p.getFechaCreacion().toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.of("+01:00")));
+            stmnt.setDate(2, Date.valueOf(p.getFechaCreacion()));
 
             estado = (stmnt.executeUpdate() == 1);
 
@@ -35,17 +34,17 @@ public class ProyetosBDD {
         if (p != null) {
             try (Connection conexion = BDD.getConnection(false);
                  PreparedStatement stmnt = conexion.prepareStatement(
-                         "UPDATE `todotabla`.`usuario` " +
+                         "UPDATE `todotabla`.`proyecto` " +
                                  "SET " +
-                                 "`titulp` = ?, " +
-                                 "`fecha_crecion` = ?, " +
+                                 "`titulo` = ?, " +
+                                 "`fecha_cierre` = ?, " +
                                  "WHERE `id` = ?; "
                  )
             ) {
                 conexion.nativeSQL("START TRANSACTION;");
 
                 stmnt.setString(1, p.getTitulo());
-                stmnt.setLong(2, p.getFechaCreacion().toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.of("+01:00")));
+                stmnt.setDate(2, Date.valueOf(p.getFechaCierre()));
 
                 stmnt.setInt(3, p.getId());
 
@@ -65,17 +64,14 @@ public class ProyetosBDD {
     }
 
     public static boolean archivar(Proyecto p)  {
-        try {
-            if (p.getFechaCierre().isAfter(LocalDate.now())) {
-                p.setFechaFin(LocalDate.now());
-                return actualizar(p);
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
+        boolean estado = false;
+
+        if (p != null && p.getFechaCierre() == null) {
+            p.setFechaCierre(LocalDate.now());
+            actualizar(p);
         }
 
+        return estado;
     }
 
     public static boolean borrar(Proyecto p) {
@@ -94,16 +90,49 @@ public class ProyetosBDD {
         return false;
     }
 
-    public static Map<Integer, Usuario> getProyectos() {
-        throw new UnsupportedOperationException();
+    public static Map<Integer, Proyecto> getProyectos() {
+        Map<Integer, Proyecto> proyectos = new LinkedHashMap<>();
+
+        try (Statement stmnt = BDD.getConnection(false).createStatement()) {
+            ResultSet table = stmnt.executeQuery("TABLE proyecto;");
+
+            while (table.next()) {
+                Proyecto pro = new Proyecto(table.getInt("id"),
+                        table.getString("titulo"),
+                        table.getDate("fecha_creacion").toLocalDate(),
+                        table.getDate("fecha_cierre").toLocalDate()
+                );
+
+                proyectos.put(pro.getId(), pro);
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return proyectos;
     }
 
-    public static Map<Integer, Usuario> getProyecto() {
-        return getProyectos();
-    }
+    public static Proyecto getProyecto(int id) {
+        Proyecto proyecto = null;
 
-    public static Usuario getProyecto(int id) {
-        throw new UnsupportedOperationException();
+        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM proyecto WHERE id = ?;")) {
+            stmnt.setInt(1, id);
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                proyecto = new Proyecto(table.getInt("id"),
+                        table.getString("titulo"),
+                        table.getDate("fecha_creacion").toLocalDate(),
+                        table.getDate("fecha_cierre").toLocalDate()
+                );
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return proyecto;
     }
 
 }

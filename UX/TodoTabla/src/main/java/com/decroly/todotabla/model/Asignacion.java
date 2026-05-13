@@ -29,28 +29,16 @@ public class Asignacion {
         return id;
     }
 
-    public Usuario getIdMiembro() {
+    public Usuario getIdUsuario() {
         return idUsuario;
-    }
-
-    public void setIdMiembro(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public Tarea getIdTarea() {
         return idTarea;
     }
 
-    public void setIdTarea(Tarea idTarea) {
-        this.idTarea = idTarea;
-    }
-
     public LocalDate getFechaAsignacion() {
         return fechaAsignacion;
-    }
-
-    public void setFechaAsignacion(LocalDate fechaAsignacion) {
-        this.fechaAsignacion = fechaAsignacion;
     }
 
     public LocalDate getFechaFin() {

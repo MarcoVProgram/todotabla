@@ -30,24 +30,12 @@ public class HistorialTareas {
         return estado;
     }
 
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
     public Tarea getIdTarea() {
         return idTarea;
     }
 
-    public void setIdTarea(Tarea idTarea) {
-        this.idTarea = idTarea;
-    }
-
     public LocalDateTime getFechaCambio() {
         return fechaCambio;
-    }
-
-    public void setFechaCambio(LocalDateTime fechaCambio) {
-        this.fechaCambio = fechaCambio;
     }
 
     @Override

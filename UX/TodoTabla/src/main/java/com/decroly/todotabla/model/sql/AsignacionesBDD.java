@@ -1,0 +1,204 @@
+package com.decroly.todotabla.model.sql;
+
+import com.decroly.todotabla.model.Asignacion;
+import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.Usuario;
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class AsignacionesBDD {
+    
+        public static boolean insertar(Asignacion i) {
+        boolean estado = false;
+
+        try (Connection conexion = BDD.getConnection(false);
+             PreparedStatement stmnt = conexion.prepareStatement(
+            "INSERT INTO asignacion VALUES (NULL, ?, ?, ?, NULL)"
+             )
+        ) {
+            stmnt.setInt(1, i.getIdUsuario().getId());
+            stmnt.setInt(2, i.getIdTarea().getId());
+            stmnt.setDate(3, Date.valueOf(i.getFechaAsignacion()));
+
+            estado = (stmnt.executeUpdate() == 1);
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return estado;
+    }
+
+    public static boolean actualizar(Asignacion i) {
+        boolean estado = false;
+
+        if (i != null) {
+            try (Connection conexion = BDD.getConnection(false);
+                 PreparedStatement stmnt = conexion.prepareStatement(
+                         "UPDATE `todotabla`.`asignacion` " +
+                                 "SET " +
+                                 "`fecha_fin` = ? " +
+                                 "WHERE `id` = ?"
+                 )
+            ) {
+                conexion.nativeSQL("START TRANSACTION;");
+
+                stmnt.setDate(1, Date.valueOf(i.getFechaFin()));
+
+                stmnt.setInt(2, i.getId());
+
+                estado = (stmnt.executeUpdate() == 1);
+
+                if (estado) {
+                    conexion.nativeSQL("COMMIT;");
+                } else {
+                    conexion.nativeSQL("ROLLBACK;");
+                }
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        return estado;
+    }
+
+    public static boolean archivar(Asignacion i) {
+        boolean estado = false;
+
+        if (i != null && i.getFechaFin() == null) {
+            i.setFechaFin(LocalDate.now());
+            estado = actualizar(i);
+        }
+
+        return estado;
+    }
+
+    public static boolean borrar(Asignacion i) {
+        boolean estado = false;
+
+        if (i != null) {
+            try (Connection conexion = BDD.getConnection(false);
+            PreparedStatement stmnt = conexion.prepareStatement(
+                "DELETE FROM asignacion WHERE id = ?"
+            )) {
+               conexion.nativeSQL("START TRANSACTION;");
+               stmnt.setInt(1, i.getId());
+
+               estado = (stmnt.executeUpdate() == 1);
+               if (estado) {
+                   conexion.nativeSQL("COMMIT;");
+               } else {
+                   conexion.nativeSQL("ROLLBACK;");
+               }
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        return estado;
+    }
+
+    public static Map<Integer, Asignacion> getAsignaciones() {
+        Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
+
+        try (Statement stmnt = BDD.getConnection(false).createStatement()) {
+            ResultSet table = stmnt.executeQuery("TABLE asignacion");
+
+            while (table.next()) {
+                Asignacion asignacion = new Asignacion(
+                        table.getInt("id"),
+                        UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
+                        TareasBDD.getTarea(table.getInt("tarea_ID")),
+                        table.getDate("fecha_asignacion").toLocalDate(),
+                        table.getDate("fecha_fin").toLocalDate()
+                );
+
+                asignaciones.put(asignacion.getId(), asignacion);
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return asignaciones;
+    }
+    
+    public static Map<Integer, Asignacion> getAsignaciones(Tarea tarea_ID) {
+        Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
+        
+        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM asignacion WHERE tarea_ID = ?;")) {
+            stmnt.setInt(1, tarea_ID.getId());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                Asignacion asignacion = new Asignacion(
+                        table.getInt("id"),
+                        UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
+                        TareasBDD.getTarea(table.getInt("tarea_ID")),
+                        table.getDate("fecha_asignacion").toLocalDate(),
+                        table.getDate("fecha_fin").toLocalDate()
+                );
+                
+                asignaciones.put(asignacion.getId(), asignacion);
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return asignaciones;
+    }
+    
+    public static Map<Integer, Asignacion> getAsignacions(Usuario usuario_ID) {
+        Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
+        
+        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM asignacion WHERE usuario_ID = ?;")) {
+            stmnt.setInt(1, usuario_ID.getId());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                Asignacion asignacion = new Asignacion(
+                        table.getInt("id"),
+                        UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
+                        TareasBDD.getTarea(table.getInt("tarea_ID")),
+                        table.getDate("fecha_asignacion").toLocalDate(),
+                        table.getDate("fecha_fin").toLocalDate()
+                );
+                
+                asignaciones.put(asignacion.getId(), asignacion);
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return asignaciones;
+    }
+
+    public static Asignacion getAsignacion(int id) {
+        Asignacion asignacion = null;
+
+        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM asignacion WHERE id = ?;")) {
+            stmnt.setInt(1, id);
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                asignacion = new Asignacion(
+                        table.getInt("id"),
+                        UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
+                        TareasBDD.getTarea(table.getInt("tarea_ID")),
+                        table.getDate("fecha_asignacion").toLocalDate(),
+                        table.getDate("fecha_fin").toLocalDate()
+                );
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return asignacion;
+    }
+}

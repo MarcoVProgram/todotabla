@@ -44,10 +44,6 @@ public class Integrante {
         return fechaEntrada;
     }
 
-    public void setFechaEntrada(LocalDate fechaEntrada) {
-        this.fechaEntrada = fechaEntrada;
-    }
-
     public LocalDate getFechaSalida() {
         return fechaSalida;
     }
@@ -56,20 +52,12 @@ public class Integrante {
         this.fechaSalida = fechaSalida;
     }
 
-    public Usuario getIdMiembro() {
+    public Usuario getIdUsuario() {
         return idUsuario;
-    }
-
-    public void setIdMiembro(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public Proyecto getIdProyecto() {
         return idProyecto;
-    }
-
-    public void setIdProyecto(Proyecto idProyecto) {
-        this.idProyecto = idProyecto;
     }
 
     @Override

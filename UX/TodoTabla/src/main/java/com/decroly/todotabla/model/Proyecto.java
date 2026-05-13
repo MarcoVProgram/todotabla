@@ -38,15 +38,11 @@ public class Proyecto {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(LocalDate fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
     public LocalDate getFechaCierre() {
         return fechaCierre;
     }
 
-    public void setFechaFin(LocalDate fechaCierre) {
+    public void setFechaCierre(LocalDate fechaCierre) {
         this.fechaCierre = fechaCierre;
     }
 

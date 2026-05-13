@@ -66,10 +66,6 @@ public class UsuariosBDD {
         return estado;
     }
 
-    public static boolean archivar(Usuario m) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
-
     public static boolean borrar(Usuario m)  {
         boolean estado = false;
 
@@ -96,7 +92,7 @@ public class UsuariosBDD {
     }
 
     public static Map<Integer, Usuario> getUsuarios() {
-        Map<Integer, Usuario> miembros = new HashMap<>();
+        Map<Integer, Usuario> miembros = new LinkedHashMap<>();
 
         try (Statement stmnt = BDD.getConnection(false).createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE usuario;");
@@ -118,14 +114,11 @@ public class UsuariosBDD {
         return miembros;
     }
 
-    public static Map<Integer, Usuario> getUsuario() {
-        return getUsuarios();
-    }
-
-    public static Usuario getUsuario(int id) throws SQLException {
+    public static Usuario getUsuario(int id) {
         try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement(
                 "SELECT * FROM usuario WHERE id = ?;"
         )) {
+            stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 
             table.next();
@@ -134,10 +127,6 @@ public class UsuariosBDD {
                     table.getString("apellidos"),
                     table.getString("email")
             );
-
-            if (table.next()) {
-                throw new Exception("Esto no me lo esperaba. (demasiados miembros)");
-            }
 
             return uzer;
 
@@ -148,5 +137,26 @@ public class UsuariosBDD {
 
     }
 
-    // TODO Si es necesario hay que agregaer otra forma de obtener los miembros al buscar.
+    public static Usuario getUsuario(String nombre) {
+        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement(
+                "SELECT * FROM usuario WHERE nombre LIKE ?;"
+        )) {
+            stmnt.setString(1, "%"+nombre+"%");
+            ResultSet table = stmnt.executeQuery();
+
+            table.next();
+            Usuario uzer = new Usuario(table.getInt("id"),
+                    table.getString("nombre"),
+                    table.getString("apellidos"),
+                    table.getString("email")
+            );
+
+            return uzer;
+
+
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
 }

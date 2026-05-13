@@ -3,11 +3,11 @@ package com.decroly.todotabla.model.sql;
 import com.decroly.todotabla.model.Tarea;
 
 import java.sql.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TareasBDD {
-    public static boolean insertar(Tarea t) throws SQLException {
+    public static boolean insertar(Tarea t) {
         boolean estado = false;
 
         try (Connection conexion = BDD.getConnection(false);
@@ -23,13 +23,13 @@ public class TareasBDD {
             estado = (stmnt.executeUpdate() == 1);
 
         } catch (Exception e) {
-            throw new SQLException(e);
+            return false;
         }
 
         return estado;
     }
 
-    public static boolean actualizar(Tarea t) throws SQLException {
+    public static boolean actualizar(Tarea t) {
         boolean estado = false;
 
         if (t != null) {
@@ -59,18 +59,14 @@ public class TareasBDD {
                     conexion.nativeSQL("ROLLBACK;");
                 }
             } catch (Exception e) {
-                throw new SQLException(e);
+                return false;
             }
         }
 
         return estado;
     }
 
-//    public static boolean archivar(Tarea t) throws UnsupportedOperationException {
-//        throw new UnsupportedOperationException();
-//    }
-
-    public static boolean borrar(Tarea t) throws Exception {
+    public static boolean borrar(Tarea t) {
         boolean estado = false;
 
         if (t != null) {
@@ -88,61 +84,57 @@ public class TareasBDD {
                    conexion.nativeSQL("ROLLBACK;");
                }
             } catch (Exception e) {
-                throw new SQLException(e);
+                return false;
             }
         }
 
         return estado;
     }
 
-    /*public static Map<Integer, Tarea> getUsuarios() throws SQLException{
-        Map<Integer, Tarea> tareas = new HashMap<>();
+    public static Map<Integer, Tarea> getTareas() {
+        Map<Integer, Tarea> tareas = new LinkedHashMap<>();
 
         try (Statement stmnt = BDD.getConnection(false).createStatement()) {
-            ResultSet table = stmnt.executeQuery("TABLE usuario;");
+            ResultSet table = stmnt.executeQuery("TABLE tarea;");
 
             while (table.next()) {
                 Tarea tarea = new Tarea(table.getInt("id"),
                         table.getString("nombre"),
-                        UsuariosBDD.getUsuario(table.getInt("")));
+                        table.getInt("prioridad"),
+                        EstadosBDD.getEstado(table.getString("estado")),
+                        ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))
+                );
+
 
                 tareas.put(tarea.getId(), tarea);
             }
 
         } catch (Exception e) {
-            throw new SQLException(e);
+            return null;
         }
 
         return tareas;
     }
 
-    public static Map<Integer, Miembro> getUsuario() throws SQLException{
-        return getUsuarios();
-    }
+    public static Tarea getTarea(int id) {
+        Tarea tarea = null;
 
-    public static Miembro getUsuario(int id) throws SQLException {
-        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement(
-                "SELECT * FROM usuario WHERE id = ?;"
-        )) {
+        try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("SELECT * FROM tarea WHERE id = ?;")) {
+            stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 
-            table.next();
-            Miembro uzer = new Miembro(table.getInt("id"),
-                    table.getString("nombre"),
-                    table.getString("apellidos"),
-                    table.getString("email")
-            );
-
-            if (table.next()) {
-                throw new Exception("Esto no me lo esperaba. (demasiados miembros)");
+            while (table.next()) {
+                tarea = new Tarea(table.getInt("id"),
+                        table.getString("nombre"),
+                        table.getInt("prioridad"),
+                        EstadosBDD.getEstado(table.getString("estado")),
+                        ProyetosBDD.getProyecto(table.getInt("proyecto_ID")));
             }
 
-            return uzer;
-
-
         } catch (Exception e) {
-            throw new SQLException(e);
+            return null;
         }
+
+        return tarea;
     }
-     */
 }
