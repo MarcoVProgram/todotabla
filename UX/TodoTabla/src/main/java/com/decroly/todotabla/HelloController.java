@@ -47,19 +47,14 @@ public class HelloController implements Initializable {
 
     @FXML
     private Node root;
-    
-    //PESTAÑA KANBAN
-    @FXML
-    private ImageView returnBtn;
-
-
-
-
 
     //VARIABLES AUXILIARES
-    private Stage ventanaSecundaria;
-    
-    
+    private static Stage ventanaSecundaria;
+
+    public static Stage getVentanaSecundaria() {
+        return ventanaSecundaria;
+    }
+
     //FORMATTER
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -70,44 +65,8 @@ public class HelloController implements Initializable {
 
 //----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
     @FXML
-    private void abrirVentanaTarea() { //panel tarea
-        try {
-
-            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
-                return;
-            }
-
-            // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view.fxml"));
-            Parent root = loader.load();
-
-            // Crear una nueva ventana (Stage)
-            ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Añadir tarea");
-            ventanaSecundaria.setScene(new Scene(root));
-
-            ventanaSecundaria.setResizable(false);
-            ventanaSecundaria.setAlwaysOnTop(true);
-
-//            listViewTareas.setItems(obsTareas);
-
-            // Mostrar la ventana
-            ventanaSecundaria.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    @FXML
     private void abrirVentanaPrincipal() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/kanban-view.fxml");
-    }
-
-    @FXML
-    private void returnToMain() throws IOException { //abrir pantalla principal (menú)
-        Stage stage = (Stage) returnBtn.getScene().getWindow();
-        Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
     }
 }
