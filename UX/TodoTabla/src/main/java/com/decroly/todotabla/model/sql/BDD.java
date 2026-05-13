@@ -20,21 +20,25 @@ public class BDD {
 
     private static final URL configURL = BDD.class.getResource("config.dat");
 
-    private static Connection getConnection() throws
-            IOException, SQLException, ClassNotFoundException, URISyntaxException {
+    private static synchronized Connection getConnection() throws IOException, SQLException, ClassNotFoundException, URISyntaxException {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         if (configURL != null) {
 
-            FileReader configFile = new FileReader(new File(configURL.toURI()));
-            BufferedReader configReader = new BufferedReader(configFile);
+            try (
+                FileReader configFile = new FileReader(new File(configURL.toURI()));
+                BufferedReader configReader = new BufferedReader(configFile);
+            ) {
 
-            url = "jdbc:mysql://" + configReader.readLine() + "/" + configReader.readLine();
-            user = configReader.readLine();
-            password = configReader.readLine();
+                url = "jdbc:mysql://" + configReader.readLine() + "/" + configReader.readLine();
+                user = configReader.readLine();
+                password = configReader.readLine();
 
-            if (conexion == null) {
-                conexion = DriverManager.getConnection(url, user, password);
+                if (conexion == null) {
+                    conexion = DriverManager.getConnection(url, user, password);
+                }
+            } catch (IOException e) {
+                throw new IOException(e);
             }
         }
         return conexion;
@@ -43,8 +47,8 @@ public class BDD {
     public static Connection getConnection(boolean restart) throws Exception {
         try {
             if (conexion != null) {
-                if (restart || conexion.isValid(7200)) {
-                    conexion = DriverManager.getConnection(url, user, password);
+                if (restart || !conexion.isValid(5)) {
+                    conexion = getConnection();
                 }
             } else {
                 return getConnection();
@@ -56,5 +60,4 @@ public class BDD {
         }
         return conexion;
     }
-
 }
