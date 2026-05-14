@@ -9,7 +9,7 @@ public class UsuariosBDD {
     public static boolean insertar(Usuario m){
         boolean estado = false;
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(
             "INSERT INTO usuario VALUES (NULL, ?, ?, ?)"
              )
@@ -32,7 +32,7 @@ public class UsuariosBDD {
         boolean estado = false;
 
         if (m != null) {
-            try (Connection conexion = BDD.getConnection(false);
+            try (Connection conexion = BDD.getConnection();
                  PreparedStatement stmnt = conexion.prepareStatement(
                          "UPDATE `todotabla`.`usuario` " +
                                  "SET " +
@@ -70,7 +70,7 @@ public class UsuariosBDD {
         boolean estado = false;
 
         if (m != null) {
-            try (Connection conexion = BDD.getConnection(false);
+            try (Connection conexion = BDD.getConnection();
             PreparedStatement stmnt = conexion.prepareStatement(
                 "DELETE FROM usuario WHERE id = ?"
             )) {
@@ -94,7 +94,7 @@ public class UsuariosBDD {
     public static Map<Integer, Usuario> getUsuarios() {
         Map<Integer, Usuario> miembros = new LinkedHashMap<>();
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
                 Statement stmnt = conexion.createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE usuario;");
 
@@ -116,7 +116,7 @@ public class UsuariosBDD {
     }
 
     public static Usuario getUsuario(int id) {
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement(
                 "SELECT * FROM usuario WHERE id = ?;"
         )) {
@@ -140,7 +140,7 @@ public class UsuariosBDD {
     }
 
     public static Usuario getUsuario(String nombre) {
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement(
                 "SELECT * FROM usuario WHERE nombre LIKE ?;"
         )) {

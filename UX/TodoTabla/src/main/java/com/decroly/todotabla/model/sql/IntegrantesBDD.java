@@ -13,7 +13,7 @@ public class IntegrantesBDD {
     public static boolean insertar(Integrante i) {
         boolean estado = false;
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(
             "INSERT INTO integrante VALUES (NULL, ?, ?, NULL, ?, ?)"
              )
@@ -36,7 +36,7 @@ public class IntegrantesBDD {
         boolean estado = false;
 
         if (i != null) {
-            try (Connection conexion = BDD.getConnection(false);
+            try (Connection conexion = BDD.getConnection();
                  PreparedStatement stmnt = conexion.prepareStatement(
                          "UPDATE `todotabla`.`integrante` " +
                                  "SET " +
@@ -71,7 +71,7 @@ public class IntegrantesBDD {
         boolean estado = false;
 
         if (i != null) {
-            try (Connection conexion = BDD.getConnection(false);
+            try (Connection conexion = BDD.getConnection();
             PreparedStatement stmnt = conexion.prepareStatement(
                 "DELETE FROM integrante WHERE id = ?"
             )) {
@@ -95,7 +95,7 @@ public class IntegrantesBDD {
     public static Map<Integer, Integrante> getIntegrantes() {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
                 Statement stmnt = conexion.createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE integrante;");
 
@@ -122,7 +122,7 @@ public class IntegrantesBDD {
     public static Map<Integer, Integrante> getIntegrantes(Proyecto proyecto_ID) {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM integrante WHERE proyecto_ID = ?;")) {
             stmnt.setInt(1, proyecto_ID.getId());
             ResultSet table = stmnt.executeQuery();
@@ -149,7 +149,7 @@ public class IntegrantesBDD {
     public static Map<Integer, Integrante> getIntegrantes(Usuario usuario_ID) {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM integrante WHERE usuario_ID = ?;")) {
             stmnt.setInt(1, usuario_ID.getId());
             ResultSet table = stmnt.executeQuery();
@@ -176,7 +176,7 @@ public class IntegrantesBDD {
     public static Integrante getIntegrante(int id) {
         Integrante integrante = null;
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM integrante WHERE id = ?;")) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();

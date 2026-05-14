@@ -10,7 +10,7 @@ public class TareasBDD {
     public static boolean insertar(Tarea t) {
         boolean estado = false;
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(
             "INSERT INTO tarea VALUES (NULL, ?, ?, ?, ?)"
              )
@@ -33,7 +33,7 @@ public class TareasBDD {
         boolean estado = false;
 
         if (t != null) {
-            try (Connection conexion = BDD.getConnection(false);
+            try (Connection conexion = BDD.getConnection();
                  PreparedStatement stmnt = conexion.prepareStatement(
                          "UPDATE `todotabla`.`tarea` " +
                                  "SET " +
@@ -70,7 +70,7 @@ public class TareasBDD {
         boolean estado = false;
 
         if (t != null) {
-            try (Connection conexion = BDD.getConnection(false);
+            try (Connection conexion = BDD.getConnection();
             PreparedStatement stmnt = conexion.prepareStatement(
                 "DELETE FROM usuario WHERE id = ?"
             )) {
@@ -94,7 +94,7 @@ public class TareasBDD {
     public static Map<Integer, Tarea> getTareas() {
         Map<Integer, Tarea> tareas = new LinkedHashMap<>();
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
              Statement stmnt = conexion.createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE tarea;");
 
@@ -111,6 +111,7 @@ public class TareasBDD {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
 
@@ -120,7 +121,7 @@ public class TareasBDD {
     public static Tarea getTarea(int id) {
         Tarea tarea = null;
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM tarea WHERE id = ?;")) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
