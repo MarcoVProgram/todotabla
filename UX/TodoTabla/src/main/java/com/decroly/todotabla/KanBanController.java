@@ -1,6 +1,9 @@
 package com.decroly.todotabla;
 
+import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.sql.EstadosBDD;
+import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.Navigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,22 +31,27 @@ public class KanBanController implements Initializable {
 
     //LISTAS
     @FXML
-    public ListView<Tarea> listViewBacklog;
+    private ListView<Tarea> listViewBacklog;
     List<Tarea> tareasBacklog = new ArrayList<>();
     ObservableList<Tarea> obsTareasBacklog = FXCollections.observableList(tareasBacklog);
 
     @FXML
-    public ListView<Tarea> listViewProgress;
+    private ListView<Tarea> listViewReady;
+    List<Tarea> tareasReady = new ArrayList<>();
+    ObservableList<Tarea> obsTareasReady = FXCollections.observableList(tareasReady);
+
+    @FXML
+    private ListView<Tarea> listViewProgress;
     List<Tarea> tareasInProgress = new ArrayList<>();
     ObservableList<Tarea> obsTareasProgress = FXCollections.observableList(tareasInProgress);
 
     @FXML
-    public ListView<Tarea> listViewReview;
+    private ListView<Tarea> listViewReview;
     List<Tarea> tareasInReview = new ArrayList<>();
     ObservableList<Tarea> obsTareasReview = FXCollections.observableList(tareasInReview);
 
     @FXML
-    public ListView<Tarea> listViewDone;
+    private ListView<Tarea> listViewDone;
     List<Tarea> tareasDone = new ArrayList<>();
     ObservableList<Tarea> obsTareasDone = FXCollections.observableList(tareasDone);
 
@@ -56,7 +64,35 @@ public class KanBanController implements Initializable {
 
 
     public void initialize(URL url, ResourceBundle rb) {
-//        listView tareas backlog
+        List<Estado> estados = EstadosBDD.getEstados();
+        for (Estado estado : estados) {
+            switch (estado.getNombre()) {
+                case "Backlog":
+                    tareasBacklog.clear();
+                    tareasBacklog.addAll(TareasBDD.getTareas(estado).values());
+                    break;
+                case "InProgress":
+                    tareasInProgress.clear();
+                    tareasInProgress.addAll(TareasBDD.getTareas(estado).values());
+                    break;
+                case "Ready":
+                    tareasReady.clear();
+                    tareasReady.addAll(TareasBDD.getTareas(estado).values());
+                    break;
+                case "InReview":
+                    tareasInReview.clear();
+                    tareasInReview.addAll(TareasBDD.getTareas(estado).values());
+                    break;
+                case "Done":
+                    tareasDone.clear();
+                    tareasDone.addAll(TareasBDD.getTareas(estado).values());
+                    break;
+                default:
+                    // TODO nuevos estados
+                    break;
+            }
+        }
+
         listViewBacklog.setItems(obsTareasBacklog);
         listViewBacklog.setCellFactory(tareaListView -> new ListCell<Tarea>() {
 

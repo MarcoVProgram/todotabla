@@ -12,10 +12,10 @@ public class EstadosBDD {
     public static boolean insertar(Estado e) {
         boolean estado = false;
 
+        String sql = "INSERT INTO estado VALUES (?, ?)";
+
         try (Connection conexion = BDD.getConnection();
-             PreparedStatement stmnt = conexion.prepareStatement(
-                     "INSERT INTO estado VALUES (?, ?)"
-             )
+             PreparedStatement stmnt = conexion.prepareStatement(sql)
         ) {
             stmnt.setString(1, e.getNombre());
             stmnt.setString(2, e.getColor());
@@ -32,13 +32,12 @@ public class EstadosBDD {
         boolean estado = false;
 
         if (e != null) {
+            String sql = "UPDATE `todotabla`.`estado` " +
+                    "SET " +
+                    "`color` = ? " +
+                    "WHERE `nombre` = ?; ";
             try (Connection conexion = BDD.getConnection();
-                 PreparedStatement stmnt = conexion.prepareStatement(
-                         "UPDATE `todotabla`.`estado` " +
-                                 "SET " +
-                                 "`color` = ? " +
-                                 "WHERE `nombre` = ?; "
-                 )
+                 PreparedStatement stmnt = conexion.prepareStatement(sql)
             ) {
                 conexion.nativeSQL("START TRANSACTION;");
 
@@ -65,11 +64,10 @@ public class EstadosBDD {
         boolean estado = false;
 
         if (e != null) {
+            String sql = "DELETE FROM `todotabla`.`estado` " +
+                    "WHERE `nombre` = ?; ";
             try (Connection conexion = BDD.getConnection();
-                 PreparedStatement stmnt = conexion.prepareStatement(
-                         "DELETE FROM `todotabla`.`estado` " +
-                                 "WHERE `nombre` = ?; "
-                 )
+                 PreparedStatement stmnt = conexion.prepareStatement(sql)
             ) {
                 conexion.nativeSQL("START TRANSACTION;");
 
@@ -93,9 +91,10 @@ public class EstadosBDD {
     public static List<Estado> getEstados() {
         List<Estado> estados = new LinkedList<>();
 
+        String sql = "SELECT * FROM `todotabla`.`estado` ";
+
         try (Connection conexion = BDD.getConnection();
-             PreparedStatement stmnt = conexion.prepareStatement(
-                     "SELECT * FROM `todotabla`.`estado` ");
+             PreparedStatement stmnt = conexion.prepareStatement(sql);
              ResultSet rs = stmnt.executeQuery();
         ) {
 
@@ -114,9 +113,9 @@ public class EstadosBDD {
     public static Estado getEstado(String estadoNombre) {
         Estado estado = null;
 
+        String sql = "SELECT * FROM `todotabla`.`estado` WHERE nombre = ? ";
         try (Connection conexion = BDD.getConnection();
-             PreparedStatement stmnt = conexion.prepareStatement(
-                     "SELECT * FROM `todotabla`.`estado` WHERE nombre = ? ");
+             PreparedStatement stmnt = conexion.prepareStatement(sql);
         ) {
 
             stmnt.setString(1, estadoNombre);

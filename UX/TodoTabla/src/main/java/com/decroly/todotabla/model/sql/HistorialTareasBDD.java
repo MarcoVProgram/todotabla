@@ -16,10 +16,10 @@ public class HistorialTareasBDD {
         boolean estado = false;
 
         if (ht != null) {
+            String sql = "DELETE FROM historial_tareas WHERE id = ?";
             try (Connection conexion = BDD.getConnection();
-            PreparedStatement stmnt = conexion.prepareStatement(
-                "DELETE FROM historial_tareas WHERE id = ?"
-            )) {
+                 PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
                conexion.nativeSQL("START TRANSACTION;");
                stmnt.setInt(1, ht.getId());
 
@@ -40,9 +40,11 @@ public class HistorialTareasBDD {
     public static Map<Integer, HistorialTareas> getHistorialTareas() {
         Map<Integer, HistorialTareas> historialTareas = new LinkedHashMap<>();
 
+        String sql = "TABLE historial_tareas;";
+
         try (Connection conexion = BDD.getConnection();
-                Statement stmnt = conexion.createStatement()) {
-            ResultSet table = stmnt.executeQuery("TABLE historial_tareas;");
+                PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+            ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
                 HistorialTareas tarea = new HistorialTareas(table.getInt("id"),
@@ -64,8 +66,11 @@ public class HistorialTareasBDD {
     public static Map<Integer, HistorialTareas> getHistorialTareas(Tarea tarea_id) {
         Map<Integer, HistorialTareas> historialTareas = new LinkedHashMap<>();
 
+        String sql = "SELECT * FROM historial_tareas WHERE tarea_id = ?;";
+
         try (Connection conexion = BDD.getConnection();
-                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM historial_tareas WHERE tarea_id = ?;")) {
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
             stmnt.setInt(1, tarea_id.getId());
             ResultSet table = stmnt.executeQuery();
 
@@ -89,8 +94,10 @@ public class HistorialTareasBDD {
     public static HistorialTareas getHistorialTarea(int id) {
         HistorialTareas tareas = null;
 
+        String sql = "SELECT * FROM historial_tareas WHERE id = ?;";
+
         try (Connection conexion = BDD.getConnection();
-                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM historial_tareas WHERE id = ?;")) {
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 
