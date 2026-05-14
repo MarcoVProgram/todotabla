@@ -19,7 +19,10 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +66,22 @@ public class HelloController implements Initializable {
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            BDD.getConnection(true);
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
+            Connection x = BDD.getConnection();
+            x.close();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "No se ha podido conectar a la base de datos, saliendo", ButtonType.CLOSE);
+            alert.showAndWait();
+            Platform.exit();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "No se ha podido acceder a los archivos de configuracion, saliendo", ButtonType.CLOSE);
+            alert.showAndWait();
+            Platform.exit();
+        } catch (URISyntaxException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Ha habido un fallo al convertir URL a URI, saliendo", ButtonType.CLOSE);
+            alert.showAndWait();
+            Platform.exit();
+        } catch (ClassNotFoundException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "No se ha podido encontrar driver de JDBC, saliendo", ButtonType.CLOSE);
             alert.showAndWait();
             Platform.exit();
         }

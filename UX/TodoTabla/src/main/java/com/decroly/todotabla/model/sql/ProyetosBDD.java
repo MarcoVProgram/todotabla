@@ -12,7 +12,7 @@ public class ProyetosBDD {
     public static boolean insertar(Proyecto p){
         boolean estado = false;
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(
                      "INSERT INTO proyecto VALUES (NULL, ?, ?, NULL)"
              )
@@ -32,7 +32,7 @@ public class ProyetosBDD {
         boolean estado = false;
 
         if (p != null) {
-            try (Connection conexion = BDD.getConnection(false);
+            try (Connection conexion = BDD.getConnection();
                  PreparedStatement stmnt = conexion.prepareStatement(
                          "UPDATE `todotabla`.`proyecto` " +
                                  "SET " +
@@ -76,7 +76,8 @@ public class ProyetosBDD {
 
     public static boolean borrar(Proyecto p) {
         if (p != null) {
-            try (PreparedStatement stmnt = BDD.getConnection(false).prepareStatement("" +
+            try (Connection  conexion = BDD.getConnection();
+                    PreparedStatement stmnt = conexion.prepareStatement("" +
                     "DELETE FROM `todotabla`.`proyecto` " +
                     "WHERE id = ?;\n")
             ) {
@@ -93,7 +94,8 @@ public class ProyetosBDD {
     public static Map<Integer, Proyecto> getProyectos() {
         Map<Integer, Proyecto> proyectos = new LinkedHashMap<>();
 
-        try (Statement stmnt = BDD.getConnection(false).createStatement()) {
+        try (Connection conexion = BDD.getConnection();
+                Statement stmnt = conexion.createStatement()) {
             ResultSet table = stmnt.executeQuery("TABLE proyecto;");
 
             while (table.next()) {
@@ -116,7 +118,7 @@ public class ProyetosBDD {
     public static Proyecto getProyecto(int id) {
         Proyecto proyecto = null;
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM proyecto WHERE id = ?;")) {
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();

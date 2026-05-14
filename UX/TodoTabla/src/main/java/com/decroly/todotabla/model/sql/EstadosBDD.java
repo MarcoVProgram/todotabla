@@ -12,7 +12,7 @@ public class EstadosBDD {
     public static boolean insertar(Estado e) {
         boolean estado = false;
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(
                      "INSERT INTO estado VALUES (?, ?)"
              )
@@ -32,7 +32,7 @@ public class EstadosBDD {
         boolean estado = false;
 
         if (e != null) {
-            try (Connection conexion = BDD.getConnection(false);
+            try (Connection conexion = BDD.getConnection();
                  PreparedStatement stmnt = conexion.prepareStatement(
                          "UPDATE `todotabla`.`estado` " +
                                  "SET " +
@@ -65,7 +65,7 @@ public class EstadosBDD {
         boolean estado = false;
 
         if (e != null) {
-            try (Connection conexion = BDD.getConnection(false);
+            try (Connection conexion = BDD.getConnection();
                  PreparedStatement stmnt = conexion.prepareStatement(
                          "DELETE FROM `todotabla`.`estado` " +
                                  "WHERE `nombre` = ?; "
@@ -93,7 +93,7 @@ public class EstadosBDD {
     public static List<Estado> getEstados() {
         List<Estado> estados = new LinkedList<>();
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(
                      "SELECT * FROM `todotabla`.`estado` ");
              ResultSet rs = stmnt.executeQuery();
@@ -114,7 +114,7 @@ public class EstadosBDD {
     public static Estado getEstado(String estadoNombre) {
         Estado estado = null;
 
-        try (Connection conexion = BDD.getConnection(false);
+        try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(
                      "SELECT * FROM `todotabla`.`estado` WHERE nombre = ? ");
         ) {
