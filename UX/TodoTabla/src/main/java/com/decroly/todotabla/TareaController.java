@@ -40,6 +40,7 @@ public class TareaController implements Initializable {
 
     @FXML
     public ListView<Tarea> listViewTareas;
+    private ObservableList<Tarea> listaTareas;
 
 
 
@@ -48,7 +49,6 @@ public class TareaController implements Initializable {
     ObservableList<Tarea> obsTareas = FXCollections.observableList(tareas);
 
     public void initialize(URL url, ResourceBundle rb) {
-        actualizarTareas();
 
         ObservableList<Integer> prioridades = FXCollections.observableList(new LinkedList<>());
 
@@ -56,6 +56,29 @@ public class TareaController implements Initializable {
             prioridades.add(i);
         }
         comboBoxPrioridadTarea.setItems(prioridades);
+
+        listaTareas = FXCollections.observableList(new ArrayList<>(TareasBDD.getTareas().values()));
+
+        listViewTareas.setItems(listaTareas);
+        listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
+            @Override
+            protected void updateItem(Tarea tarea, boolean empty) {
+                super.updateItem(tarea, empty);
+
+                if (empty || tarea == null) {
+                    setGraphic(null);
+                } else {
+
+                    Label titulo = new Label(tarea.getNombre());
+                    titulo.getStyleClass().add("titulo-tarea");
+
+                    VBox card = new VBox(8, titulo);
+                    card.getStyleClass().add("kanban-list");
+
+                    setGraphic(card);
+                }
+            }
+        });
 
     }
 
