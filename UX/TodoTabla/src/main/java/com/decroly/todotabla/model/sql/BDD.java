@@ -12,7 +12,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class BDD {
-    private static Connection conexion = null;
+//    private static Connection conexion = null;
 
     private static String url;
     private static String user;
@@ -20,7 +20,8 @@ public class BDD {
 
     private static final URL configURL = BDD.class.getResource("config.dat");
 
-    private static synchronized Connection getConnection() throws IOException, SQLException, ClassNotFoundException, URISyntaxException {
+    //private
+    public static synchronized Connection getConnection() throws IOException, SQLException, ClassNotFoundException, URISyntaxException {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         if (configURL != null) {
@@ -34,16 +35,15 @@ public class BDD {
                 user = configReader.readLine();
                 password = configReader.readLine();
 
-                if (conexion == null) {
-                    conexion = DriverManager.getConnection(url, user, password);
-                }
-            } catch (IOException e) {
-                throw new IOException(e);
+//                if (conexion == null) {
+//                    conexion = DriverManager.getConnection(url, user, password);
+//                }
+                return DriverManager.getConnection(url, user, password);
             }
         }
-        return conexion;
+        return null;
     }
-
+/*
     public static Connection getConnection(boolean restart) throws Exception {
         try {
             if (conexion != null) {
@@ -59,5 +59,5 @@ public class BDD {
             // return null;
         }
         return conexion;
-    }
+    }*/
 }
