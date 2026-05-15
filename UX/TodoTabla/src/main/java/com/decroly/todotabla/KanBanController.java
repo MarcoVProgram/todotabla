@@ -227,7 +227,7 @@ public class KanBanController implements Initializable {
 //            listViewTareas.setItems(obsTareas);
 
             // Mostrar la ventana
-            ventanaSecundaria.show();
+            ventanaSecundaria.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -72,7 +72,7 @@ public class TareasBDD {
 
         if (t != null) {
 
-            String sql = "DELETE FROM usuario WHERE id = ?";
+            String sql = "DELETE FROM tarea WHERE id = ?";
 
             try (Connection conexion = BDD.getConnection();
                  PreparedStatement stmnt = conexion.prepareStatement(sql)) {
