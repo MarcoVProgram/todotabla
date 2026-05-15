@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="720.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaController">
+<BorderPane prefHeight="720.0" prefWidth="720.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaController">
    <top>
       <VBox>
          <children>
@@ -76,7 +76,7 @@
                         <HBox alignment="TOP_RIGHT" prefHeight="74.0" prefWidth="1342.0">
                            <children>
                               <Button onMouseClicked="#addTarea" styleClass="btnAdd" text="Add task" />
-                              <Button alignment="TOP_LEFT" styleClass="btnRemove" text="Remove task" />
+                              <Button alignment="TOP_LEFT" onAction="#removeTarea" styleClass="btnRemove" text="Remove task" />
                            </children>
                         </HBox>
                      </children>

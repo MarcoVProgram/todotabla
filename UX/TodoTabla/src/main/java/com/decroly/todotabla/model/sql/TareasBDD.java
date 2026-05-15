@@ -1,5 +1,7 @@
 package com.decroly.todotabla.model.sql;
 
+import com.decroly.todotabla.model.Estado;
+import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
 
 import java.sql.*;
@@ -10,10 +12,9 @@ public class TareasBDD {
     public static boolean insertar(Tarea t) {
         boolean estado = false;
 
+        String sql = "INSERT INTO tarea VALUES (NULL, ?, ?, ?, ?)";
         try (Connection conexion = BDD.getConnection();
-             PreparedStatement stmnt = conexion.prepareStatement(
-            "INSERT INTO tarea VALUES (NULL, ?, ?, ?, ?)"
-             )
+             PreparedStatement stmnt = conexion.prepareStatement(sql)
         ) {
             stmnt.setString(1, t.getNombre());
             stmnt.setInt(2, t.getPrioridad());
@@ -33,16 +34,16 @@ public class TareasBDD {
         boolean estado = false;
 
         if (t != null) {
+
+            String sql = "UPDATE `todotabla`.`tarea` " +
+                    "SET " +
+                    "`nombre` = ?, " +
+                    "`prioridad` = ?, " +
+                    "`estado` = ?, " +
+                    "WHERE `id` = ?; ";
+
             try (Connection conexion = BDD.getConnection();
-                 PreparedStatement stmnt = conexion.prepareStatement(
-                         "UPDATE `todotabla`.`tarea` " +
-                                 "SET " +
-                                 "`nombre` = ?, " +
-                                 "`prioridad` = ?, " +
-                                 "`estado` = ?, " +
-                                 "WHERE `id` = ?; "
-                 )
-            ) {
+                 PreparedStatement stmnt = conexion.prepareStatement(sql)) {
                 conexion.nativeSQL("START TRANSACTION;");
 
                 stmnt.setString(1, t.getNombre());
@@ -70,10 +71,11 @@ public class TareasBDD {
         boolean estado = false;
 
         if (t != null) {
+
+            String sql = "DELETE FROM tarea WHERE id = ?";
+
             try (Connection conexion = BDD.getConnection();
-            PreparedStatement stmnt = conexion.prepareStatement(
-                "DELETE FROM usuario WHERE id = ?"
-            )) {
+                 PreparedStatement stmnt = conexion.prepareStatement(sql)) {
                conexion.nativeSQL("START TRANSACTION;");
                stmnt.setInt(1, t.getId());
 
@@ -94,9 +96,75 @@ public class TareasBDD {
     public static Map<Integer, Tarea> getTareas() {
         Map<Integer, Tarea> tareas = new LinkedHashMap<>();
 
+        String sql = "TABLE tarea";
+
         try (Connection conexion = BDD.getConnection();
-             Statement stmnt = conexion.createStatement()) {
-            ResultSet table = stmnt.executeQuery("TABLE tarea;");
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                Tarea tarea = new Tarea(table.getInt("id"),
+                        table.getString("nombre"),
+                        table.getInt("prioridad"),
+                        EstadosBDD.getEstado(table.getString("estado")),
+                        ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))
+                );
+
+
+                tareas.put(tarea.getId(), tarea);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return tareas;
+    }
+
+    public static Map<Integer, Tarea> getTareas(Estado idEstado) {
+        Map<Integer, Tarea> tareas = new LinkedHashMap<>();
+
+        String sql = "SELECT * FROM tarea WHERE estado = ?;";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            stmnt.setString(1, idEstado.getNombre());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                Tarea tarea = new Tarea(table.getInt("id"),
+                        table.getString("nombre"),
+                        table.getInt("prioridad"),
+                        EstadosBDD.getEstado(table.getString("estado")),
+                        ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))
+                );
+
+
+                tareas.put(tarea.getId(), tarea);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return tareas;
+    }
+
+    public static Map<Integer, Tarea> getTareas(Estado idEstado, Proyecto idProyecto) {
+        Map<Integer, Tarea> tareas = new LinkedHashMap<>();
+
+        String sql = "SELECT * FROM tarea WHERE estado = ? AND idProyecto = ?;";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            stmnt.setString(1, idEstado.getNombre());
+            stmnt.setInt(2, idProyecto.getId());
+            ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
                 Tarea tarea = new Tarea(table.getInt("id"),
@@ -121,8 +189,11 @@ public class TareasBDD {
     public static Tarea getTarea(int id) {
         Tarea tarea = null;
 
+        String sql = "SELECT * FROM tarea WHERE id = ?;";
+
         try (Connection conexion = BDD.getConnection();
-                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM tarea WHERE id = ?;")) {
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 
