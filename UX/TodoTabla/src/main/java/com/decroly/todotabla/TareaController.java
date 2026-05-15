@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -57,7 +58,12 @@ public class TareaController implements Initializable {
         }
         comboBoxPrioridadTarea.setItems(prioridades);
 
-        listaTareas = FXCollections.observableList(new ArrayList<>(TareasBDD.getTareas().values()));
+        listarTareas();
+
+    }
+
+    private void listarTareas() {
+        listaTareas = FXCollections.observableList(new ArrayList<>(TareasBDD.getTareas().values())); // No puedo filtrar las tareas por proyecto
 
         listViewTareas.setItems(listaTareas);
         listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
@@ -79,7 +85,6 @@ public class TareaController implements Initializable {
                 }
             }
         });
-
     }
 
     private void actualizarTareas() {
@@ -98,10 +103,11 @@ public class TareaController implements Initializable {
         String nombre = nombreTarea.getText();
         int prioridad = comboBoxPrioridadTarea.getSelectionModel().getSelectedItem();
 
-        //valores extra necesarios // TODO cambiar esto paraa seleccionar otros proyectos
+        //valores extra necesarios // TODO cambiar esto para seleccionar otros proyectos
         Proyecto idProyecto = ProyetosBDD.getProyecto(1);
 
-        boolean insertarExito = TareasBDD.insertar(new Tarea(nombre, prioridad, EstadosBDD.getEstado("Backlog"), ProyetosBDD.getProyecto(1)));
+        boolean insertarExito = TareasBDD.insertar(new Tarea(nombre, prioridad, 
+                EstadosBDD.getEstado("Backlog"), ProyetosBDD.getProyecto(1)));
         if (insertarExito) {
             this.actualizarTareas();
         }
@@ -113,4 +119,19 @@ public class TareaController implements Initializable {
         return added;
     }
 
+    @FXML
+    public void removeTarea(ActionEvent event) {
+        boolean estado = false;
+        ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
+        
+        for (Tarea t: listaDeTareas) {
+            estado = TareasBDD.borrar(t);
+        }
+
+        if (estado) {
+            listarTareas();
+        } else {
+            (new Alert(Alert.AlertType.WARNING, "No se ha podido borrar", ButtonType.OK)).showAndWait();
+        }
+    }
 }
