@@ -14,10 +14,10 @@ public class AsignacionesBDD {
         public static boolean insertar(Asignacion i) {
         boolean estado = false;
 
+        String sql = "INSERT INTO asignacion VALUES (NULL, ?, ?, ?, NULL)";
+
         try (Connection conexion = BDD.getConnection();
-             PreparedStatement stmnt = conexion.prepareStatement(
-            "INSERT INTO asignacion VALUES (NULL, ?, ?, ?, NULL)"
-             )
+             PreparedStatement stmnt = conexion.prepareStatement(sql)
         ) {
             stmnt.setInt(1, i.getIdUsuario().getId());
             stmnt.setInt(2, i.getIdTarea().getId());
@@ -36,18 +36,18 @@ public class AsignacionesBDD {
         boolean estado = false;
 
         if (i != null) {
+            String sql = "UPDATE `todotabla`.`asignacion` " +
+                    "SET " +
+                    "`fecha_fin` = ? " +
+                    "WHERE `id` = ?";
+
             try (Connection conexion = BDD.getConnection();
-                 PreparedStatement stmnt = conexion.prepareStatement(
-                         "UPDATE `todotabla`.`asignacion` " +
-                                 "SET " +
-                                 "`fecha_fin` = ? " +
-                                 "WHERE `id` = ?"
-                 )
+                 PreparedStatement stmnt = conexion.prepareStatement(sql)
             ) {
+
                 conexion.nativeSQL("START TRANSACTION;");
 
                 stmnt.setDate(1, Date.valueOf(i.getFechaFin()));
-
                 stmnt.setInt(2, i.getId());
 
                 estado = (stmnt.executeUpdate() == 1);
@@ -80,10 +80,10 @@ public class AsignacionesBDD {
         boolean estado = false;
 
         if (i != null) {
+            String sql = "DELETE FROM asignacion WHERE id = ?";
             try (Connection conexion = BDD.getConnection();
-            PreparedStatement stmnt = conexion.prepareStatement(
-                "DELETE FROM asignacion WHERE id = ?"
-            )) {
+                 PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
                conexion.nativeSQL("START TRANSACTION;");
                stmnt.setInt(1, i.getId());
 
@@ -104,9 +104,12 @@ public class AsignacionesBDD {
     public static Map<Integer, Asignacion> getAsignaciones() {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
 
+        String sql = "TABLE asignacion";
+
         try (Connection conexion = BDD.getConnection();
-                Statement stmnt = conexion.createStatement()) {
-            ResultSet table = stmnt.executeQuery("TABLE asignacion");
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
                 Asignacion asignacion = new Asignacion(
@@ -129,9 +132,12 @@ public class AsignacionesBDD {
     
     public static Map<Integer, Asignacion> getAsignaciones(Tarea tarea_ID) {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
-        
+
+        String sql = "SELECT * FROM asignacion WHERE tarea_ID = ?;";
+
         try (Connection conexion = BDD.getConnection();
-                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM asignacion WHERE tarea_ID = ?;")) {
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
             stmnt.setInt(1, tarea_ID.getId());
             ResultSet table = stmnt.executeQuery();
 
@@ -156,9 +162,12 @@ public class AsignacionesBDD {
     
     public static Map<Integer, Asignacion> getAsignacions(Usuario usuario_ID) {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
-        
+
+        String sql = "SELECT * FROM asignacion WHERE usuario_ID = ?;";
+
         try (Connection conexion = BDD.getConnection();
-                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM asignacion WHERE usuario_ID = ?;")) {
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
             stmnt.setInt(1, usuario_ID.getId());
             ResultSet table = stmnt.executeQuery();
 
@@ -184,8 +193,11 @@ public class AsignacionesBDD {
     public static Asignacion getAsignacion(int id) {
         Asignacion asignacion = null;
 
+        String sql = "SELECT * FROM asignacion WHERE id = ?;";
+
         try (Connection conexion = BDD.getConnection();
-                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM asignacion WHERE id = ?;")) {
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
             stmnt.setInt(1, id);
             ResultSet table = stmnt.executeQuery();
 
