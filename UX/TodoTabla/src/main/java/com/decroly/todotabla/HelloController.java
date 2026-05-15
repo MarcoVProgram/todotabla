@@ -53,6 +53,27 @@ public class HelloController implements Initializable {
     @FXML
     private Node root;
 
+    @FXML
+    private ListView<Proyecto> listViewProyectos;
+        List<Proyecto> proyectoList = new ArrayList<>();
+        ObservableList<Proyecto> obsProyectoList = FXCollections.observableList(proyectoList);
+
+    public ListView<Proyecto> getListViewProyectos() {
+        return listViewProyectos;
+    }
+
+    @FXML
+    private ComboBox<opcionesBase> comboBoxOpcion;
+        List<opcionesBase> opcionesBaseList = new ArrayList<>();
+
+        ObservableList<opcionesBase> obsOpcionesBase = FXCollections.observableList(opcionesBaseList);
+
+    public ComboBox<opcionesBase> getComboBoxOpcion() {
+        return comboBoxOpcion;
+    }
+
+
+
     //VARIABLES AUXILIARES
     private static Stage ventanaSecundaria;
 
@@ -85,6 +106,13 @@ public class HelloController implements Initializable {
             alert.showAndWait();
             Platform.exit();
         }
+
+
+        comboBoxOpcion.getItems().addAll(opcionesBase.values());
+        listViewProyectos.setItems(obsProyectoList);
+
+
+
     }
 
 
@@ -93,5 +121,13 @@ public class HelloController implements Initializable {
     private void abrirVentanaPrincipal() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/kanban-view.fxml");
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

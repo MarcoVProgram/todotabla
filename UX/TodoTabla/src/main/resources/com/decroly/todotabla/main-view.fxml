@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="424" prefWidth="600.0" styleClass="root-pane" stylesheets="@style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/26">
+<AnchorPane prefHeight="424" prefWidth="700.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
 
    <VBox spacing="18" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="18">
 
@@ -22,9 +23,12 @@
 
             <Label styleClass="search-icon" text="🔍" />
 
-            <TextField styleClass="search-field" text="is:open" HBox.hgrow="ALWAYS" />
-
-            <Button styleClass="clear-button" text="✕" />
+            <TextField editable="false" styleClass="search-field" text="is:open" HBox.hgrow="ALWAYS" />
+            <ImageView fx:id="changeImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/change.png" />
+               </image>
+            </ImageView>
          </HBox>
       </HBox>
 
@@ -61,7 +65,7 @@
                <HBox alignment="CENTER_LEFT" spacing="10" />
             </VBox>
             <ListView fx:id="listViewProyectos" prefHeight="88.0" prefWidth="448.0" />
-            <ComboBox prefHeight="23.0" prefWidth="66.0" promptText="..." />
+            <ComboBox fx:id="comboBoxOpcion" prefHeight="23.0" prefWidth="135.0" promptText="..." />
 
             <Region HBox.hgrow="ALWAYS" />
          </HBox>
