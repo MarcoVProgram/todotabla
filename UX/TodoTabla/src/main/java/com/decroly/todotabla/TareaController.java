@@ -85,6 +85,7 @@ public class TareaController implements Initializable {
                 }
             }
         });
+
     }
 
     private void actualizarTareas() {
@@ -96,7 +97,7 @@ public class TareaController implements Initializable {
 
     //--------AGREGAR TAREA-------------
     @FXML
-    private boolean addTarea(){
+    private void addTarea(){
         boolean added = false;
 
         //obtener valores campos
@@ -115,8 +116,29 @@ public class TareaController implements Initializable {
             (new Alert(Alert.AlertType.ERROR,"No se pudo añadir", ButtonType.OK)).show();
         }
 
+        actualizarTareas();
+    }
 
-        return added;
+    @FXML
+    public void modTarea(ActionEvent event) { // TODO terminar
+
+        //obtener valores campos
+        String nombre = nombreTarea.getText();
+        int prioridad = comboBoxPrioridadTarea.getSelectionModel().getSelectedItem();
+
+        //valores extra necesarios // TODO cambiar esto para seleccionar otros proyectos
+        Proyecto idProyecto = ProyetosBDD.getProyecto(1);
+
+        boolean insertarExito = TareasBDD.insertar(new Tarea(nombre, prioridad,
+                EstadosBDD.getEstado("Backlog"), ProyetosBDD.getProyecto(1)));
+        if (insertarExito) {
+            this.actualizarTareas();
+        }
+        else {
+            (new Alert(Alert.AlertType.ERROR,"No se pudo añadir", ButtonType.OK)).show();
+        }
+
+        actualizarTareas();
     }
 
     @FXML

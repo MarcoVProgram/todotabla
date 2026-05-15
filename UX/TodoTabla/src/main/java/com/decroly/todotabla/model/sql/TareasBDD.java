@@ -186,6 +186,37 @@ public class TareasBDD {
         return tareas;
     }
 
+    public static Map<Integer, Tarea> getTareas(Proyecto idProyecto) {
+        Map<Integer, Tarea> tareas = new LinkedHashMap<>();
+
+        String sql = "SELECT * FROM tarea WHERE idProyecto = ?;";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            stmnt.setInt(1, idProyecto.getId());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                Tarea tarea = new Tarea(table.getInt("id"),
+                        table.getString("nombre"),
+                        table.getInt("prioridad"),
+                        EstadosBDD.getEstado(table.getString("estado")),
+                        ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))
+                );
+
+
+                tareas.put(tarea.getId(), tarea);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return tareas;
+    }
+
     public static Tarea getTarea(int id) {
         Tarea tarea = null;
 

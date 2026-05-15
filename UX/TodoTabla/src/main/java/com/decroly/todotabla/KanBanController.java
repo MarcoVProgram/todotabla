@@ -7,6 +7,7 @@ import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.Navigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -232,5 +233,11 @@ public class KanBanController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @FXML
+    public void editarTarea(ActionEvent event) {
+        System.out.println("Caca \n");
     }
 }
