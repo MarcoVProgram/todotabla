@@ -150,7 +150,7 @@
 }
 
 .kanban-list .list-cell {
-    -fx-background-color: #2b2d31;
+    -fx-background-color: #696c71;
     -fx-background-radius: 12;
     -fx-padding: 15;
     -fx-text-fill: white;
@@ -167,7 +167,7 @@
 }
 
 .kanban-list .list-cell:hover {
-    -fx-background-color: #36393f;
+    -fx-background-color: #b0b0b1;
 }
 
 .kanban-list .list-cell:selected {
