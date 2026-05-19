@@ -3,6 +3,7 @@ package com.decroly.todotabla;
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.BDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
+import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
 import javafx.animation.PauseTransition;
@@ -152,7 +153,7 @@ public class HelloController implements Initializable {
                 case VER_KANBAN -> {
                     if(listViewProyectos.getSelectionModel().getSelectedItem() != null){
                         try {
-                            KanBanController.proyectoSeleccionado = listViewProyectos.getSelectionModel().getSelectedItem();
+                            EstadoPrograma.getInstance().setProyectoActivo(listViewProyectos.getSelectionModel().getSelectedItem());
                             abrirVentanaPrincipal();
                         } catch (IOException e) {
                             showAlert("Ocurrió un error inesperado y no se puede acceder al proyecto", "Cagaste");

@@ -4,6 +4,7 @@ import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -64,7 +65,7 @@ public class KanBanController implements Initializable {
 
     private Stage ventanaSecundaria = getVentanaSecundaria();
 
-    public static Proyecto proyectoSeleccionado;
+    private Proyecto proyectoSeleccionado;
 
     private static Stage getVentanaSecundaria() {
         return HelloController.getVentanaSecundaria();
@@ -73,6 +74,7 @@ public class KanBanController implements Initializable {
 
     public void initialize(URL url, ResourceBundle rb) {
         List<Estado> estados = EstadosBDD.getEstados();
+        proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
         for (Estado estado : estados) {
             switch (estado.getNombre()) {
                 case "Backlog":
