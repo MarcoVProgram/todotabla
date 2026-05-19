@@ -2,8 +2,11 @@ package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.BDD;
+import com.decroly.todotabla.model.sql.ProyetosBDD;
+import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,33 +20,37 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.decroly.todotabla.model.sql.*;
+
 public class HelloController implements Initializable {
     //lista miembros
 
-    List<Usuario> usuarios = new ArrayList<>();
+    private List<Usuario> usuarios = new ArrayList<>();
     ObservableList<Usuario> obsUsuarios = FXCollections.observableList(usuarios);
 
     //lista tareas
-    List<Tarea> tareas = new ArrayList<>();
+    private List<Tarea> tareas = new ArrayList<>();
     ObservableList<Tarea> obsTareas = FXCollections.observableList(tareas);
 
-    List<Usuario> miembros = new ArrayList<>();
+    private List<Usuario> miembros = new ArrayList<>();
     ObservableList<Usuario> obsMiembros = FXCollections.observableList(miembros);
 
     
     //lista proyectos
-    List<Proyecto> proyectos = new ArrayList<>();
+    private List<Proyecto> proyectos = new ArrayList<>();
     ObservableList<Proyecto> obsProyectos = FXCollections.observableList(proyectos);
     
     //PESTAÑA INICIO
@@ -53,6 +60,27 @@ public class HelloController implements Initializable {
     @FXML
     private Node root;
 
+    @FXML
+    private ListView<Proyecto> listViewProyectos;
+        List<Proyecto> proyectoList = new ArrayList<>();
+        ObservableList<Proyecto> obsProyectoList = FXCollections.observableList(proyectoList);
+
+    public ListView<Proyecto> getListViewProyectos() {
+        return listViewProyectos;
+    }
+
+    @FXML
+    private ComboBox<opcionesBase> comboBoxOpcion;
+        List<opcionesBase> opcionesBaseList = new ArrayList<>();
+
+        ObservableList<opcionesBase> obsOpcionesBase = FXCollections.observableList(opcionesBaseList);
+
+    public ComboBox<opcionesBase> getComboBoxOpcion() {
+        return comboBoxOpcion;
+    }
+
+
+
     //VARIABLES AUXILIARES
     private static Stage ventanaSecundaria;
 
@@ -60,8 +88,7 @@ public class HelloController implements Initializable {
         return ventanaSecundaria;
     }
 
-    //FORMATTER
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
 
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
@@ -85,6 +112,21 @@ public class HelloController implements Initializable {
             alert.showAndWait();
             Platform.exit();
         }
+
+
+        comboBoxOpcion.getItems().addAll(opcionesBase.values());
+        listViewProyectos.setItems(obsProyectoList);
+
+        obsProyectoList.addAll(ProyetosBDD.getProyectos().values());
+
+
+//        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+//
+//        delay.setOnFinished(event -> {
+//            comprobarProyecto();
+//        });
+//
+//        delay.play();
     }
 
 
@@ -93,5 +135,39 @@ public class HelloController implements Initializable {
     private void abrirVentanaPrincipal() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/kanban-view.fxml");
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+    @FXML
+    private void comprobarProyecto(){
+        if(comboBoxOpcion.getSelectionModel().getSelectedItem() != null){
+            switch (comboBoxOpcion.getSelectionModel().getSelectedItem()){
+                case VER_KANBAN -> {
+                    if(listViewProyectos.getSelectionModel().getSelectedItem() != null){
+                        try {
+                            EstadoPrograma.getInstance().setProyectoActivo(listViewProyectos.getSelectionModel().getSelectedItem());
+                            abrirVentanaPrincipal();
+                        } catch (IOException e) {
+                            showAlert("Ocurrió un error inesperado y no se puede acceder al proyecto", "Cagaste");
+                        }
+                    }
+                }
+                case BORRAR_PROYECTO -> {
+                    if(listViewProyectos.getSelectionModel().getSelectedItem() != null){
+                        int id = listViewProyectos.getSelectionModel().getSelectedItem().getId();
+
+                        obsProyectoList.remove(id);
+                    }
+                }
+            }
+        }
     }
 }

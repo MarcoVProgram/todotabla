@@ -1,73 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1000.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
-   <top>
-      <VBox />
-   </top>
-   <center>
-      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" styleClass="scroll" vbarPolicy="NEVER">
-         <content>
-            <HBox alignment="CENTER" spacing="24" styleClass="board">
-               <children>
-                  <VBox alignment="CENTER" prefHeight="758.0" prefWidth="124.0" spacing="100.0">
-                     <children>
-                        <Button fx:id="panelKanbanBtn" mnemonicParsing="false" onMouseClicked="#abrirVentanaPrincipal" prefHeight="60.0" prefWidth="120.0" styleClass="btn" text="Panel kanban" />
-                     </children>
-                  </VBox>
-                  <VBox alignment="CENTER" prefHeight="758.0" prefWidth="142.0">
-                     <children>
-                        <Label alignment="CENTER" contentDisplay="TOP" lineSpacing="20.0" minHeight="28.0" minWidth="136.0" prefHeight="28.0" prefWidth="136.0" styleClass="logo" text="TodoTabla" textAlignment="CENTER">
-                           <font>
-                              <Font size="27.0" />
-                           </font>
-                           <effect>
-                              <Blend />
-                           </effect>
-                        </Label>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" style="-fx-translate-z: -10;">
-                           <image>
-                              <Image url="@images/logo.png" />
-                           </image>
-                        </ImageView>
-<!--                        <ImageView fitHeight="167.0" fitWidth="337.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                           <image>-->
-<!--                              <Image url="" />-->
-<!--                           </image>-->
-<!--                        </ImageView>-->
-                     </children>
-                  </VBox>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="100.0">
-                     <children>
-                        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="109.0" styleClass="btn" text="Ver Proyectos">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin></Button>
-                        <AnchorPane prefHeight="47.0" prefWidth="120.0">
-                           <children>
-                              <Label text="Proyecto Seleccionado" />
-                           </children>
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </AnchorPane>
-                     </children>
-                  </VBox>
-               </children>
+<AnchorPane fx:id="root" prefHeight="424" prefWidth="700.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
+
+   <VBox spacing="18" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="18">
+
+      <!-- TOP BAR -->
+      <HBox alignment="CENTER_LEFT" spacing="14">
+
+         <!-- SEARCH -->
+         <HBox alignment="CENTER_LEFT" prefHeight="42" spacing="10" styleClass="search-container" HBox.hgrow="ALWAYS">
+
+            <Label styleClass="search-icon" text="🔍" />
+
+            <TextField editable="false" styleClass="search-field" text="is:open" HBox.hgrow="ALWAYS" />
+            <ImageView fx:id="changeImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/change.png" />
+               </image>
+            </ImageView>
+         </HBox>
+      </HBox>
+
+      <!-- PANEL -->
+      <VBox spacing="0" styleClass="panel-container">
+
+         <!-- HEADER -->
+         <HBox alignment="CENTER_LEFT" prefHeight="64" spacing="20" styleClass="panel-header">
+
+            <HBox alignment="CENTER_LEFT" spacing="6">
+
+               <Label styleClass="header-title" text="Open" />
+
+               <Label styleClass="badge-active" text="1" />
             </HBox>
-         </content>
-      </ScrollPane>
-   </center>
-</BorderPane>
+
+            <HBox alignment="CENTER_LEFT" spacing="6">
+
+               <Label styleClass="header-subtitle" text="Closed" />
+
+               <Label styleClass="badge-inactive" text="0" />
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS" />
+         </HBox>
+
+         <!-- ISSUE -->
+         <HBox alignment="CENTER_LEFT" prefHeight="88" spacing="14" styleClass="issue-item">
+
+            <Label styleClass="issue-icon" text="⊞" />
+
+            <VBox alignment="CENTER" spacing="6">
+
+               <HBox alignment="CENTER_LEFT" spacing="10" />
+            </VBox>
+            <ListView fx:id="listViewProyectos" prefHeight="88.0" prefWidth="448.0" />
+            <ComboBox fx:id="comboBoxOpcion" onMouseClicked="#comprobarProyecto" prefHeight="23.0" prefWidth="135.0" promptText="..." />
+
+            <Region HBox.hgrow="ALWAYS" />
+         </HBox>
+
+      </VBox>
+
+   </VBox>
+
+</AnchorPane>
