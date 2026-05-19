@@ -37,19 +37,19 @@ import com.decroly.todotabla.model.sql.*;
 public class HelloController implements Initializable {
     //lista miembros
 
-    List<Usuario> usuarios = new ArrayList<>();
+    private List<Usuario> usuarios = new ArrayList<>();
     ObservableList<Usuario> obsUsuarios = FXCollections.observableList(usuarios);
 
     //lista tareas
-    List<Tarea> tareas = new ArrayList<>();
+    private List<Tarea> tareas = new ArrayList<>();
     ObservableList<Tarea> obsTareas = FXCollections.observableList(tareas);
 
-    List<Usuario> miembros = new ArrayList<>();
+    private List<Usuario> miembros = new ArrayList<>();
     ObservableList<Usuario> obsMiembros = FXCollections.observableList(miembros);
 
     
     //lista proyectos
-    List<Proyecto> proyectos = new ArrayList<>();
+    private List<Proyecto> proyectos = new ArrayList<>();
     ObservableList<Proyecto> obsProyectos = FXCollections.observableList(proyectos);
     
     //PESTAÑA INICIO
@@ -87,10 +87,6 @@ public class HelloController implements Initializable {
         return ventanaSecundaria;
     }
 
-    //FORMATTER
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-    Proyecto p = new Proyecto(1, "", LocalDate.now(), LocalDate.of(9999, 1, 1));
 
 
     @FXML
@@ -120,8 +116,7 @@ public class HelloController implements Initializable {
         comboBoxOpcion.getItems().addAll(opcionesBase.values());
         listViewProyectos.setItems(obsProyectoList);
 
-        ProyetosBDD.insertar(p);
-        obsProyectoList.add(p);
+        obsProyectoList.addAll(ProyetosBDD.getProyectos().values());
 
 
 //        PauseTransition delay = new PauseTransition(Duration.seconds(2));
@@ -157,6 +152,7 @@ public class HelloController implements Initializable {
                 case VER_KANBAN -> {
                     if(listViewProyectos.getSelectionModel().getSelectedItem() != null){
                         try {
+                            KanBanController.proyectoSeleccionado = listViewProyectos.getSelectionModel().getSelectedItem();
                             abrirVentanaPrincipal();
                         } catch (IOException e) {
                             showAlert("Ocurrió un error inesperado y no se puede acceder al proyecto", "Cagaste");

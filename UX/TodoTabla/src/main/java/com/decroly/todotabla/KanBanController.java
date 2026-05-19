@@ -64,6 +64,8 @@ public class KanBanController implements Initializable {
 
     private Stage ventanaSecundaria = getVentanaSecundaria();
 
+    public static Proyecto proyectoSeleccionado;
+
     private static Stage getVentanaSecundaria() {
         return HelloController.getVentanaSecundaria();
     }
@@ -75,23 +77,23 @@ public class KanBanController implements Initializable {
             switch (estado.getNombre()) {
                 case "Backlog":
                     tareasBacklog.clear();
-                    tareasBacklog.addAll(TareasBDD.getTareas(estado).values());
+                    tareasBacklog.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     break;
                 case "InProgress":
                     tareasInProgress.clear();
-                    tareasInProgress.addAll(TareasBDD.getTareas(estado).values());
+                    tareasInProgress.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     break;
                 case "Ready":
                     tareasReady.clear();
-                    tareasReady.addAll(TareasBDD.getTareas(estado).values());
+                    tareasReady.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     break;
                 case "InReview":
                     tareasInReview.clear();
-                    tareasInReview.addAll(TareasBDD.getTareas(estado).values());
+                    tareasInReview.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     break;
                 case "Done":
                     tareasDone.clear();
-                    tareasDone.addAll(TareasBDD.getTareas(estado).values());
+                    tareasDone.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     break;
                 default:
                     // TODO nuevos estados
@@ -101,6 +103,52 @@ public class KanBanController implements Initializable {
 
         listViewBacklog.setItems(obsTareasBacklog);
         listViewBacklog.setCellFactory(tareaListView -> new ListCell<Tarea>() {
+            @Override
+            protected void updateItem(Tarea tarea, boolean empty) {
+                super.updateItem(tarea, empty);
+
+                if (empty || tarea == null) {
+                    setGraphic(null);
+
+                } else {
+                    // Título
+                    Label titulo = new Label(tarea.getNombre());
+                    titulo.getStyleClass().add("titulo-tarea");
+
+                    // Prioridad
+                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
+
+                    // Imagen integrante
+                    ImageView avatar = new ImageView(
+                            new Image(
+                                    HelloApplication.class
+                                            .getResource("/com/decroly/todotabla/images/user.png")
+                                            .toExternalForm()
+                            )
+                    );
+
+                    avatar.setFitWidth(40);
+                    avatar.setFitHeight(40);
+
+                    // Hacerla circular
+                    Circle clip = new Circle(20, 20, 20);
+                    avatar.setClip(clip);
+
+                    // Parte superior de la card
+                    HBox top = new HBox(10, avatar, titulo);
+
+                    // Card completa
+                    VBox card = new VBox(10, top, prioridad);
+
+                    card.getStyleClass().add("task-card");
+
+                    setGraphic(card);
+                }
+            }
+        });
+
+        listViewReady.setItems(obsTareasReady);
+        listViewReady.setCellFactory(tareaListView -> new ListCell<Tarea>() {
             @Override
             protected void updateItem(Tarea tarea, boolean empty) {
                 super.updateItem(tarea, empty);
