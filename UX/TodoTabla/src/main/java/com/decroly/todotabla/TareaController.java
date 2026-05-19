@@ -121,7 +121,8 @@ public class TareaController implements Initializable {
     }
 
     @FXML
-    public void modTarea(ActionEvent event) { // TODO terminar
+    public void modTarea(ActionEvent event) {
+        boolean actualizarExito = true;
 
         //obtener valores campos
         String nombre = nombreTarea.getText();
@@ -130,16 +131,22 @@ public class TareaController implements Initializable {
         //valores extra necesarios // TODO cambiar esto para seleccionar otros proyectos
         Proyecto idProyecto = ProyetosBDD.getProyecto(1);
 
-        boolean insertarExito = TareasBDD.insertar(new Tarea(nombre, prioridad,
-                EstadosBDD.getEstado("Backlog"), ProyetosBDD.getProyecto(1)));
-        if (insertarExito) {
+        ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
+
+        for (Tarea tarea : listaDeTareas) {
+            tarea.setNombre(nombre);
+            tarea.setPrioridad(prioridad);
+
+            actualizarExito = actualizarExito && TareasBDD.actualizar(tarea);
+        }
+        
+
+        if (actualizarExito) {
             this.actualizarTareas();
         }
         else {
-            (new Alert(Alert.AlertType.ERROR,"No se pudo añadir", ButtonType.OK)).show();
+            (new Alert(Alert.AlertType.ERROR,"No se pudo editar", ButtonType.OK)).show();
         }
-
-        actualizarTareas();
     }
 
     @FXML
