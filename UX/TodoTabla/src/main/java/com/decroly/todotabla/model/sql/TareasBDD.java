@@ -39,7 +39,7 @@ public class TareasBDD {
                     "SET " +
                     "`nombre` = ?, " +
                     "`prioridad` = ?, " +
-                    "`estado` = ?, " +
+                    "`estado` = ? " +
                     "WHERE `id` = ?; ";
 
             try (Connection conexion = BDD.getConnection();
