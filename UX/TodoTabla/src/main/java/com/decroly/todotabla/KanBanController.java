@@ -239,7 +239,11 @@ public class KanBanController implements Initializable {
 
 
     @FXML
-    public void editarTarea(ActionEvent event) {
-        System.out.println("Caca \n");
+    public void buscarTarea(ActionEvent event) {
+        String name = ""; // Señalar barra de busqueda
+        obsTareasReady.addAll(TareasBDD.getTarea(name));
+
     }
+
+
 }

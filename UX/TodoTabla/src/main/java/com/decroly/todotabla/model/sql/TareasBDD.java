@@ -5,6 +5,7 @@ import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
 
 import java.sql.*;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -241,5 +242,32 @@ public class TareasBDD {
         }
 
         return tarea;
+    }
+
+    public static HashSet<Tarea> getTarea(String nombre, Proyecto p) {
+        HashSet<Tarea> tareas = null;
+
+        String sql = "SELECT * FROM tarea WHERE nombre LIKE ? AND proyecto_ID = ?;";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            stmnt.setString(1, "%"+nombre+"%");
+            stmnt.setInt(2, p.getId());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                tareas.add(new Tarea(table.getInt("id"),
+                        table.getString("nombre"),
+                        table.getInt("prioridad"),
+                        EstadosBDD.getEstado(table.getString("estado")),
+                        ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))));
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return tareas;
     }
 }
