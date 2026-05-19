@@ -1,7 +1,7 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Estado;
-import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.Navigator;
@@ -15,8 +15,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -54,6 +57,9 @@ public class KanBanController implements Initializable {
     private ListView<Tarea> listViewDone;
     List<Tarea> tareasDone = new ArrayList<>();
     ObservableList<Tarea> obsTareasDone = FXCollections.observableList(tareasDone);
+    
+    List<Integrante> integrantes = new ArrayList<>();
+    ObservableList<Integrante> obsIntegrantes = FXCollections.observableList(integrantes);
 
 
     private Stage ventanaSecundaria = getVentanaSecundaria();
@@ -95,22 +101,44 @@ public class KanBanController implements Initializable {
 
         listViewBacklog.setItems(obsTareasBacklog);
         listViewBacklog.setCellFactory(tareaListView -> new ListCell<Tarea>() {
-
             @Override
             protected void updateItem(Tarea tarea, boolean empty) {
                 super.updateItem(tarea, empty);
 
                 if (empty || tarea == null) {
                     setGraphic(null);
-                } else {
 
+                } else {
+                    // Título
                     Label titulo = new Label(tarea.getNombre());
                     titulo.getStyleClass().add("titulo-tarea");
 
+                    // Prioridad
                     Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
 
-                    VBox card = new VBox(8, titulo, prioridad);
-                    card.getStyleClass().add("kanban-list");
+                    // Imagen integrante
+                    ImageView avatar = new ImageView(
+                            new Image(
+                                    HelloApplication.class
+                                            .getResource("/com/decroly/todotabla/images/user.png")
+                                            .toExternalForm()
+                            )
+                    );
+
+                    avatar.setFitWidth(40);
+                    avatar.setFitHeight(40);
+
+                    // Hacerla circular
+                    Circle clip = new Circle(20, 20, 20);
+                    avatar.setClip(clip);
+
+                    // Parte superior de la card
+                    HBox top = new HBox(10, avatar, titulo);
+
+                    // Card completa
+                    VBox card = new VBox(10, top, prioridad);
+
+                    card.getStyleClass().add("task-card");
 
                     setGraphic(card);
                 }
@@ -128,14 +156,36 @@ public class KanBanController implements Initializable {
                 if (empty || tarea == null) {
                     setGraphic(null);
                 } else {
-
+// Título
                     Label titulo = new Label(tarea.getNombre());
                     titulo.getStyleClass().add("titulo-tarea");
 
+                    // Prioridad
                     Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
 
-                    VBox card = new VBox(8, titulo, prioridad);
-                    card.getStyleClass().add("kanban-list");
+                    // Imagen integrante
+                    ImageView avatar = new ImageView(
+                            new Image(
+                                    HelloApplication.class
+                                            .getResource("/com/decroly/todotabla/images/user.png")
+                                            .toExternalForm()
+                            )
+                    );
+
+                    avatar.setFitWidth(40);
+                    avatar.setFitHeight(40);
+
+                    // Hacerla circular
+                    Circle clip = new Circle(20, 20, 20);
+                    avatar.setClip(clip);
+
+                    // Parte superior de la card
+                    HBox top = new HBox(10, avatar, titulo);
+
+                    // Card completa
+                    VBox card = new VBox(10, top, prioridad);
+
+                    card.getStyleClass().add("task-card");
 
                     setGraphic(card);
                 }
@@ -153,14 +203,36 @@ public class KanBanController implements Initializable {
                 if (empty || tarea == null) {
                     setGraphic(null);
                 } else {
-
+// Título
                     Label titulo = new Label(tarea.getNombre());
                     titulo.getStyleClass().add("titulo-tarea");
 
+                    // Prioridad
                     Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
 
-                    VBox card = new VBox(8, titulo, prioridad);
-                    card.getStyleClass().add("kanban-list");
+                    // Imagen integrante
+                    ImageView avatar = new ImageView(
+                            new Image(
+                                    HelloApplication.class
+                                            .getResource("/com/decroly/todotabla/images/user.png")
+                                            .toExternalForm()
+                            )
+                    );
+
+                    avatar.setFitWidth(40);
+                    avatar.setFitHeight(40);
+
+                    // Hacerla circular
+                    Circle clip = new Circle(20, 20, 20);
+                    avatar.setClip(clip);
+
+                    // Parte superior de la card
+                    HBox top = new HBox(10, avatar, titulo);
+
+                    // Card completa
+                    VBox card = new VBox(10, top, prioridad);
+
+                    card.getStyleClass().add("task-card");
 
                     setGraphic(card);
                 }
@@ -178,14 +250,36 @@ public class KanBanController implements Initializable {
                 if (empty || tarea == null) {
                     setGraphic(null);
                 } else {
-
+// Título
                     Label titulo = new Label(tarea.getNombre());
                     titulo.getStyleClass().add("titulo-tarea");
 
+                    // Prioridad
                     Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
 
-                    VBox card = new VBox(8, titulo, prioridad);
-                    card.getStyleClass().add("kanban-list");
+                    // Imagen integrante
+                    ImageView avatar = new ImageView(
+                            new Image(
+                                    HelloApplication.class
+                                            .getResource("/com/decroly/todotabla/images/user.png")
+                                            .toExternalForm()
+                            )
+                    );
+
+                    avatar.setFitWidth(40);
+                    avatar.setFitHeight(40);
+
+                    // Hacerla circular
+                    Circle clip = new Circle(20, 20, 20);
+                    avatar.setClip(clip);
+
+                    // Parte superior de la card
+                    HBox top = new HBox(10, avatar, titulo);
+
+                    // Card completa
+                    VBox card = new VBox(10, top, prioridad);
+
+                    card.getStyleClass().add("task-card");
 
                     setGraphic(card);
                 }
@@ -227,7 +321,7 @@ public class KanBanController implements Initializable {
 //            listViewTareas.setItems(obsTareas);
 
             // Mostrar la ventana
-            ventanaSecundaria.show();
+            ventanaSecundaria.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();

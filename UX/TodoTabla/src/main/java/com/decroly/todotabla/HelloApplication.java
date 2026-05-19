@@ -13,7 +13,7 @@ public class HelloApplication extends Application {
 //        WindowWatcher.init(); //iniciar clase que comprueba ventanas abiertas
         
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1500, 800);
+        Scene scene = new Scene(fxmlLoader.load(), 700,424);
         stage.setTitle("Bienvenido a TodoTabla!");
         stage.setScene(scene);
 
