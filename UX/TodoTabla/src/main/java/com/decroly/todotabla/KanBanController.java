@@ -230,6 +230,8 @@ public class KanBanController implements Initializable {
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
+            // TODO Hay que refrescar las listas del Kanban controller
+
         } catch (IOException e) {
             e.printStackTrace();
         }

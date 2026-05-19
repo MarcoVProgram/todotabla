@@ -92,6 +92,7 @@ public class TareaController implements Initializable {
         Map<Integer, Tarea> todasTareasDelUniverso = TareasBDD.getTareas();
         if (todasTareasDelUniverso != null) {
             obsTareas.addAll((TareasBDD.getTareas()).values());
+            listViewTareas.refresh();
         }
     }
 
