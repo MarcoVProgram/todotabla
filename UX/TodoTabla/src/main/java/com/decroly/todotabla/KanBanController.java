@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -117,7 +118,11 @@ public class KanBanController implements Initializable {
 
                     // Imagen integrante
                     ImageView avatar = new ImageView(
-                            getClass().getResource("/com/decroly/todotabla/img/user.png").toExternalForm()
+                            new Image(
+                                    HelloApplication.class
+                                            .getResource("/com/decroly/todotabla/images/user.png")
+                                            .toExternalForm()
+                            )
                     );
 
                     avatar.setFitWidth(40);
@@ -160,7 +165,11 @@ public class KanBanController implements Initializable {
 
                     // Imagen integrante
                     ImageView avatar = new ImageView(
-                            getClass().getResource("/com/decroly/todotabla/img/user.png").toExternalForm()
+                            new Image(
+                                    HelloApplication.class
+                                            .getResource("/com/decroly/todotabla/images/user.png")
+                                            .toExternalForm()
+                            )
                     );
 
                     avatar.setFitWidth(40);
@@ -203,7 +212,11 @@ public class KanBanController implements Initializable {
 
                     // Imagen integrante
                     ImageView avatar = new ImageView(
-                            getClass().getResource("/com/decroly/todotabla/img/user.png").toExternalForm()
+                            new Image(
+                                    HelloApplication.class
+                                            .getResource("/com/decroly/todotabla/images/user.png")
+                                            .toExternalForm()
+                            )
                     );
 
                     avatar.setFitWidth(40);
@@ -246,7 +259,11 @@ public class KanBanController implements Initializable {
 
                     // Imagen integrante
                     ImageView avatar = new ImageView(
-                            getClass().getResource("/com/decroly/todotabla/img/user.png").toExternalForm()
+                            new Image(
+                                    HelloApplication.class
+                                            .getResource("/com/decroly/todotabla/images/user.png")
+                                            .toExternalForm()
+                            )
                     );
 
                     avatar.setFitWidth(40);
