@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.decroly.todotabla.model.sql.*;
+import org.w3c.dom.events.MouseEvent;
 
 public class HelloController implements Initializable {
     //lista miembros
@@ -162,6 +164,17 @@ public class HelloController implements Initializable {
                 }
             }
         });
+
+        listViewProyectos.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2){
+                try {
+                    KanBanController.proyectoSeleccionado = listViewProyectos.getSelectionModel().getSelectedItem();
+                    abrirVentanaPrincipal();
+                } catch (IOException e) {
+                    showAlert("Ocurrió un error inesperado y no se puede acceder al proyecto", "Cagaste");
+                }
+            }
+        });
     }
 
 
@@ -205,4 +218,6 @@ public class HelloController implements Initializable {
             }
         }
     }
+
+
 }
