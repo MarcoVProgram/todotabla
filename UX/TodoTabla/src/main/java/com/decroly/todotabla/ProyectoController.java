@@ -8,10 +8,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.chrono.IsoChronology;
 import java.util.ResourceBundle;
 
-public class ProyectoController {
+public class ProyectoController implements Initializable{
 
     @FXML
     private TextField tituloProyecto;
@@ -37,4 +38,8 @@ public class ProyectoController {
         };
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        fechaProyecto.setValue(LocalDate.now());
+    }
 }
