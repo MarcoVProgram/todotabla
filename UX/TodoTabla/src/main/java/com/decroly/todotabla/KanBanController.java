@@ -385,7 +385,7 @@ public class KanBanController implements Initializable {
     @FXML
     public void buscarTarea(ActionEvent event) {
         String name = ""; // Señalar barra de busqueda
-        obsTareasReady.addAll(TareasBDD.getTarea(name));
+        obsTareasReady.addAll(TareasBDD.getTarea(name, EstadoPrograma.getInstance().getProyectoActivo()));
 
     }
 
