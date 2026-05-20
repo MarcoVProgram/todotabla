@@ -170,4 +170,9 @@ public class HelloController implements Initializable {
             }
         }
     }
+
+    @FXML
+    private void crearProyecto(){
+        throw new UnsupportedOperationException();
+    }
 }

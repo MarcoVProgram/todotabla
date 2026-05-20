@@ -161,7 +161,10 @@ public class TareaController implements Initializable {
         if (estado) {
             listarTareas();
         } else {
-            (new Alert(Alert.AlertType.WARNING, "No se ha podido borrar", ButtonType.OK)).showAndWait();
+            (new Alert(Alert.AlertType.WARNING,
+                    "No se ha podido borrar",
+                    ButtonType.OK
+            )).showAndWait();
         }
     }
 }
