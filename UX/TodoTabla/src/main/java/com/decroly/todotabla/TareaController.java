@@ -85,18 +85,20 @@ public class TareaController implements Initializable {
                 }
             }
         });
+
     }
 
     private void actualizarTareas() {
         Map<Integer, Tarea> todasTareasDelUniverso = TareasBDD.getTareas();
         if (todasTareasDelUniverso != null) {
             obsTareas.addAll((TareasBDD.getTareas()).values());
+            listViewTareas.refresh();
         }
     }
 
     //--------AGREGAR TAREA-------------
     @FXML
-    private boolean addTarea(){
+    private void addTarea(){
         boolean added = false;
 
         //obtener valores campos
@@ -115,8 +117,36 @@ public class TareaController implements Initializable {
             (new Alert(Alert.AlertType.ERROR,"No se pudo añadir", ButtonType.OK)).show();
         }
 
+        actualizarTareas();
+    }
 
-        return added;
+    @FXML
+    public void modTarea(ActionEvent event) {
+        boolean actualizarExito = true;
+
+        //obtener valores campos
+        String nombre = nombreTarea.getText();
+        int prioridad = comboBoxPrioridadTarea.getSelectionModel().getSelectedItem();
+
+        //valores extra necesarios // TODO cambiar esto para seleccionar otros proyectos
+        Proyecto idProyecto = ProyetosBDD.getProyecto(1);
+
+        ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
+
+        for (Tarea tarea : listaDeTareas) {
+            tarea.setNombre(nombre);
+            tarea.setPrioridad(prioridad);
+
+            actualizarExito = actualizarExito && TareasBDD.actualizar(tarea);
+        }
+        
+
+        if (actualizarExito) {
+            this.actualizarTareas();
+        }
+        else {
+            (new Alert(Alert.AlertType.ERROR,"No se pudo editar", ButtonType.OK)).show();
+        }
     }
 
     @FXML
@@ -131,7 +161,10 @@ public class TareaController implements Initializable {
         if (estado) {
             listarTareas();
         } else {
-            (new Alert(Alert.AlertType.WARNING, "No se ha podido borrar", ButtonType.OK)).showAndWait();
+            (new Alert(Alert.AlertType.WARNING,
+                    "No se ha podido borrar",
+                    ButtonType.OK
+            )).showAndWait();
         }
     }
 }

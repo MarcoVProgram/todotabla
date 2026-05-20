@@ -4,9 +4,11 @@ import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -64,7 +66,7 @@ public class KanBanController implements Initializable {
 
     private Stage ventanaSecundaria = getVentanaSecundaria();
 
-    public static Proyecto proyectoSeleccionado;
+    private Proyecto proyectoSeleccionado;
 
     private static Stage getVentanaSecundaria() {
         return HelloController.getVentanaSecundaria();
@@ -73,6 +75,7 @@ public class KanBanController implements Initializable {
 
     public void initialize(URL url, ResourceBundle rb) {
         List<Estado> estados = EstadosBDD.getEstados();
+        proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
         for (Estado estado : estados) {
             switch (estado.getNombre()) {
                 case "Backlog":
@@ -371,8 +374,20 @@ public class KanBanController implements Initializable {
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
+            // TODO Hay que refrescar las listas del Kanban controller
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
+    @FXML
+    public void buscarTarea(ActionEvent event) {
+        String name = ""; // Señalar barra de busqueda
+        obsTareasReady.addAll(TareasBDD.getTarea(name));
+
+    }
+
+
 }

@@ -5,6 +5,7 @@ import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
 
 import java.sql.*;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class TareasBDD {
                     "SET " +
                     "`nombre` = ?, " +
                     "`prioridad` = ?, " +
-                    "`estado` = ?, " +
+                    "`estado` = ? " +
                     "WHERE `id` = ?; ";
 
             try (Connection conexion = BDD.getConnection();
@@ -187,6 +188,37 @@ public class TareasBDD {
         return tareas;
     }
 
+    public static Map<Integer, Tarea> getTareas(Proyecto idProyecto) {
+        Map<Integer, Tarea> tareas = new LinkedHashMap<>();
+
+        String sql = "SELECT * FROM tarea WHERE idProyecto = ?;";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            stmnt.setInt(1, idProyecto.getId());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                Tarea tarea = new Tarea(table.getInt("id"),
+                        table.getString("nombre"),
+                        table.getInt("prioridad"),
+                        EstadosBDD.getEstado(table.getString("estado")),
+                        ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))
+                );
+
+
+                tareas.put(tarea.getId(), tarea);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return tareas;
+    }
+
     public static Tarea getTarea(int id) {
         Tarea tarea = null;
 
@@ -211,5 +243,32 @@ public class TareasBDD {
         }
 
         return tarea;
+    }
+
+    public static HashSet<Tarea> getTarea(String nombre, Proyecto p) {
+        HashSet<Tarea> tareas = null;
+
+        String sql = "SELECT * FROM tarea WHERE nombre LIKE ? AND proyecto_ID = ?;";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            stmnt.setString(1, "%"+nombre+"%");
+            stmnt.setInt(2, p.getId());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                tareas.add(new Tarea(table.getInt("id"),
+                        table.getString("nombre"),
+                        table.getInt("prioridad"),
+                        EstadosBDD.getEstado(table.getString("estado")),
+                        ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))));
+            }
+
+        } catch (Exception e) {
+            return null;
+        }
+
+        return tareas;
     }
 }
