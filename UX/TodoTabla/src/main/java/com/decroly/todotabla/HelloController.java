@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -126,6 +127,41 @@ public class HelloController implements Initializable {
 //        });
 //
 //        delay.play();
+        listViewProyectos.setCellFactory(proyectoListView -> new ListCell<Proyecto>() {
+
+            @Override
+            protected void updateItem(Proyecto p, boolean empty) {
+                super.updateItem(p, empty);
+
+                if (empty || p == null) {
+
+                    setGraphic(null);
+
+                } else {
+
+                    // Título
+                    Label titulo = new Label(p.getTitulo());
+                    titulo.getStyleClass().add("titulo-tarea");
+
+                    // Fecha fin
+                    Label inicio = new Label("Fecha inicio: " + p.getFechaCreacion());
+
+                     //Fecha fin
+                    Label fin = new Label("Fecha fin: " + p.getFechaCierre());
+
+                    if(fin.getText().contentEquals("Fecha fin: " + null)){
+                        fin.setText("");
+                    }
+
+                    // Card completa
+                    VBox card = new VBox(10, titulo, inicio, fin);
+
+                    card.getStyleClass().add("task-card");
+
+                    setGraphic(card);
+                }
+            }
+        });
     }
 
 

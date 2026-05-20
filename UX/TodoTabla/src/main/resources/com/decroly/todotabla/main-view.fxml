@@ -56,7 +56,7 @@
          </HBox>
 
          <!-- ISSUE -->
-         <HBox alignment="CENTER_LEFT" prefHeight="88" spacing="14" styleClass="issue-item">
+         <HBox alignment="CENTER_LEFT" prefHeight="650.0" prefWidth="658.0" spacing="14" styleClass="issue-item">
 
             <Label styleClass="issue-icon" text="⊞" />
 
@@ -64,7 +64,7 @@
 
                <HBox alignment="CENTER_LEFT" spacing="10" />
             </VBox>
-            <ListView fx:id="listViewProyectos" prefHeight="88.0" prefWidth="448.0" />
+            <ListView fx:id="listViewProyectos" prefHeight="138.0" prefWidth="437.0" />
             <ComboBox fx:id="comboBoxOpcion" onMouseClicked="#comprobarProyecto" prefHeight="23.0" prefWidth="135.0" promptText="..." />
 
             <Region HBox.hgrow="ALWAYS" />
