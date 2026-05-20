@@ -6,12 +6,15 @@ import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
+import com.decroly.todotabla.utils.TareaCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -19,16 +22,15 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class KanBanController implements Initializable {
     @FXML
@@ -68,6 +70,7 @@ public class KanBanController implements Initializable {
 
     private Proyecto proyectoSeleccionado;
 
+
     private static Stage getVentanaSecundaria() {
         return HelloController.getVentanaSecundaria();
     }
@@ -104,241 +107,22 @@ public class KanBanController implements Initializable {
             }
         }
 
-        listViewBacklog.setItems(obsTareasBacklog);
-        listViewBacklog.setCellFactory(tareaListView -> new ListCell<Tarea>() {
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
 
-                if (empty || tarea == null) {
-                    setGraphic(null);
+        listViewBacklog.setItems(TareaCell.sorted(obsTareasBacklog));
+        listViewBacklog.setCellFactory(tareaListView -> new TareaCell() {});
 
-                } else {
-                    // Título
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
+        listViewReady.setItems(TareaCell.sorted(obsTareasReady));
+        listViewReady.setCellFactory(tareaListView -> new TareaCell() {});
 
-                    // Prioridad
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
+        listViewProgress.setItems(TareaCell.sorted(obsTareasProgress));
+        listViewProgress.setCellFactory(tareaListView -> new TareaCell() {});
 
-                    // Imagen integrante
-                    ImageView avatar = new ImageView(
-                            new Image(
-                                    HelloApplication.class
-                                            .getResource("/com/decroly/todotabla/images/user.png")
-                                            .toExternalForm()
-                            )
-                    );
+        listViewReview.setItems(TareaCell.sorted(obsTareasReview));
+        listViewReview.setCellFactory(tareaListView -> new TareaCell() {});
 
-                    avatar.setFitWidth(40);
-                    avatar.setFitHeight(40);
-
-                    // Hacerla circular
-                    Circle clip = new Circle(20, 20, 20);
-                    avatar.setClip(clip);
-
-                    // Parte superior de la card
-                    HBox top = new HBox(10, avatar, titulo);
-
-                    // Card completa
-                    VBox card = new VBox(10, top, prioridad);
-
-                    card.getStyleClass().add("task-card");
-
-                    setGraphic(card);
-                }
-            }
-        });
-
-        listViewReady.setItems(obsTareasReady);
-        listViewReady.setCellFactory(tareaListView -> new ListCell<Tarea>() {
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-
-                } else {
-                    // Título
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    // Prioridad
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-
-                    // Imagen integrante
-                    ImageView avatar = new ImageView(
-                            new Image(
-                                    HelloApplication.class
-                                            .getResource("/com/decroly/todotabla/images/user.png")
-                                            .toExternalForm()
-                            )
-                    );
-
-                    avatar.setFitWidth(40);
-                    avatar.setFitHeight(40);
-
-                    // Hacerla circular
-                    Circle clip = new Circle(20, 20, 20);
-                    avatar.setClip(clip);
-
-                    // Parte superior de la card
-                    HBox top = new HBox(10, avatar, titulo);
-
-                    // Card completa
-                    VBox card = new VBox(10, top, prioridad);
-
-                    card.getStyleClass().add("task-card");
-
-                    setGraphic(card);
-                }
-            }
-        });
-
-        //listView tareas progress
-        listViewProgress.setItems(obsTareasProgress);
-        listViewProgress.setCellFactory(obstareasInProgress -> new ListCell<Tarea>() {
-
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-                } else {
-// Título
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    // Prioridad
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-
-                    // Imagen integrante
-                    ImageView avatar = new ImageView(
-                            new Image(
-                                    HelloApplication.class
-                                            .getResource("/com/decroly/todotabla/images/user.png")
-                                            .toExternalForm()
-                            )
-                    );
-
-                    avatar.setFitWidth(40);
-                    avatar.setFitHeight(40);
-
-                    // Hacerla circular
-                    Circle clip = new Circle(20, 20, 20);
-                    avatar.setClip(clip);
-
-                    // Parte superior de la card
-                    HBox top = new HBox(10, avatar, titulo);
-
-                    // Card completa
-                    VBox card = new VBox(10, top, prioridad);
-
-                    card.getStyleClass().add("task-card");
-
-                    setGraphic(card);
-                }
-            }
-        });
-
-        //listView tareas review
-        listViewReview.setItems(obsTareasReview);
-        listViewReview.setCellFactory(obstareasInReview -> new ListCell<Tarea>() {
-
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-                } else {
-// Título
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    // Prioridad
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-
-                    // Imagen integrante
-                    ImageView avatar = new ImageView(
-                            new Image(
-                                    HelloApplication.class
-                                            .getResource("/com/decroly/todotabla/images/user.png")
-                                            .toExternalForm()
-                            )
-                    );
-
-                    avatar.setFitWidth(40);
-                    avatar.setFitHeight(40);
-
-                    // Hacerla circular
-                    Circle clip = new Circle(20, 20, 20);
-                    avatar.setClip(clip);
-
-                    // Parte superior de la card
-                    HBox top = new HBox(10, avatar, titulo);
-
-                    // Card completa
-                    VBox card = new VBox(10, top, prioridad);
-
-                    card.getStyleClass().add("task-card");
-
-                    setGraphic(card);
-                }
-            }
-        });
-
-        //listView tareas done
-        listViewDone.setItems(obsTareasDone);
-        listViewDone.setCellFactory(obstareasDone -> new ListCell<Tarea>() {
-
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-                } else {
-// Título
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    // Prioridad
-                    Label prioridad = new Label("Prioridad: " + tarea.getPrioridad());
-
-                    // Imagen integrante
-                    ImageView avatar = new ImageView(
-                            new Image(
-                                    HelloApplication.class
-                                            .getResource("/com/decroly/todotabla/images/user.png")
-                                            .toExternalForm()
-                            )
-                    );
-
-                    avatar.setFitWidth(40);
-                    avatar.setFitHeight(40);
-
-                    // Hacerla circular
-                    Circle clip = new Circle(20, 20, 20);
-                    avatar.setClip(clip);
-
-                    // Parte superior de la card
-                    HBox top = new HBox(10, avatar, titulo);
-
-                    // Card completa
-                    VBox card = new VBox(10, top, prioridad);
-
-                    card.getStyleClass().add("task-card");
-
-                    setGraphic(card);
-                }
-            }
-        });
+        listViewDone.setItems(TareaCell.sorted(obsTareasDone));
+        listViewDone.setCellFactory(tareaListView -> new TareaCell() {});
     }
-
-
 
 
     //----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
@@ -385,7 +169,7 @@ public class KanBanController implements Initializable {
     @FXML
     public void buscarTarea(ActionEvent event) {
         String name = ""; // Señalar barra de busqueda
-        obsTareasReady.addAll(TareasBDD.getTarea(name));
+        obsTareasReady.addAll(TareasBDD.getTarea(name, EstadoPrograma.getInstance().getProyectoActivo()));
 
     }
 
