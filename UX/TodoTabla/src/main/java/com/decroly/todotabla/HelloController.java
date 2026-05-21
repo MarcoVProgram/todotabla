@@ -256,7 +256,7 @@ public class HelloController implements Initializable {
         int contActivos = 0;
 
         for(Proyecto p :obsProyectoList){
-                if(p.getFechaCierre() != null){
+                if(p.getFechaCierre() == null){
                     contActivos++;
                 }
             }
@@ -268,7 +268,7 @@ public class HelloController implements Initializable {
         int contArchivados = 0;
 
         for(Proyecto p :obsProyectoList) {
-            if (p.getFechaCierre() == null) {
+            if (p.getFechaCierre() != null) {
                 contArchivados++;
             }
         }
