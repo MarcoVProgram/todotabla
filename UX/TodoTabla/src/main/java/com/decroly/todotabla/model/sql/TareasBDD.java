@@ -191,7 +191,7 @@ public class TareasBDD {
     public static Map<Integer, Tarea> getTareas(Proyecto idProyecto) {
         Map<Integer, Tarea> tareas = new LinkedHashMap<>();
 
-        String sql = "SELECT * FROM tarea WHERE idProyecto = ?;";
+        String sql = "SELECT * FROM tarea WHERE proyecto_ID = ?;";
 
         try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(sql)) {

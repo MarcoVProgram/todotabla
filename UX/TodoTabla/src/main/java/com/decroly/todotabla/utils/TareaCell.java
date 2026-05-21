@@ -1,18 +1,32 @@
 package com.decroly.todotabla.utils;
 
+import com.decroly.todotabla.model.Asignacion;
 import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.sql.AsignacionesBDD;
 import com.decroly.todotabla.utils.constants.ColoresPrioridad;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorInput;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class TareaCell extends ListCell<Tarea> {
 
@@ -22,11 +36,19 @@ public class TareaCell extends ListCell<Tarea> {
     private final Region dot;
     private final VBox card;
     private final Label ownerLabel;
+
+    //Variables Mover cosas
     private double dragOffsetX;
     private double dragOffsetY;
+    private final BorderPane root;
+    private final Map<ListView<Tarea>, ObservableList<Tarea>> columnMap;
+    private ImageView ghost;
+    private ColorInput tintInput;
 
     //Constructor
-    public TareaCell() {
+    public TareaCell(BorderPane root, Map<ListView<Tarea>, ObservableList<Tarea>> columnMap) {
+        this.root = root;
+        this.columnMap = columnMap;
 
         // Titulo
         titulo = new Label();
@@ -102,7 +124,18 @@ public class TareaCell extends ListCell<Tarea> {
         prioLabel.setText(tarea.getPrioridad() + "");
 
         // Avatar Letra
-        ownerLabel.setText(tarea.getNombre().substring(0, 1).toUpperCase());
+        List<Asignacion> asignados = new LinkedList<>();
+        asignados.addAll(AsignacionesBDD.getAsignaciones(tarea).values());
+        String initials = "";
+        for  (Asignacion asignacion : asignados) {
+            if (asignacion.getIdUsuario() != null) {
+                if (initials.length() != 0) {
+                    initials += "|";
+                }
+                initials += asignacion.getIdUsuario().getNombre().substring(0, 1).toUpperCase();
+            }
+        }
+        ownerLabel.setText(initials);
 
         setGraphic(card);
         setStyle("-fx-background-color: transparent;");
@@ -124,18 +157,66 @@ public class TareaCell extends ListCell<Tarea> {
     }
 
     private void onDragStart(MouseEvent e) {
-        // Agarrar tarea, snapshot, y un controlador del drag
-        this.dragOffsetX = e.getSceneX();
-        this.dragOffsetY = e.getSceneY();
+        //Salir si no es valido
+        if (getItem() == null) return;
+
+        // Guardado de posicion inicial
+        Bounds cardBounds = card.localToScene(card.getBoundsInLocal());
+        this.dragOffsetX = e.getSceneX() - cardBounds.getMinX();
+        this.dragOffsetY = e.getSceneY() - cardBounds.getMinY();
+
+        // Toma una radiografia de la tarea
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        WritableImage snapshot = card.snapshot(params, null);
+
+        // Construccion de la tarea fantasma
+        ghost = new ImageView(snapshot);
+        ghost.setManaged(false);
+        ghost.setMouseTransparent(true);
+        ghost.setOpacity(0.85);
+
+        tintInput = new ColorInput(0, 0, snapshot.getWidth(), snapshot.getHeight(), Color.TRANSPARENT);
+        Blend blend = new Blend(BlendMode.SRC_ATOP);
+        blend.setTopInput(tintInput);
+        ghost.setEffect(blend);
+
+        // Fantasma sobre la original
+        Point2D rootPos = root.sceneToLocal(cardBounds.getMinX(), cardBounds.getMinY());
+        ghost.setLayoutX(rootPos.getX());
+        ghost.setLayoutY(rootPos.getY());
+
+        root.getChildren().add(ghost);
+
+        // Transparencia original
+        card.setOpacity(0.3);
     }
 
     private void onDragMove(MouseEvent e) {
-        // move el fantasma, detectar columna y fila, cambiar color en base a esto
-        this.setTranslateX(e.getSceneX() - dragOffsetX);
-        this.setTranslateY(e.getSceneY() - dragOffsetY);
+        // Si el Fantasma no es Null
+        if (ghost == null) return;
+
+        // Mover el fantasma
+        Point2D rootPos = root.sceneToLocal(
+            e.getSceneX() - dragOffsetX,
+            e.getSceneY() - dragOffsetY
+        );
+
+        ghost.setLayoutX(rootPos.getX());
+        ghost.setLayoutY(rootPos.getY());
+
+        double sceneHeight = root.getScene().getHeight();
+        int band = (int) Math.min(8, (e.getSceneY() / sceneHeight) * 9);//Formula a ajustar para colores
+        tintInput.setPaint(Color.web(ColoresPrioridad.getColores(band)).deriveColor(0, 1, 1, 0.4));
     }
 
     private void onDragEnd(MouseEvent e) {
         // realizar los updates en base al resultado
+
+        // Adios fantasma
+        root.getChildren().remove(ghost);
+
+        // Carta vuelta a ser full
+        card.setOpacity(1);
     }
 }
