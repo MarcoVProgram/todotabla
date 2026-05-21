@@ -64,7 +64,7 @@
 
                <HBox alignment="CENTER_LEFT" spacing="10" />
             </VBox>
-            <ListView fx:id="listViewProyectos" prefHeight="138.0" prefWidth="437.0" />
+            <ListView fx:id="listViewProyectos" prefHeight="138.0" prefWidth="437.0" styleClass="project-list" />
             <ComboBox fx:id="comboBoxOpcion" onMouseClicked="#comprobarProyecto" prefHeight="23.0" prefWidth="135.0" promptText="..." />
 
             <Region HBox.hgrow="ALWAYS" />
