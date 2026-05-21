@@ -31,11 +31,16 @@ public class ProyectoController implements Initializable{
                 null
         );
         if (ProyetosBDD.insertar(p)) {
+            (new Alert(Alert.AlertType.INFORMATION,
+                    "Se ha creado correctamente",
+                    ButtonType.OK
+            )).showAndWait();
+        } else {
             (new Alert(Alert.AlertType.WARNING,
                     "No se ha podido crear",
                     ButtonType.OK
             )).showAndWait();
-        };
+        }
     }
 
     @Override

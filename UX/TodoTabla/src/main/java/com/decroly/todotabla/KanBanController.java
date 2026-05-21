@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class KanBanController implements Initializable {
@@ -385,7 +386,7 @@ public class KanBanController implements Initializable {
     @FXML
     public void buscarTarea(ActionEvent event) {
         String name = ""; // Señalar barra de busqueda
-        obsTareasReady.addAll(TareasBDD.getTarea(name));
+        obsTareasReady.addAll(Objects.requireNonNull(TareasBDD.getTarea(name, EstadoPrograma.getInstance().getProyectoActivo())));
 
     }
 
