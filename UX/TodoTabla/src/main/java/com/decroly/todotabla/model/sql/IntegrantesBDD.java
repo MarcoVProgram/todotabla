@@ -5,6 +5,7 @@ import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Usuario;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -100,10 +101,16 @@ public class IntegrantesBDD {
             ResultSet table = stmnt.executeQuery("TABLE integrante;");
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_salida");
+                LocalDate dateExit = null;
+                if (rawDate != null) {
+                    dateExit = rawDate.toLocalDate();
+                }
+
                 Integrante integrante = new Integrante(table.getInt("id"),
                         table.getString("rol"),
                         table.getDate("fecha_entrada").toLocalDate(),
-                        table.getDate("fecha_salida").toLocalDate(),
+                        dateExit,
                         UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
                         ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))
                 );
@@ -128,10 +135,16 @@ public class IntegrantesBDD {
             ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_salida");
+                LocalDate dateExit = null;
+                if (rawDate != null) {
+                    dateExit = rawDate.toLocalDate();
+                }
+
                 Integrante integrante = new Integrante(table.getInt("id"),
                         table.getString("rol"),
                         table.getDate("fecha_entrada").toLocalDate(),
-                        table.getDate("fecha_salida").toLocalDate(),
+                        dateExit,
                         UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
                         ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))
                 );
@@ -155,10 +168,16 @@ public class IntegrantesBDD {
             ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_salida");
+                LocalDate dateExit = null;
+                if (rawDate != null) {
+                    dateExit = rawDate.toLocalDate();
+                }
+
                 Integrante integrante = new Integrante(table.getInt("id"),
                         table.getString("rol"),
                         table.getDate("fecha_entrada").toLocalDate(),
-                        table.getDate("fecha_salida").toLocalDate(),
+                        dateExit,
                         UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
                         ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))
                 );
@@ -182,10 +201,16 @@ public class IntegrantesBDD {
             ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_salida");
+                LocalDate dateExit = null;
+                if (rawDate != null) {
+                    dateExit = rawDate.toLocalDate();
+                }
+
                 integrante = new Integrante(table.getInt("id"),
                         table.getString("rol"),
                         table.getDate("fecha_entrada").toLocalDate(),
-                        table.getDate("fecha_salida").toLocalDate(),
+                        dateExit,
                         UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
                         ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))
                 );

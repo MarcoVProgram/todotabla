@@ -99,10 +99,16 @@ public class ProyetosBDD {
             ResultSet table = stmnt.executeQuery("TABLE proyecto;");
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_cierre");
+                LocalDate dateClose = null;
+                if (rawDate != null) {
+                    dateClose = rawDate.toLocalDate();
+                }
+
                 Proyecto pro = new Proyecto(table.getInt("id"),
                         table.getString("titulo"),
                         table.getDate("fecha_creacion").toLocalDate(),
-                        table.getDate("fecha_cierre").toLocalDate()
+                        dateClose
                 );
 
                 proyectos.put(pro.getId(), pro);
@@ -124,10 +130,16 @@ public class ProyetosBDD {
             ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_cierre");
+                LocalDate dateClose = null;
+                if (rawDate != null) {
+                    dateClose = rawDate.toLocalDate();
+                }
+
                 proyecto = new Proyecto(table.getInt("id"),
                         table.getString("titulo"),
                         table.getDate("fecha_creacion").toLocalDate(),
-                        table.getDate("fecha_cierre").toLocalDate()
+                        dateClose
                 );
             }
 

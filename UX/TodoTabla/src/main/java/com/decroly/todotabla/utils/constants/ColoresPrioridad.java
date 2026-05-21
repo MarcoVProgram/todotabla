@@ -6,7 +6,7 @@ import java.util.Map;
 public class ColoresPrioridad {
     private ColoresPrioridad() {}
 
-    final static Map<Integer, String> COLORES = new HashMap<>() {{
+    private final static Map<Integer, String> COLORES = new HashMap<>() {{
         put(0,"#da3633");
         put(1,"#f85149");
         put(2,"#f0883e");
@@ -17,7 +17,7 @@ public class ColoresPrioridad {
     }};
 
     public static String getColores(int prioridad) {
-        if (prioridad <= 0) return ColoresPrioridad.getColores(0);
+        if (prioridad <= 0) return COLORES.get(0);
         if (prioridad >= 6) return COLORES.get(6);
         return COLORES.get(prioridad);
     }
