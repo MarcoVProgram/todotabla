@@ -142,7 +142,7 @@
 /*tareas kanban*/
 .kanban-list {
     -fx-background-color: transparent;
-    -fx-padding: 10;
+    -fx-padding: 10 4;
 }
 
 .kanban-list .viewport {
@@ -150,33 +150,42 @@
 }
 
 .kanban-list .list-cell {
-    -fx-background-color: #696c71;
-    -fx-background-radius: 12;
-    -fx-padding: 15;
-    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-padding: 4 6;
     -fx-font-size: 14px;
-
-    -fx-border-radius: 12;
-    -fx-border-color: #3c3f45;
-
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0, 0, 2);
-
-    -fx-pref-width: 220;
 
     -fx-cursor: hand;
 }
 
 .kanban-list .list-cell:hover {
-    -fx-background-color: #b0b0b1;
+    -fx-background-color: transparent;
 }
 
 .kanban-list .list-cell:selected {
-    -fx-background-color: #5865f2;
+    -fx-background-color: transparent;
 }
 
 /*estilos para nuevo main*/
 .root-pane {
     -fx-background-color: #0d1117;
+}
+
+/*estilos seleccion del proyecto*/
+.project-list {
+    -fx-background-color: transparent;
+    -fx-padding: 10 4;
+}
+
+.project-list .viewport {
+    -fx-background-color: transparent;
+}
+
+.project-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 6;
+    -fx-font-size: 14px;
+
+    -fx-cursor: hand;
 }
 
 /* SEARCH */
@@ -321,18 +330,49 @@
 
 /*TAREAS BACKLOG*/
 .task-card {
-    -fx-background-color: #2b2d31;
-    -fx-padding: 14;
-    -fx-background-radius: 12;
+    -fx-background-color: #161b22;
+    -fx-padding: 14 16;
+    -fx-background-radius: 8;
 
-    -fx-border-color: #3c3f45;
-    -fx-border-radius: 12;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
 
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 10, 0, 0, 3);
+
+    /*-fx-pref-width: 248;*/
+    -fx-cursor: hand;
+}
+
+.task-card:hover {
+    -fx-border-color: #6e7681;
+    -fx-background-color: #1c2128;
 }
 
 .titulo-tarea {
-    -fx-font-size: 15px;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
-    -fx-text-fill: white;
+    -fx-text-fill: #e6edf3;
+    -fx-wrap-text: true;
+}
+
+.prioridad-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #8b949e;
+    -fx-font-family: "Monospace";
+}
+
+.prioridad-dot {
+    -fx-background-radius: 50;
+    -fx-min-width: 8;
+    -fx-min-height: 8;
+    -fx-max-width: 8;
+    -fx-max-height: 8;
+}
+
+.avatar-container {
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-border-color: #30363d;
+    -fx-border-width: 1.5;
 }

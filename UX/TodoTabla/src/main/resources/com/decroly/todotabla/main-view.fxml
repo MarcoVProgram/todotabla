@@ -7,8 +7,11 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="root" prefHeight="424" prefWidth="700.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
@@ -34,41 +37,52 @@
 
       <!-- PANEL -->
       <VBox spacing="0" styleClass="panel-container">
-
-         <!-- HEADER -->
-         <HBox alignment="CENTER_LEFT" prefHeight="64" spacing="20" styleClass="panel-header">
-
-            <HBox alignment="CENTER_LEFT" spacing="6">
-
-               <Label styleClass="header-title" text="Open" />
-
-               <Label styleClass="badge-active" text="1" />
-            </HBox>
-
-            <HBox alignment="CENTER_LEFT" spacing="6">
-
-               <Label styleClass="header-subtitle" text="Closed" />
-
-               <Label styleClass="badge-inactive" text="0" />
-            </HBox>
-
-            <Region HBox.hgrow="ALWAYS" />
-         </HBox>
-
-         <!-- ISSUE -->
-         <HBox alignment="CENTER_LEFT" prefHeight="88" spacing="14" styleClass="issue-item">
-
-            <Label styleClass="issue-icon" text="⊞" />
-
-            <VBox alignment="CENTER" spacing="6">
-
-               <HBox alignment="CENTER_LEFT" spacing="10" />
-            </VBox>
-            <ListView fx:id="listViewProyectos" prefHeight="88.0" prefWidth="448.0" />
-            <ComboBox fx:id="comboBoxOpcion" onMouseClicked="#comprobarProyecto" prefHeight="23.0" prefWidth="135.0" promptText="..." />
-
-            <Region HBox.hgrow="ALWAYS" />
-         </HBox>
+         <GridPane prefHeight="331.0" prefWidth="658.0">
+           <columnConstraints>
+             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints maxHeight="161.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+             <RowConstraints maxHeight="293.0" minHeight="10.0" prefHeight="293.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+      
+               <!-- HEADER -->
+               <HBox alignment="CENTER_LEFT" prefHeight="64" spacing="20" styleClass="panel-header">
+      
+                  <HBox alignment="CENTER_LEFT" spacing="6">
+      
+                     <Label styleClass="header-title" text="Abiertos" />
+      
+                     <Label fx:id="contAbiertos" styleClass="badge-active" text="1" />
+                  </HBox>
+      
+                  <HBox alignment="CENTER_LEFT" spacing="6">
+      
+                     <Label styleClass="header-subtitle" text="Archivados" />
+      
+                     <Label fx:id="contArchivados" styleClass="badge-inactive" text="0" />
+                  </HBox>
+      
+                  <Region HBox.hgrow="ALWAYS" />
+               </HBox>
+      
+               <!-- ISSUE -->
+               <HBox alignment="CENTER_LEFT" prefHeight="650.0" prefWidth="658.0" spacing="14" styleClass="issue-item" GridPane.rowIndex="1">
+      
+                  <Label styleClass="issue-icon" text="⊞" />
+      
+                  <VBox alignment="CENTER" spacing="6">
+      
+                     <HBox alignment="CENTER_LEFT" spacing="10" />
+                  </VBox>
+                  <ListView fx:id="listViewProyectos" prefHeight="138.0" prefWidth="437.0" styleClass="project-list" />
+                  <ComboBox fx:id="comboBoxOpcion" onMouseClicked="#comprobarProyecto" prefHeight="23.0" prefWidth="135.0" promptText="..." />
+      
+                  <Region HBox.hgrow="ALWAYS" />
+               </HBox>
+            </children>
+         </GridPane>
 
       </VBox>
 
