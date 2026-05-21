@@ -6,37 +6,30 @@ import com.decroly.todotabla.model.sql.ProyetosBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
-import javafx.animation.PauseTransition;
+import com.decroly.todotabla.utils.constants.opcionesBase;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import com.decroly.todotabla.model.sql.*;
-import org.w3c.dom.events.MouseEvent;
 
 public class HelloController implements Initializable {
     //lista miembros
@@ -241,13 +234,13 @@ public class HelloController implements Initializable {
                         }
                     }
                 }
-                case BORRAR_PROYECTO -> {
+                /*case BORRAR_PROYECTO -> {
                     if(listViewProyectos.getSelectionModel().getSelectedItem() != null){
                         int id = listViewProyectos.getSelectionModel().getSelectedItem().getId();
 
                         obsProyectoList.remove(id);
                     }
-                }
+                }*/
             }
         }
     }
