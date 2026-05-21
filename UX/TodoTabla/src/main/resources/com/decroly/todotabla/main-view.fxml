@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="424" prefWidth="700.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
+<AnchorPane fx:id="root" prefHeight="424" prefWidth="700.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
 
    <VBox spacing="18" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="18">
 
@@ -34,7 +34,7 @@
                </image>
             </ImageView>
          </HBox>
-         <Button fx:id="crearProyectoForm" mnemonicParsing="false" text="Crear proyecto" />
+         <Button fx:id="crearProyectoForm" mnemonicParsing="false" onMouseClicked="#abrirVentanaProyecto" text="Crear proyecto" />
       </HBox>
 
       <!-- PANEL -->

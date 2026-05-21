@@ -218,6 +218,39 @@ public class HelloController implements Initializable {
         Navigator.changeScene(stage, "/com/decroly/todotabla/kanban-view.fxml");
     }
 
+    @FXML
+    private void abrirVentanaProyecto() { //panel proyecto
+        try {
+
+            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                return;
+            }
+
+            // Cargar el archivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("proyecto-form.fxml"));
+            Parent root = loader.load();
+
+            // Crear una nueva ventana (Stage)
+            ventanaSecundaria = new Stage();
+            ventanaSecundaria.setTitle("Añadir proyecto");
+            ventanaSecundaria.setScene(new Scene(root));
+
+            ventanaSecundaria.setResizable(false);
+            ventanaSecundaria.setAlwaysOnTop(true);
+
+//            listViewTareas.setItems(obsTareas);
+
+            // Mostrar la ventana
+            ventanaSecundaria.showAndWait();
+
+            // TODO Hay que refrescar las listas del Kanban controller
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
