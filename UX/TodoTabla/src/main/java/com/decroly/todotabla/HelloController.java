@@ -64,6 +64,15 @@ public class HelloController implements Initializable {
     private Node root;
 
     @FXML
+    private Label contAbiertos;
+
+    @FXML
+    private Label contArchivados;
+
+    @FXML
+    private ImageView changeImage;
+
+    @FXML
     private ListView<Proyecto> listViewProyectos;
         List<Proyecto> proyectoList = new ArrayList<>();
         ObservableList<Proyecto> obsProyectoList = FXCollections.observableList(proyectoList);
@@ -176,6 +185,15 @@ public class HelloController implements Initializable {
                 }
             }
         });
+
+        contAbiertos.setText(String.valueOf(contadorProyectosActivos()));
+        contArchivados.setText(String.valueOf(contadorProyectosArchivados()));
+
+        changeImage.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.PRIMARY){
+                 
+            }
+        }
     }
 
 
@@ -202,7 +220,7 @@ public class HelloController implements Initializable {
                 case VER_KANBAN -> {
                     if(listViewProyectos.getSelectionModel().getSelectedItem() != null){
                         try {
-                            KanBanController.proyectoSeleccionado = listViewProyectos.getSelectionModel().getSelectedItem();
+                            EstadoPrograma.getInstance().setProyectoActivo(listViewProyectos.getSelectionModel().getSelectedItem());
                             abrirVentanaPrincipal();
                         } catch (IOException e) {
                             showAlert("Ocurrió un error inesperado y no se puede acceder al proyecto", "Cagaste");
@@ -220,5 +238,27 @@ public class HelloController implements Initializable {
         }
     }
 
+    public int contadorProyectosActivos(){
+        int contActivos = 0;
 
+        for(Proyecto p :obsProyectoList){
+                if(p.getFechaCierre() != null){
+                    contActivos++;
+                }
+            }
+
+        return contActivos;
+        }
+
+    public int contadorProyectosArchivados(){
+        int contArchivados = 0;
+
+        for(Proyecto p :obsProyectoList) {
+            if (p.getFechaCierre() == null) {
+                contArchivados++;
+            }
+        }
+
+        return contArchivados;
+    }
 }
