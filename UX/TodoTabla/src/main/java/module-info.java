@@ -9,4 +9,6 @@ module com.decroly.todotabla {
     opens com.decroly.todotabla to javafx.fxml;
     exports com.decroly.todotabla;
     exports com.decroly.todotabla.model;
+    exports com.decroly.todotabla.utils;
+    exports com.decroly.todotabla.utils.constants;
 }

@@ -1,6 +1,7 @@
 package com.decroly.todotabla.utils;
 
 import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.utils.constants.ColoresPrioridad;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.Pos;
@@ -21,6 +22,8 @@ public class TareaCell extends ListCell<Tarea> {
     private final Region dot;
     private final VBox card;
     private final Label ownerLabel;
+    private double dragOffsetX;
+    private double dragOffsetY;
 
     //Constructor
     public TareaCell() {
@@ -65,9 +68,9 @@ public class TareaCell extends ListCell<Tarea> {
         setMaxWidth(Double.MAX_VALUE);
 
         // Eventos
-        card.setOnMousePressed(e -> onDragStart(e));
-        card.setOnMouseDragged(e -> onDragMove(e));
-        card.setOnMouseReleased(e -> onDragEnd(e));
+        this.setOnMousePressed(e -> onDragStart(e));
+        this.setOnMouseDragged(e -> onDragMove(e));
+        this.setOnMouseReleased(e -> onDragEnd(e));
     }
 
     // Metodo publico para ordenar tareas para estas celdas
@@ -122,15 +125,17 @@ public class TareaCell extends ListCell<Tarea> {
 
     private void onDragStart(MouseEvent e) {
         // Agarrar tarea, snapshot, y un controlador del drag
+        this.dragOffsetX = e.getSceneX();
+        this.dragOffsetY = e.getSceneY();
     }
 
     private void onDragMove(MouseEvent e) {
         // move el fantasma, detectar columna y fila, cambiar color en base a esto
-        System.out.println(e.getX() + " " + e.getY());
+        this.setTranslateX(e.getSceneX() - dragOffsetX);
+        this.setTranslateY(e.getSceneY() - dragOffsetY);
     }
 
     private void onDragEnd(MouseEvent e) {
         // realizar los updates en base al resultado
-        System.out.println("onDragEnd");
     }
 }

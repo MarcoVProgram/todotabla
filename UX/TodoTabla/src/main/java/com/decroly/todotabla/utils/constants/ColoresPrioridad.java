@@ -1,4 +1,4 @@
-package com.decroly.todotabla.utils;
+package com.decroly.todotabla.utils.constants;
 
 import java.util.HashMap;
 import java.util.Map;
