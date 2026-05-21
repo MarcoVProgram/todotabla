@@ -68,7 +68,7 @@ public class KanBanController implements Initializable {
 
     private Stage ventanaSecundaria = getVentanaSecundaria();
 
-    private Proyecto proyectoSeleccionado;
+    public static Proyecto proyectoSeleccionado;
 
 
     private static Stage getVentanaSecundaria() {
