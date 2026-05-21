@@ -71,6 +71,9 @@ public class HelloController implements Initializable {
 
     @FXML
     private ImageView changeImage;
+    
+    @FXML
+    private TextField isEstado;
 
     @FXML
     private ListView<Proyecto> listViewProyectos;
@@ -101,7 +104,8 @@ public class HelloController implements Initializable {
     }
 
 
-
+    private int cont = 0;
+    
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
         try {
@@ -189,11 +193,21 @@ public class HelloController implements Initializable {
         contAbiertos.setText(String.valueOf(contadorProyectosActivos()));
         contArchivados.setText(String.valueOf(contadorProyectosArchivados()));
 
+
         changeImage.setOnMouseClicked(event -> {
-            if(event.getButton() == MouseButton.PRIMARY){
-                 
+
+            String[] estado = {"is:open", "is:archived"};
+
+            if (event.getButton() == MouseButton.PRIMARY) {
+                cont++;
+
+                if ((cont % 2) == 0) {
+                    isEstado.setText(estado[0]);
+                } else {
+                    isEstado.setText(estado[1]);
+                }
             }
-        }
+        });
     }
 
 
