@@ -8,10 +8,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.chrono.IsoChronology;
 import java.util.ResourceBundle;
 
-public class ProyectoController {
+public class ProyectoController implements Initializable{
 
     @FXML
     private TextField tituloProyecto;
@@ -30,11 +31,20 @@ public class ProyectoController {
                 null
         );
         if (ProyetosBDD.insertar(p)) {
+            (new Alert(Alert.AlertType.INFORMATION,
+                    "Se ha creado correctamente",
+                    ButtonType.OK
+            )).showAndWait();
+        } else {
             (new Alert(Alert.AlertType.WARNING,
                     "No se ha podido crear",
                     ButtonType.OK
             )).showAndWait();
-        };
+        }
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        fechaProyecto.setValue(LocalDate.now());
+    }
 }

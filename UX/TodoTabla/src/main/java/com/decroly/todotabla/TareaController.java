@@ -111,6 +111,7 @@ public class TareaController implements Initializable {
         boolean insertarExito = TareasBDD.insertar(new Tarea(nombre, prioridad, 
                 EstadosBDD.getEstado("Backlog"), ProyetosBDD.getProyecto(1)));
         if (insertarExito) {
+            (new Alert(Alert.AlertType.INFORMATION,"Se añadio correctamente", ButtonType.OK)).show();
             this.actualizarTareas();
         }
         else {
@@ -142,6 +143,7 @@ public class TareaController implements Initializable {
         
 
         if (actualizarExito) {
+            (new Alert(Alert.AlertType.INFORMATION,"Se edito correctamente", ButtonType.OK)).show();
             this.actualizarTareas();
         }
         else {
@@ -159,6 +161,10 @@ public class TareaController implements Initializable {
         }
 
         if (estado) {
+            (new Alert(Alert.AlertType.INFORMATION,
+                    "Se borro correctamente",
+                    ButtonType.OK
+            )).show();
             listarTareas();
         } else {
             (new Alert(Alert.AlertType.WARNING,
