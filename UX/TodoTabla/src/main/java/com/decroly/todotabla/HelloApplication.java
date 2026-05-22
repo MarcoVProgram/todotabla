@@ -17,6 +17,12 @@ public class HelloApplication extends Application {
         stage.setTitle("Bienvenido a TodoTabla!");
         stage.setScene(scene);
 
+        if(stage.isFocused()){
+            stage.setAlwaysOnTop(true);
+        }else{
+            stage.setAlwaysOnTop(false);
+        }
+
         stage.setResizable(false);//hacer que no se pueda cambiar tamaño de la ventana
         stage.show();
     }

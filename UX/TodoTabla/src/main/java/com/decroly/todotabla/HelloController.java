@@ -28,11 +28,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import com.decroly.todotabla.model.sql.*;
 
 public class HelloController implements Initializable {
     //lista miembros
@@ -72,13 +73,19 @@ public class HelloController implements Initializable {
     private TextField isEstado;
 
     @FXML
-    private ListView<Proyecto> listViewProyectos;
-        List<Proyecto> proyectoList = new ArrayList<>();
-        ObservableList<Proyecto> obsProyectoList = FXCollections.observableList(proyectoList);
+    private Label proyectosAbiertos;
 
-    public ListView<Proyecto> getListViewProyectos() {
-        return listViewProyectos;
-    }
+    @FXML
+    private Label proyectosArchivados;
+
+    @FXML
+    private ListView<Proyecto> listViewProyectos;
+
+    private List<Proyecto> proyectoListActivos = new ArrayList<>();
+    private ObservableList<Proyecto> obsProyectoListActivos = FXCollections.observableList(proyectoListActivos);
+
+    private List<Proyecto> proyectoListArchivados = new ArrayList<>();
+    private ObservableList<Proyecto> obsProyectoListArchivados = FXCollections.observableList(proyectoListArchivados);
 
     @FXML
     private ComboBox<opcionesBase> comboBoxOpcion;
@@ -125,11 +132,36 @@ public class HelloController implements Initializable {
             Platform.exit();
         }
 
+        List<Proyecto> allProyectos = new LinkedList<>();
+        allProyectos.addAll(ProyetosBDD.getProyectos().values());
 
-        comboBoxOpcion.getItems().addAll(opcionesBase.values());
-        listViewProyectos.setItems(obsProyectoList);
 
-        obsProyectoList.addAll(ProyetosBDD.getProyectos().values());
+        listViewProyectos.getItems().addAll();
+
+        for (Proyecto p : allProyectos) {
+            boolean estaAbierto = false;
+
+            if (p.getFechaCierre() != null) {
+                try {
+                    LocalDate fechaCierre = LocalDate.parse(String.valueOf(p.getFechaCierre()));
+                    estaAbierto = !fechaCierre.isBefore(LocalDate.now()); // Incluye igualdad
+
+                } catch (DateTimeParseException e) {
+                    // Manejar formato incorrecto
+                    estaAbierto = false;
+                }
+            }
+
+            if (estaAbierto) {
+                obsProyectoListActivos.add(p);
+            } else {
+                obsProyectoListArchivados.add(p);
+            }
+
+            listViewProyectos.setItems(obsProyectoListArchivados);
+        }
+
+
 
 
 //        PauseTransition delay = new PauseTransition(Duration.seconds(2));
@@ -180,6 +212,7 @@ public class HelloController implements Initializable {
                 try {
                     EstadoPrograma.getInstance().setProyectoActivo(listViewProyectos.getSelectionModel().getSelectedItem());
                     abrirVentanaPrincipal();
+
                 } catch (IOException e) {
                     showAlert("Ocurrió un error inesperado y no se puede acceder al proyecto", "Cagaste");
                 }
@@ -204,6 +237,45 @@ public class HelloController implements Initializable {
                 }
             }
         });
+
+        proyectosAbiertos.setOnMouseClicked(event -> {
+
+            String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
+
+            if (event.getButton() == MouseButton.PRIMARY) {
+                cont++;
+
+                if ((cont % 2) == 0) {
+                    isEstado.setText(estado[0]);
+                    listViewProyectos.setItems(obsProyectoListActivos);
+                    proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
+                    proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
+                } else {
+                    isEstado.setText(estado[1]);
+                    listViewProyectos.setItems(obsProyectoListArchivados);
+                    proyectosAbiertos.getStyleClass().add("proyectosArchivados");
+                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");
+                }
+            }
+        });
+
+        proyectosArchivados.setOnMouseClicked(event -> {
+
+            String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
+
+            if (event.getButton() == MouseButton.PRIMARY) {
+                cont++;
+
+                if ((cont % 2) == 0) {
+                    isEstado.setText(estado[0]);
+                    listViewProyectos.setItems(obsProyectoListActivos);
+                } else {
+                    isEstado.setText(estado[1]);
+                    listViewProyectos.setItems(obsProyectoListArchivados);
+                }
+            }
+        });
+
     }
 
 
@@ -284,7 +356,7 @@ public class HelloController implements Initializable {
     public int contadorProyectosActivos(){
         int contActivos = 0;
 
-        for(Proyecto p :obsProyectoList){
+        for(Proyecto p : obsProyectoListActivos){
                 if(p.getFechaCierre() == null){
                     contActivos++;
                 }
@@ -296,7 +368,7 @@ public class HelloController implements Initializable {
     public int contadorProyectosArchivados(){
         int contArchivados = 0;
 
-        for(Proyecto p :obsProyectoList) {
+        for(Proyecto p : obsProyectoListArchivados) {
             if (p.getFechaCierre() != null) {
                 contArchivados++;
             }

@@ -376,3 +376,19 @@
     -fx-border-color: #30363d;
     -fx-border-width: 1.5;
 }
+
+/*.proyectosAbiertos{*/
+/*    -fx-font-weight: bold;*/
+/*}*/
+
+/*.proyectoAbiertoDeseleccionado {*/
+/*    -fx-font-weight: normal;*/
+/*}*/
+
+/*.proyectosArchivados{*/
+/*    -fx-font-weight: bold;*/
+/*}*/
+
+/*.proyectoArchivadoDeseleccionado{*/
+/*    -fx-font-weight: normal;*/
+/*}*/
