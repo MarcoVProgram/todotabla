@@ -164,7 +164,12 @@ public class KanBanController implements Initializable {
             ventanaSecundaria.setScene(new Scene(root));
 
             ventanaSecundaria.setResizable(false);
-            ventanaSecundaria.setAlwaysOnTop(true);
+
+            if(ventanaSecundaria.isFocused()){
+                ventanaSecundaria.setAlwaysOnTop(true);
+            }else{
+                ventanaSecundaria.setAlwaysOnTop(false);
+            }
 
 //            listViewTareas.setItems(obsTareas);
 
