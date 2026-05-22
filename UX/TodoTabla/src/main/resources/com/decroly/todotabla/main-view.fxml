@@ -33,7 +33,7 @@
                </image>
             </ImageView>
          </HBox>
-         <Button fx:id="crearProyectoForm" mnemonicParsing="false" onMouseClicked="#abrirVentanaProyecto" styleClass="btn" text="Crear proyecto" />
+         <Button fx:id="crearProyectoForm" mnemonicParsing="false" onMouseClicked="#abrirVentanaProyecto" styleClass="btnAdd" text="Crear proyecto" />
       </HBox>
 
       <!-- PANEL -->
