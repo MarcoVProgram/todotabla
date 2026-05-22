@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.KanBanController">
+<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.KanBanController">
 
     <!-- ================= HEADER ================= -->
     <top>
@@ -55,7 +55,7 @@
             <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="title-bar">
                 <padding><Insets bottom="12" left="16" top="12" /></padding>
 
-                <Label prefHeight="26.0" prefWidth="160.0" styleClass="icon" text="🔒 Proyecto Ejemplo">
+                <Label prefHeight="26.0" prefWidth="184.0" styleClass="icon" text="🔒 Proyecto Ejemplo">
                <font>
                   <Font size="36.0" />
                </font></Label>
@@ -63,6 +63,7 @@
                <HBox.margin>
                   <Insets />
                </HBox.margin></Label>
+            <Button fx:id="gestionarUsuarios" disable="true" prefHeight="27.0" prefWidth="168.0" styleClass="btn" text="Gestionar usuarios" />
 
                 <Button fx:id="addTarea" onMouseClicked="#abrirVentanaTarea" prefHeight="27.0" prefWidth="130.0" styleClass="btn" text="Crear Tarea">
                <HBox.margin>

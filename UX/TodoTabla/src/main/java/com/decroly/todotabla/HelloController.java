@@ -106,7 +106,6 @@ public class HelloController implements Initializable {
         return ventanaSecundaria;
     }
 
-
     private int cont = 0;
     
     @FXML
