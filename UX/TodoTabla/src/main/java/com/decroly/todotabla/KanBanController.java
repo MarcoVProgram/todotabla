@@ -96,17 +96,17 @@ public class KanBanController implements Initializable {
                     tareasInProgress.clear();
                     tareasInProgress.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     break;
-                case "Ready":
-                    tareasReady.clear();
-                    tareasReady.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
+                case "Done":
+                    tareasDone.clear();
+                    tareasDone.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     break;
                 case "InReview":
                     tareasInReview.clear();
                     tareasInReview.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     break;
-                case "Done":
-                    tareasDone.clear();
-                    tareasDone.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
+                case "Ready":
+                    tareasReady.clear();
+                    tareasReady.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     break;
                 default:
                     // TODO nuevos estados
@@ -124,17 +124,17 @@ public class KanBanController implements Initializable {
         listViewBacklog.setItems(TareaCell.sorted(obsTareasBacklog));
         listViewBacklog.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
 
-        listViewReady.setItems(TareaCell.sorted(obsTareasReady));
-        listViewReady.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
-
         listViewProgress.setItems(TareaCell.sorted(obsTareasProgress));
         listViewProgress.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
+
+        listViewDone.setItems(TareaCell.sorted(obsTareasDone));
+        listViewDone.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
 
         listViewReview.setItems(TareaCell.sorted(obsTareasReview));
         listViewReview.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
 
-        listViewDone.setItems(TareaCell.sorted(obsTareasDone));
-        listViewDone.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
+        listViewReady.setItems(TareaCell.sorted(obsTareasReady));
+        listViewReady.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
     }
 
 

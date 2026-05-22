@@ -233,7 +233,7 @@ public class HelloController implements Initializable {
             ventanaSecundaria.setScene(new Scene(root));
 
             ventanaSecundaria.setResizable(false);
-            ventanaSecundaria.setAlwaysOnTop(true);
+            ventanaSecundaria.setAlwaysOnTop(false);
 
 //            listViewTareas.setItems(obsTareas);
 
