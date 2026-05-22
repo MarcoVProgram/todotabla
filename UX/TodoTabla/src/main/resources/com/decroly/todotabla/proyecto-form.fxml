@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox alignment="CENTER" maxHeight="720.0" maxWidth="720.0" minHeight="420.0" minWidth="420.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.ProyectoController">
+<VBox alignment="CENTER" maxHeight="720.0" maxWidth="720.0" minHeight="420.0" minWidth="420.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.ProyectoController">
    <children>
       <Label styleClass="logo" text="Crear proyecto">
          <VBox.margin>

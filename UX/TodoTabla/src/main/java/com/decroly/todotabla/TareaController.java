@@ -5,6 +5,7 @@ import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,7 +64,7 @@ public class TareaController implements Initializable {
     }
 
     private void listarTareas() {
-        listaTareas = FXCollections.observableList(new ArrayList<>(TareasBDD.getTareas().values())); // No puedo filtrar las tareas por proyecto
+        listaTareas = FXCollections.observableList(new ArrayList<>(TareasBDD.getTareas(EstadoPrograma.getInstance().getProyectoActivo()).values()));
 
         listViewTareas.setItems(listaTareas);
         listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
@@ -91,7 +92,7 @@ public class TareaController implements Initializable {
     private void actualizarTareas() {
         Map<Integer, Tarea> todasTareasDelUniverso = TareasBDD.getTareas();
         if (todasTareasDelUniverso != null) {
-            obsTareas.addAll((TareasBDD.getTareas()).values());
+            obsTareas.addAll((TareasBDD.getTareas(EstadoPrograma.getInstance().getProyectoActivo())).values());
             listViewTareas.refresh();
         }
     }
@@ -106,10 +107,8 @@ public class TareaController implements Initializable {
         int prioridad = comboBoxPrioridadTarea.getSelectionModel().getSelectedItem();
 
         //valores extra necesarios // TODO cambiar esto para seleccionar otros proyectos
-        Proyecto idProyecto = ProyetosBDD.getProyecto(1);
-
         boolean insertarExito = TareasBDD.insertar(new Tarea(nombre, prioridad, 
-                EstadosBDD.getEstado("Backlog"), ProyetosBDD.getProyecto(1)));
+                EstadosBDD.getEstado("Backlog"), EstadoPrograma.getInstance().getProyectoActivo()));
         if (insertarExito) {
             (new Alert(Alert.AlertType.INFORMATION,"Se añadio correctamente", ButtonType.OK)).show();
             this.actualizarTareas();
@@ -130,8 +129,6 @@ public class TareaController implements Initializable {
         int prioridad = comboBoxPrioridadTarea.getSelectionModel().getSelectedItem();
 
         //valores extra necesarios // TODO cambiar esto para seleccionar otros proyectos
-        Proyecto idProyecto = ProyetosBDD.getProyecto(1);
-
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 
         for (Tarea tarea : listaDeTareas) {

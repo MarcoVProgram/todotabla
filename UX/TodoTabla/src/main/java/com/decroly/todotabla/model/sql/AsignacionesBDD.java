@@ -112,12 +112,18 @@ public class AsignacionesBDD {
             ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_fin");
+                LocalDate dateFin = null;
+                if (rawDate != null) {
+                    dateFin = rawDate.toLocalDate();
+                }
+
                 Asignacion asignacion = new Asignacion(
                         table.getInt("id"),
                         UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
                         TareasBDD.getTarea(table.getInt("tarea_ID")),
                         table.getDate("fecha_asignacion").toLocalDate(),
-                        table.getDate("fecha_fin").toLocalDate()
+                        dateFin
                 );
 
                 asignaciones.put(asignacion.getId(), asignacion);
@@ -142,12 +148,18 @@ public class AsignacionesBDD {
             ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_fin");
+                LocalDate dateFin = null;
+                if (rawDate != null) {
+                    dateFin = rawDate.toLocalDate();
+                }
+
                 Asignacion asignacion = new Asignacion(
                         table.getInt("id"),
                         UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
-                        TareasBDD.getTarea(table.getInt("tarea_ID")),
+                        tarea_ID,
                         table.getDate("fecha_asignacion").toLocalDate(),
-                        table.getDate("fecha_fin").toLocalDate()
+                        dateFin
                 );
                 
                 asignaciones.put(asignacion.getId(), asignacion);
@@ -172,12 +184,18 @@ public class AsignacionesBDD {
             ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_fin");
+                LocalDate dateFin = null;
+                if (rawDate != null) {
+                    dateFin = rawDate.toLocalDate();
+                }
+
                 Asignacion asignacion = new Asignacion(
                         table.getInt("id"),
-                        UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
+                        usuario_ID,
                         TareasBDD.getTarea(table.getInt("tarea_ID")),
                         table.getDate("fecha_asignacion").toLocalDate(),
-                        table.getDate("fecha_fin").toLocalDate()
+                        dateFin
                 );
                 
                 asignaciones.put(asignacion.getId(), asignacion);
@@ -202,12 +220,18 @@ public class AsignacionesBDD {
             ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
+                Date rawDate = table.getDate("fecha_fin");
+                LocalDate dateFin = null;
+                if (rawDate != null) {
+                    dateFin = rawDate.toLocalDate();
+                }
+
                 asignacion = new Asignacion(
                         table.getInt("id"),
                         UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
                         TareasBDD.getTarea(table.getInt("tarea_ID")),
                         table.getDate("fecha_asignacion").toLocalDate(),
-                        table.getDate("fecha_fin").toLocalDate()
+                        dateFin
                 );
             }
 

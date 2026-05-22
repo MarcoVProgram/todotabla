@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="424" prefWidth="700.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
+<AnchorPane fx:id="root" prefHeight="424" prefWidth="700.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HelloController">
 
    <VBox spacing="18" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="18">
 
@@ -27,7 +27,7 @@
 
             <Label styleClass="search-icon" text="🔍" />
 
-            <TextField fx:id="isEstado" editable="false" styleClass="search-field" text="is:open" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="isEstado" editable="false" styleClass="search-field" text="Proyectos Abiertos" HBox.hgrow="ALWAYS" />
             <ImageView fx:id="changeImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@images/change.png" />
