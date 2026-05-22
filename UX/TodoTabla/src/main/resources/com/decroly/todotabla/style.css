@@ -69,31 +69,34 @@
 }
 
 .btnAdd {
-    -fx-background-color: #21262d;
+    -fx-background-color: #006222;
     -fx-text-fill: white;
     -fx-background-radius: 6;
     -fx-padding: 6 12;
-    -fx-transition: -fx-background-color 0.3s ease;
+}
+.btnAdd:hover{
+    -fx-background-color: #00792a;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
 }
 
 .btnRemove {
-    -fx-background-color: #21262d;
+    -fx-background-color: #451003;
     -fx-text-fill: white;
     -fx-background-radius: 6;
     -fx-padding: 6 12;
-    -fx-transition: -fx-background-color 0.3s ease;
+}
+
+.btnEdit{
+    -fx-background-color: #eae35e;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
 }
 
 .btn:hover {
     -fx-background-color: #30363d;
-}
-
-.btnAdd:hover{
-    -fx-background-color: #013e06;
-}
-
-.btnRemove:hover{
-    -fx-background-color: #451003;
 }
 
 /* BOARD */
