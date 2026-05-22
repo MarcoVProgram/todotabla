@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.KanBanController">
+<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.KanBanController">
 
     <!-- ================= HEADER ================= -->
     <top>

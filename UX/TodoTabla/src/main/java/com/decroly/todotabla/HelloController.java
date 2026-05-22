@@ -192,7 +192,7 @@ public class HelloController implements Initializable {
 
         changeImage.setOnMouseClicked(event -> {
 
-            String[] estado = {"is:open", "is:archived"};
+            String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
 
             if (event.getButton() == MouseButton.PRIMARY) {
                 cont++;

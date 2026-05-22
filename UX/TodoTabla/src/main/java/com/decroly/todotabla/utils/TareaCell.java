@@ -128,7 +128,7 @@ public class TareaCell extends ListCell<Tarea> {
         asignados.addAll(AsignacionesBDD.getAsignaciones(tarea).values());
         String initials = "";
         for  (Asignacion asignacion : asignados) {
-            if (asignacion.getIdUsuario() != null) {
+            if (asignacion.getIdUsuario() != null && asignacion.getFechaFin() == null) {
                 if (initials.length() != 0) {
                     initials += "|";
                 }
