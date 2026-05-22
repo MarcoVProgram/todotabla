@@ -1,6 +1,7 @@
 package com.decroly.todotabla.utils;
 
 import com.decroly.todotabla.model.Asignacion;
+import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.AsignacionesBDD;
 import com.decroly.todotabla.utils.constants.ColoresPrioridad;
@@ -24,18 +25,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class TareaCell extends ListCell<Tarea> {
 
     //Variables a dibujar
     private final Label titulo;
-    private final Label prioLabel;
+    private final Label estadoLabel;
     private final Region dot;
     private final VBox card;
     private final Label ownerLabel;
+    private Circle bg;
 
     //Variables Mover cosas
     private double dragOffsetX;
@@ -57,19 +57,21 @@ public class TareaCell extends ListCell<Tarea> {
         titulo.setWrapText(true);
         HBox.setHgrow(titulo, Priority.ALWAYS);
 
-        // Color Punto Prioridad
+//        // Color Punto Prioridad
         dot = new Region();
         dot.getStyleClass().add("prioridad-dot");
 
         // Texto Prioridad
-        prioLabel = new Label();
-        prioLabel.getStyleClass().add("prioridad-label");
+        estadoLabel = new Label();
+        estadoLabel.getStyleClass().add("prioridad-label");
 
-        HBox prioRow = new HBox(6, dot, prioLabel);
+        HBox prioRow = new HBox(6, dot, estadoLabel);
         prioRow.setAlignment(Pos.CENTER_LEFT);
 
         // Label Letra User
         ownerLabel = new Label("");
+        bg = new Circle(14);
+
 
         // Avatar - Dibuja o toma
         StackPane avatarPane = buildAvatarPane();
@@ -120,32 +122,40 @@ public class TareaCell extends ListCell<Tarea> {
         titulo.setText(tarea.getNombre());
 
         // Color asociado a prioridad
-        dot.setStyle("-fx-background-color: " + ColoresPrioridad.getColores(tarea.getPrioridad()) + ";");
-        prioLabel.setText(tarea.getPrioridad() + "");
+        dot.setStyle("-fx-background-color: " + tarea.getEstado().getColor() + ";");
+        estadoLabel.setText(tarea.getEstado().getNombre());
 
         // Avatar Letra
-        List<Asignacion> asignados = new LinkedList<>();
-        asignados.addAll(AsignacionesBDD.getAsignaciones(tarea).values());
+        Map<Integer, Asignacion> asignados = AsignacionesBDD.getAsignaciones(tarea);
         String initials = "";
-        for  (Asignacion asignacion : asignados) {
-            if (asignacion.getIdUsuario() != null && asignacion.getFechaFin() == null) {
+
+        boolean hasActiveAsignees = false;
+        for  (Map.Entry<Integer, Asignacion> entry : asignados.entrySet()) {
+            if (entry.getValue().getIdUsuario() != null && entry.getValue().getFechaFin() == null) {
+                hasActiveAsignees = true;
                 if (initials.length() != 0) {
                     initials += "|";
                 }
-                initials += asignacion.getIdUsuario().getNombre().substring(0, 1).toUpperCase();
+                initials += entry.getValue().getIdUsuario().getNombre().substring(0, 1).toUpperCase();
             }
         }
         ownerLabel.setText(initials);
+
+        // Avatar Color
+        if (!hasActiveAsignees) {
+            bg.setFill(Color.TRANSPARENT);
+        }
+        else {
+            bg.setFill(Color.web(ColoresPrioridad.getColores(tarea.getPrioridad())));
+        }
 
         setGraphic(card);
         setStyle("-fx-background-color: transparent;");
     }
 
     private StackPane buildAvatarPane() {
-        Circle bg = new Circle(14);
         bg.setFill(Color.web("#1f6feb"));
 
-         // placeholder, filled in updateItem
         ownerLabel.setStyle("-fx-text-fill: #e6edf3; -fx-font-size: 11px; -fx-font-weight: bold;");
 
         StackPane pane = new StackPane(bg, ownerLabel);
@@ -207,7 +217,7 @@ public class TareaCell extends ListCell<Tarea> {
 
         double sceneHeight = root.getScene().getHeight();
         int band = (int) Math.min(8, (e.getSceneY() / sceneHeight) * 9);//Formula a ajustar para colores
-        tintInput.setPaint(Color.web(ColoresPrioridad.getColores(band)).deriveColor(0, 1, 1, 0.4));
+        //tintInput.setPaint(Color.web(ColoresPrioridad.getColores(band)).deriveColor(0, 1, 1, 0.4));
     }
 
     private void onDragEnd(MouseEvent e) {
