@@ -1,7 +1,6 @@
 package com.decroly.todotabla.utils;
 
 import com.decroly.todotabla.model.Asignacion;
-import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.AsignacionesBDD;
 import com.decroly.todotabla.utils.constants.ColoresPrioridad;
@@ -218,6 +217,7 @@ public class TareaCell extends ListCell<Tarea> {
         double sceneHeight = root.getScene().getHeight();
         int band = (int) Math.min(8, (e.getSceneY() / sceneHeight) * 9);//Formula a ajustar para colores
         //tintInput.setPaint(Color.web(ColoresPrioridad.getColores(band)).deriveColor(0, 1, 1, 0.4));
+
     }
 
     private void onDragEnd(MouseEvent e) {
@@ -228,5 +228,12 @@ public class TareaCell extends ListCell<Tarea> {
 
         // Carta vuelta a ser full
         card.setOpacity(1);
+    }
+
+    private ListView<Tarea> getTargetListView(double screenX, double screenY) {
+        return columnMap.keySet().stream()
+                .filter(lv -> lv.localToScreen(lv.getBoundsInLocal()).contains(screenX, screenY))
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -55,7 +55,7 @@
             <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="title-bar">
                 <padding><Insets bottom="12" left="16" top="12" /></padding>
 
-                <Label prefHeight="26.0" prefWidth="160.0" styleClass="icon" text="🔒 Proyecto Ejemplo">
+                <Label fx:id="proyectoTitulo" prefHeight="26.0" prefWidth="160.0" styleClass="icon" text="🔒 Proyecto Ejemplo">
                <font>
                   <Font size="36.0" />
                </font></Label>

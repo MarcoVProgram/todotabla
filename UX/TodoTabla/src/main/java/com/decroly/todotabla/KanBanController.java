@@ -99,12 +99,16 @@ public class KanBanController implements Initializable {
     @FXML
     private Label doneTitle;
 
+    @FXML
+    private Label proyectoTitulo;
+
 
 
     public void initialize(URL url, ResourceBundle rb) {
         estados = EstadosBDD.getEstados();
         tareasOrdenadas = new  ListView[estados.size()];
         proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
+        proyectoTitulo.setText("🔒 " + proyectoSeleccionado.getTitulo());
         actualizarTareas();
     }
 
