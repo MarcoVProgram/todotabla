@@ -145,7 +145,7 @@ public class KanBanController implements Initializable {
             }
 
             // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view-create.fxml"));
             Parent root = loader.load();
 
             // Crear una nueva ventana (Stage)

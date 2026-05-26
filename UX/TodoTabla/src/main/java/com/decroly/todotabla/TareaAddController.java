@@ -1,5 +1,6 @@
 package com.decroly.todotabla;
 
+import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.Usuario;
@@ -10,14 +11,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class TareaAddController implements Initializable {
+public class TareaAddController implements Initializable { // TODO Comprobar su funcinamiento
 
     //PESTAÑA TAREA
 //    @FXML
@@ -42,15 +43,23 @@ public class TareaAddController implements Initializable {
 
     public void initialize(URL url, ResourceBundle rb) {
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        listarTareas();
+        listarUsuarios();
     }
 
-    private void listarTareas() {
+    private void listarUsuarios() {
         listaUsuarios = FXCollections.observableList(new ArrayList<>());
-        // TODO Solo se requieren los usarios
-        // listaUsuarios.addAll(AsignacionesBDD.getAsignaciones().values());
 
-        listViewUsuarios.setItems(listaUsuarios);
+        Iterator<Integrante> integrantes =
+                IntegrantesBDD.getIntegrantes(
+                        EstadoPrograma.getInstance().getProyectoActivo()
+                ).values().iterator();
+
+        while (integrantes.hasNext()){
+            Usuario user = integrantes.next().getIdUsuario();
+            listaUsuarios.add(user);
+        }
+
+        // TODO rehacer esto para hacer lo con usuarios recomendablemente
         /*listViewUsuarios.setCellFactory(listaTareas -> new ListCell<Tarea>() {
             @Override
             protected void updateItem(Tarea tarea, boolean empty) {
@@ -70,6 +79,7 @@ public class TareaAddController implements Initializable {
                 }
             }
         });*/
+
     }
 
     //--------AGREGAR TAREA-------------
@@ -82,10 +92,10 @@ public class TareaAddController implements Initializable {
         int prioridad = PrioridadTareaFormCrear.getValue();
 
         //valores extra necesarios // TODO cambiar esto para seleccionar otros proyectos
-        Proyecto idProyecto = ProyetosBDD.getProyecto(1);
+        Proyecto idProyecto = EstadoPrograma.getInstance().getProyectoActivo();
 
         boolean insertarExito = TareasBDD.insertar(new Tarea(nombre, prioridad, 
-                EstadosBDD.getEstado("Backlog"), ProyetosBDD.getProyecto(1)));
+                EstadosBDD.getEstado("Backlog"), EstadoPrograma.getInstance().getProyectoActivo()));
         if (insertarExito) {
             (new Alert(Alert.AlertType.INFORMATION,"Se añadio correctamente", ButtonType.OK)).show();
         }
