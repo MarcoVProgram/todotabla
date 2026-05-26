@@ -31,37 +31,39 @@ public class KanBanController implements Initializable {
     //LISTAS
     @FXML
     private ListView<Tarea> listViewBacklog;
-    List<Tarea> tareasBacklog = new ArrayList<>();
-    ObservableList<Tarea> obsTareasBacklog = FXCollections.observableList(tareasBacklog);
+    private List<Tarea> tareasBacklog = new ArrayList<>();
+    private ObservableList<Tarea> obsTareasBacklog = FXCollections.observableList(tareasBacklog);
 
     @FXML
     private ListView<Tarea> listViewReady;
-    List<Tarea> tareasReady = new ArrayList<>();
-    ObservableList<Tarea> obsTareasReady = FXCollections.observableList(tareasReady);
+    private List<Tarea> tareasReady = new ArrayList<>();
+    private ObservableList<Tarea> obsTareasReady = FXCollections.observableList(tareasReady);
 
     @FXML
     private ListView<Tarea> listViewProgress;
-    List<Tarea> tareasInProgress = new ArrayList<>();
-    ObservableList<Tarea> obsTareasProgress = FXCollections.observableList(tareasInProgress);
+    private List<Tarea> tareasInProgress = new ArrayList<>();
+    private ObservableList<Tarea> obsTareasProgress = FXCollections.observableList(tareasInProgress);
 
     @FXML
     private ListView<Tarea> listViewReview;
-    List<Tarea> tareasInReview = new ArrayList<>();
-    ObservableList<Tarea> obsTareasReview = FXCollections.observableList(tareasInReview);
+    private List<Tarea> tareasInReview = new ArrayList<>();
+    private ObservableList<Tarea> obsTareasReview = FXCollections.observableList(tareasInReview);
 
     @FXML
     private ListView<Tarea> listViewDone;
-    List<Tarea> tareasDone = new ArrayList<>();
+    private List<Tarea> tareasDone = new ArrayList<>();
     ObservableList<Tarea> obsTareasDone = FXCollections.observableList(tareasDone);
     
-    List<Integrante> integrantes = new ArrayList<>();
-    ObservableList<Integrante> obsIntegrantes = FXCollections.observableList(integrantes);
+    private List<Integrante> integrantes = new ArrayList<>();
+    private ObservableList<Integrante> obsIntegrantes = FXCollections.observableList(integrantes);
 
 
     private Stage ventanaSecundaria = getVentanaSecundaria();
 
     private Proyecto proyectoSeleccionado;
-    List<Estado> estados;
+    private List<Estado> estados;
+
+    private ListView<Tarea>[] tareasOrdenadas;
 
     @FXML
     private BorderPane root;
@@ -73,6 +75,7 @@ public class KanBanController implements Initializable {
 
     public void initialize(URL url, ResourceBundle rb) {
         estados = EstadosBDD.getEstados();
+        tareasOrdenadas = new  ListView[estados.size()];
         proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
         actualizarTareas();
     }
@@ -80,31 +83,37 @@ public class KanBanController implements Initializable {
     private void actualizarTareas() {
         for (Estado estado : estados) {
             switch (estado.getNombre()) {
-                case "Backlog":
+                case "Pendiente":
                     tareasBacklog.clear();
                     tareasBacklog.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
+                    tareasOrdenadas[estado.getOrden()-1] = listViewBacklog;
                     break;
-                case "InProgress":
+                case "En Curso":
                     tareasInProgress.clear();
                     tareasInProgress.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
+                    tareasOrdenadas[estado.getOrden()-1] = listViewProgress;
                     break;
-                case "Done":
+                case "Completado":
                     tareasDone.clear();
                     tareasDone.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
+                    tareasOrdenadas[estado.getOrden()-1] = listViewDone;
                     break;
-                case "InReview":
+                case "En Revisión":
                     tareasInReview.clear();
                     tareasInReview.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
+                    tareasOrdenadas[estado.getOrden()-1] = listViewReview;
                     break;
-                case "Ready":
+                case "Desplegable":
                     tareasReady.clear();
                     tareasReady.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
+                    tareasOrdenadas[estado.getOrden()-1] = listViewReady;
                     break;
                 default:
                     // TODO nuevos estados
                     break;
             }
         }
+
         Map<ListView<Tarea>, ObservableList<Tarea>> columnMap = new LinkedHashMap<>();
         columnMap.put(listViewBacklog, obsTareasBacklog);
         columnMap.put(listViewReady, obsTareasReady);
@@ -113,7 +122,11 @@ public class KanBanController implements Initializable {
         columnMap.put(listViewDone, obsTareasDone);
 
 
-        listViewBacklog.setItems(TareaCell.sorted(obsTareasBacklog));
+        for (ListView<Tarea> listView : tareasOrdenadas) {
+            listView.setItems(TareaCell.sorted(columnMap.get(listView)));
+            listView.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
+        }
+        /*listViewBacklog.setItems(TareaCell.sorted(obsTareasBacklog));
         listViewBacklog.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
 
         listViewProgress.setItems(TareaCell.sorted(obsTareasProgress));
@@ -126,7 +139,7 @@ public class KanBanController implements Initializable {
         listViewReview.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
 
         listViewReady.setItems(TareaCell.sorted(obsTareasReady));
-        listViewReady.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
+        listViewReady.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});*/
     }
 
 

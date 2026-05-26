@@ -12,13 +12,14 @@ public class EstadosBDD {
     public static boolean insertar(Estado e) {
         boolean estado = false;
 
-        String sql = "INSERT INTO estado VALUES (?, ?)";
+        String sql = "INSERT INTO estado VALUES (?, ?, ?)";
 
         try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(sql)
         ) {
             stmnt.setString(1, e.getNombre());
             stmnt.setString(2, e.getColor());
+            stmnt.setInt(3, e.getOrden());
 
             estado = (stmnt.executeUpdate() == 1);
 
@@ -34,7 +35,8 @@ public class EstadosBDD {
         if (e != null) {
             String sql = "UPDATE `todotabla`.`estado` " +
                     "SET " +
-                    "`color` = ? " +
+                    "`color` = ?, " +
+                    "`orden` = ? " +
                     "WHERE `nombre` = ?; ";
             try (Connection conexion = BDD.getConnection();
                  PreparedStatement stmnt = conexion.prepareStatement(sql)
@@ -42,8 +44,9 @@ public class EstadosBDD {
                 conexion.nativeSQL("START TRANSACTION;");
 
                 stmnt.setString(1, e.getColor());
+                stmnt.setInt(2, e.getOrden());
 
-                stmnt.setString(2, e.getNombre());
+                stmnt.setString(3, e.getNombre());
 
                 estado = (stmnt.executeUpdate() == 1);
 
@@ -99,7 +102,9 @@ public class EstadosBDD {
         ) {
 
             while (rs.next()) {
-                Estado newEstado = new Estado(rs.getString("nombre"), rs.getString("color"));
+                Estado newEstado = new Estado(rs.getString("nombre"),
+                        rs.getString("color"),
+                        rs.getInt("orden"));
 
                 estados.add(newEstado);
             }
@@ -122,7 +127,9 @@ public class EstadosBDD {
             ResultSet rs = stmnt.executeQuery();
             
             while (rs.next()) {
-                estado = new Estado(rs.getString("nombre"), rs.getString("color"));
+                estado = new Estado(rs.getString("nombre"),
+                        rs.getString("color"),
+                        rs.getInt("orden"));
             }
 
         } catch (Exception ex) {
