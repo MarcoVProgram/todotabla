@@ -15,9 +15,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -72,6 +74,32 @@ public class KanBanController implements Initializable {
         return MainController.getVentanaSecundaria();
     }
 
+    @FXML
+    private Circle dotBacklog;
+    @FXML
+    private Label backlogTitle;
+
+    @FXML
+    private Circle dotReady;
+    @FXML
+    private Label readyTitle;
+
+    @FXML
+    private Circle dotProgress;
+    @FXML
+    private Label progressTitle;
+
+    @FXML
+    private Circle dotReview;
+    @FXML
+    private Label reviewTitle;
+
+    @FXML
+    private Circle dotDone;
+    @FXML
+    private Label doneTitle;
+
+
 
     public void initialize(URL url, ResourceBundle rb) {
         estados = EstadosBDD.getEstados();
@@ -87,26 +115,36 @@ public class KanBanController implements Initializable {
                     tareasBacklog.clear();
                     tareasBacklog.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     tareasOrdenadas[estado.getOrden()-1] = listViewBacklog;
+                    dotBacklog.setStyle("-fx-fill: " + estado.getColor() +";");
+                    backlogTitle.setText(estado.getNombre() + " [" + tareasBacklog.size()+"]");
                     break;
                 case "En Curso":
                     tareasInProgress.clear();
                     tareasInProgress.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     tareasOrdenadas[estado.getOrden()-1] = listViewProgress;
+                    dotProgress.setStyle("-fx-fill: " + estado.getColor() +";");
+                    progressTitle.setText(estado.getNombre() + " [" + tareasInProgress.size()+"]");
                     break;
                 case "Completado":
                     tareasDone.clear();
                     tareasDone.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     tareasOrdenadas[estado.getOrden()-1] = listViewDone;
+                    dotDone.setStyle("-fx-fill: " + estado.getColor() +";");
+                    doneTitle.setText(estado.getNombre() + " [" + tareasDone.size()+"]");
                     break;
                 case "En Revisión":
                     tareasInReview.clear();
                     tareasInReview.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     tareasOrdenadas[estado.getOrden()-1] = listViewReview;
+                    dotReview.setStyle("-fx-fill: " + estado.getColor() +";");
+                    reviewTitle.setText(estado.getNombre() + " [" + tareasInReview.size()+"]");
                     break;
                 case "Desplegable":
                     tareasReady.clear();
                     tareasReady.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
                     tareasOrdenadas[estado.getOrden()-1] = listViewReady;
+                    dotReady.setStyle("-fx-fill: " + estado.getColor() +";");
+                    readyTitle.setText(estado.getNombre() + " [" + tareasReady.size()+"]");
                     break;
                 default:
                     // TODO nuevos estados

@@ -98,8 +98,8 @@
                 <!-- COLUMN TEMPLATE -->
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
                     <HBox alignment="CENTER_LEFT" spacing="6">
-                        <Circle radius="4" styleClass="dot-green" />
-                        <Label styleClass="column-title" text="Backlog 0" />
+                        <Circle fx:id="dotBacklog" radius="4" styleClass="dot-green" />
+                        <Label fx:id="backlogTitle" styleClass="column-title" text="Pendiente" />
                     </HBox>
 
                     <Label styleClass="column-desc" text="Estas son las tareas que no se han empezado" />
@@ -108,8 +108,8 @@
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
                     <HBox spacing="6">
-                        <Circle radius="4" styleClass="dot-yellow" />
-                        <Label styleClass="column-title" text="En Progreso 0" />
+                        <Circle fx:id="dotProgress" radius="4" styleClass="dot-yellow" />
+                        <Label fx:id="progressTitle" styleClass="column-title" text="En Curso" />
                     </HBox>
                     <Label styleClass="column-desc" text="Estas son tareas que están siendo desarrolladas" />
                <ListView fx:id="listViewProgress" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
@@ -117,8 +117,8 @@
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
                     <HBox spacing="6">
-                        <Circle radius="4" styleClass="dot-red" />
-                        <Label styleClass="column-title" text="Completado 0" />
+                        <Circle fx:id="dotDone" radius="4" styleClass="dot-red" />
+                        <Label fx:id="doneTitle" styleClass="column-title" text="Completado" />
                     </HBox>
                     <Label styleClass="column-desc" text="Estas son tareas completadas" />
                <ListView fx:id="listViewDone" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
@@ -126,8 +126,8 @@
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
                     <HBox spacing="6">
-                        <Circle radius="4" styleClass="dot-purple" />
-                        <Label styleClass="column-title" text="En Revisión 0" />
+                        <Circle fx:id="dotReview" radius="4" styleClass="dot-purple" />
+                        <Label fx:id="reviewTitle" styleClass="column-title" text="En Revisión" />
                     </HBox>
                     <Label styleClass="column-desc" text="Estas son tareas pendientes a revisión" />
                <ListView fx:id="listViewReview" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
@@ -135,8 +135,8 @@
 
                 <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
                     <HBox spacing="6">
-                        <Circle radius="4" styleClass="dot-blue" />
-                        <Label styleClass="column-title" text="Listo 0" />
+                        <Circle fx:id="dotReady" radius="4" styleClass="dot-blue" />
+                        <Label fx:id="readyTitle" styleClass="column-title" text="Desplegable" />
                     </HBox>
                     <Label styleClass="column-desc" text="Estas son tareas que pueden ser usadas" />
                <ListView fx:id="listViewReady" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
