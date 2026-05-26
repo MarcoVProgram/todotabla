@@ -34,7 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class HelloController implements Initializable {
+public class MainController implements Initializable {
     //lista miembros
 
     private List<Usuario> usuarios = new ArrayList<>();
