@@ -7,12 +7,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class ApplicationMain extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 //        WindowWatcher.init(); //iniciar clase que comprueba ventanas abiertas
         
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(ApplicationMain.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1500,800);
         stage.setTitle("Bienvenido a TodoTabla!");
         stage.setScene(scene);

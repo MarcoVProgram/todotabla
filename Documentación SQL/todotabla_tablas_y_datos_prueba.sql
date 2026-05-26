@@ -13,8 +13,9 @@ DROP TABLE IF EXISTS usuario,
                      
                      
 CREATE TABLE estado (
-	nombre 			VARCHAR(10) 	PRIMARY KEY,
-	color 			VARCHAR(7)		NOT NULL
+	nombre 			VARCHAR(16) 	PRIMARY KEY,
+	color 			VARCHAR(7)		NOT NULL,
+    orden			int				NOT NULL
 );
 
 CREATE TABLE usuario (
@@ -49,7 +50,7 @@ CREATE TABLE tarea (
 	id 				INT 			AUTO_INCREMENT		PRIMARY KEY,
     nombre 			VARCHAR(45) 	NOT NULL,
     prioridad 		INT 			NOT NULL 			DEFAULT 0,
-    estado 			VARCHAR(10),
+    estado 			VARCHAR(16),
     proyecto_ID 	INT,
     
     CONSTRAINT proyecto_tarea_FK FOREIGN KEY (proyecto_ID) REFERENCES proyecto(id) ON DELETE CASCADE,
@@ -58,7 +59,7 @@ CREATE TABLE tarea (
 
 CREATE TABLE historial_tareas (
 	id 				INT 			AUTO_INCREMENT 		PRIMARY KEY,
-	estado			VARCHAR(10),
+	estado			VARCHAR(16),
 	tarea_id 		INT,
 	fecha_cambio 	DATETIME		NOT NULL,
     
@@ -90,11 +91,11 @@ CREATE TABLE asignacion (
 -- ============================================================
 -- ESTADO (5)
 -- ============================================================
-INSERT INTO estado (nombre, color) VALUES ('Backlog',    '#6B7280');
-INSERT INTO estado (nombre, color) VALUES ('Ready',      '#3B82F6');
-INSERT INTO estado (nombre, color) VALUES ('InProgress', '#F59E0B');
-INSERT INTO estado (nombre, color) VALUES ('InReview',  '#8B5CF6');
-INSERT INTO estado (nombre, color) VALUES ('Done',       '#10B981');
+INSERT INTO estado (nombre, color, orden) VALUES ('Pendiente',    	'#6B7280', 1);
+INSERT INTO estado (nombre, color, orden) VALUES ('En Curso', 		'#F59E0B', 2);
+INSERT INTO estado (nombre, color, orden) VALUES ('Completado',		'#10B981', 3);
+INSERT INTO estado (nombre, color, orden) VALUES ('En Revisión',  	'#8B5CF6', 4);
+INSERT INTO estado (nombre, color, orden) VALUES ('Desplegable',  	'#3B82F6', 5);
 
 
 -- ============================================================
@@ -156,34 +157,34 @@ INSERT INTO integrante (rol, fecha_entrada, fecha_salida, usuario_id, proyecto_i
 -- ============================================================
 
 -- Proyecto 1: ERP Corporativo
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Análisis de requisitos',       3, 'Done',       1);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Diseño de base de datos',      3, 'Done',       1);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de facturación',        3, 'Done',       1);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de inventario',         2, 'InReview',  1);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de RRHH',               2, 'InProgress', 1);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Integración con contabilidad', 1, 'Ready',      1);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Panel de administración',      2, 'Backlog',    1);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Testing y QA global',          1, 'Backlog',    1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Análisis de requisitos',       3, 'Completado',       1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Diseño de base de datos',      3, 'Completado',       1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de facturación',        3, 'Completado',       1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de inventario',         2, 'En Revisión',  1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de RRHH',               2, 'En Curso', 1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Integración con contabilidad', 1, 'Desplegable',      1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Panel de administración',      2, 'Pendiente',    1);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Testing y QA global',          1, 'Pendiente',    1);
 
 -- Proyecto 2: App Móvil Clientes
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Wireframes y prototipo',    3, 'Done',       2);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Diseño UI/UX',              3, 'Done',       2);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Autenticación de usuarios', 3, 'Done',       2);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Catálogo de productos',     2, 'InReview',  2);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Carrito de compras',        2, 'InProgress', 2);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Pasarela de pagos',         3, 'InProgress', 2);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Notificaciones push',       1, 'Ready',      2);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Testing en dispositivos',   1, 'Backlog',    2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Wireframes y prototipo',    3, 'Completado',       2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Diseño UI/UX',              3, 'Completado',       2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Autenticación de usuarios', 3, 'Completado',       2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Catálogo de productos',     2, 'En Revisión',  2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Carrito de compras',        2, 'En Curso', 2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Pasarela de pagos',         3, 'En Curso', 2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Notificaciones push',       1, 'Desplegable',      2);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Testing en dispositivos',   1, 'Pendiente',    2);
 
 -- Proyecto 3: Portal Web B2B
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Definición de arquitectura',  3, 'Done',       3);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Diseño visual y branding',    2, 'Done',       3);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Sistema de autenticación',    3, 'Done',       3);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Gestión de pedidos',          3, 'InReview',  3);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Dashboard de métricas',       2, 'InProgress', 3);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Integración API proveedores', 2, 'InProgress', 3);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de reportes',          1, 'Ready',      3);
-INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Optimización SEO',            1, 'Backlog',    3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Definición de arquitectura',  3, 'Completado',       3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Diseño visual y branding',    2, 'Completado',       3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Sistema de autenticación',    3, 'Completado',       3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Gestión de pedidos',          3, 'En Revisión',  3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Dashboard de métricas',       2, 'En Curso', 3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Integración API proveedores', 2, 'En Curso', 3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Módulo de reportes',          1, 'Desplegable',      3);
+INSERT INTO tarea (nombre, prioridad, estado, proyecto_ID) VALUES ('Optimización SEO',            1, 'Pendiente',    3);
 
 
 -- ============================================================
@@ -285,97 +286,113 @@ INSERT INTO asignacion (usuario_ID, tarea_ID, fecha_asignacion, fecha_fin) VALUE
 -- ============================================================
 
 -- Tarea 1 (Done) — Análisis de requisitos
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    1, '2024-01-20 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       1, '2024-02-10 17:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    1, '2024-01-20 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Completado',       1, '2024-02-10 17:00:00');
 
 -- Tarea 2 (Done) — Diseño de base de datos
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    2, '2024-02-11 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       2, '2024-03-01 18:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    2, '2024-02-11 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Completado',       2, '2024-03-01 18:00:00');
 
 -- Tarea 3 (Done) — Módulo de facturación
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      3, '2024-03-05 08:30:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       3, '2024-04-30 16:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Desplegable',      3, '2024-03-05 08:30:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Completado',       3, '2024-04-30 16:00:00');
 
 -- Tarea 4 (InReview) — Módulo de inventario
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 4, '2024-04-01 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InReview',  4, '2024-04-25 11:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Curso', 4, '2024-04-01 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Revisión',  4, '2024-04-25 11:00:00');
 
 -- Tarea 5 (InProgress) — Módulo de RRHH
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    5, '2024-04-15 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 5, '2024-04-20 10:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    5, '2024-04-15 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Curso', 5, '2024-04-20 10:00:00');
 
 -- Tarea 6 (Ready) — Integración con contabilidad
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    6, '2024-05-01 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      6, '2024-05-03 14:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    6, '2024-05-01 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Desplegable',      6, '2024-05-03 14:00:00');
 
 -- Tarea 7 (Backlog) — Panel de administración
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    7, '2024-05-10 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    7, '2024-05-14 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    7, '2024-05-10 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    7, '2024-05-14 09:00:00');
 
 -- Tarea 8 (Backlog) — Testing y QA global
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    8, '2024-05-15 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    8, '2024-05-17 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    8, '2024-05-15 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    8, '2024-05-17 09:00:00');
 
 -- Tarea 9 (Done) — Wireframes y prototipo
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    9, '2024-03-05 08:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       9, '2024-03-25 17:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    9, '2024-03-05 08:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Completado',       9, '2024-03-25 17:00:00');
 
 -- Tarea 10 (Done) — Diseño UI/UX
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      10, '2024-03-20 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       10, '2024-04-15 16:30:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Desplegable',      10, '2024-03-20 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Completado',       10, '2024-04-15 16:30:00');
 
 -- Tarea 11 (Done) — Autenticación de usuarios
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 11, '2024-04-01 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       11, '2024-04-30 18:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Curso', 11, '2024-04-01 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Completado',       11, '2024-04-30 18:00:00');
 
 -- Tarea 12 (InReview) — Catálogo de productos
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      12, '2024-04-20 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InReview',  12, '2024-05-05 14:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Desplegable',      12, '2024-04-20 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Revisión',  12, '2024-05-05 14:00:00');
 
 -- Tarea 13 (InProgress) — Carrito de compras
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      13, '2024-05-01 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 13, '2024-05-06 10:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Desplegable',      13, '2024-05-01 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Curso', 13, '2024-05-06 10:00:00');
 
 -- Tarea 14 (InProgress) — Pasarela de pagos
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    14, '2024-05-01 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 14, '2024-05-08 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    14, '2024-05-01 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Curso', 14, '2024-05-08 09:00:00');
 
 -- Tarea 15 (Ready) — Notificaciones push
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    15, '2024-05-10 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      15, '2024-05-12 11:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    15, '2024-05-10 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Desplegable',      15, '2024-05-12 11:00:00');
 
 -- Tarea 16 (Backlog) — Testing en dispositivos
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    16, '2024-05-15 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    16, '2024-05-17 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    16, '2024-05-15 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    16, '2024-05-17 09:00:00');
 
 -- Tarea 17 (Done) — Definición de arquitectura
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    17, '2024-02-05 08:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       17, '2024-02-28 17:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    17, '2024-02-05 08:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Completado',       17, '2024-02-28 17:00:00');
 
 -- Tarea 18 (Done) — Diseño visual y branding
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    18, '2024-03-01 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       18, '2024-03-31 16:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    18, '2024-03-01 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Completado',       18, '2024-03-31 16:00:00');
 
 -- Tarea 19 (Done) — Sistema de autenticación
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      19, '2024-03-15 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Done',       19, '2024-04-20 17:30:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Desplegable',      19, '2024-03-15 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Completado',       19, '2024-04-20 17:30:00');
 
 -- Tarea 20 (InReview) — Gestión de pedidos
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 20, '2024-04-10 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InReview',  20, '2024-04-30 14:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Curso', 20, '2024-04-10 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Revisión',  20, '2024-04-30 14:00:00');
 
 -- Tarea 21 (InProgress) — Dashboard de métricas
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    21, '2024-04-25 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 21, '2024-05-02 10:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    21, '2024-04-25 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Curso', 21, '2024-05-02 10:00:00');
 
 -- Tarea 22 (InProgress) — Integración API proveedores
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      22, '2024-05-01 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress', 22, '2024-05-07 11:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Desplegable',      22, '2024-05-01 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Curso', 22, '2024-05-07 11:00:00');
 
 -- Tarea 23 (Ready) — Módulo de reportes
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    23, '2024-05-05 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Ready',      23, '2024-05-07 14:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    23, '2024-05-05 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Desplegable',      23, '2024-05-07 14:00:00');
 
 -- Tarea 24 (Backlog) — Optimización SEO
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Backlog',    24, '2024-05-10 09:00:00');
-INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('InProgress',    24, '2024-05-13 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('Pendiente',    24, '2024-05-10 09:00:00');
+INSERT INTO historial_tareas (estado, tarea_id, fecha_cambio) VALUES ('En Curso',    24, '2024-05-13 09:00:00');
+
+
+-- Triggers — Activar después de Inserts prueba
+DELIMITER $$
+CREATE TRIGGER guardarHistorialCambio AFTER UPDATE ON tarea FOR EACH ROW 
+BEGIN 
+	INSERT INTO historial_tareas(estado, tarea_id, fecha_cambio) VALUES (NEW.estado, NEW.id, NOW());
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER guardarHistorialInsercion AFTER INSERT ON tarea FOR EACH ROW 
+BEGIN 
+	INSERT INTO historial_tareas(estado, tarea_id, fecha_cambio) VALUES (NEW.estado, NEW.id, NOW());
+END $$
+DELIMITER ;

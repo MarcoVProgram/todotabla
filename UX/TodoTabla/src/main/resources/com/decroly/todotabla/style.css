@@ -73,12 +73,16 @@
     -fx-text-fill: white;
     -fx-background-radius: 6;
     -fx-padding: 6 12;
+    -fx-border-color: #05ab3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
 }
 .btnAdd:hover{
     -fx-background-color: #00792a;
     -fx-text-fill: white;
     -fx-background-radius: 6;
     -fx-padding: 6 12;
+    -fx-border-color: #09dd55;
 }
 
 .btnRemove {

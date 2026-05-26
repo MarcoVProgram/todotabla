@@ -6,7 +6,6 @@ import com.decroly.todotabla.model.sql.ProyetosBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
-import com.decroly.todotabla.utils.constants.opcionesBase;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,7 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class HelloController implements Initializable {
+public class MainController implements Initializable {
     //lista miembros
 
     private List<Usuario> usuarios = new ArrayList<>();
@@ -87,15 +86,6 @@ public class HelloController implements Initializable {
     private List<Proyecto> proyectoListArchivados = new ArrayList<>();
     private ObservableList<Proyecto> obsProyectoListArchivados = FXCollections.observableList(proyectoListArchivados);
 
-    @FXML
-    private ComboBox<opcionesBase> comboBoxOpcion;
-        List<opcionesBase> opcionesBaseList = new ArrayList<>();
-
-        ObservableList<opcionesBase> obsOpcionesBase = FXCollections.observableList(opcionesBaseList);
-
-    public ComboBox<opcionesBase> getComboBoxOpcion() {
-        return comboBoxOpcion;
-    }
 
 
 
@@ -324,32 +314,6 @@ public class HelloController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-
-    @FXML
-    private void comprobarProyecto(){
-        if(comboBoxOpcion.getSelectionModel().getSelectedItem() != null){
-            switch (comboBoxOpcion.getSelectionModel().getSelectedItem()){
-                case VER_KANBAN -> {
-                    if(listViewProyectos.getSelectionModel().getSelectedItem() != null){
-                        try {
-                            EstadoPrograma.getInstance().setProyectoActivo(listViewProyectos.getSelectionModel().getSelectedItem());
-                            abrirVentanaPrincipal();
-                        } catch (IOException e) {
-                            showAlert("Ocurrió un error inesperado y no se puede acceder al proyecto", "Cagaste");
-                        }
-                    }
-                }
-                /*case BORRAR_PROYECTO -> {
-                    if(listViewProyectos.getSelectionModel().getSelectedItem() != null){
-                        int id = listViewProyectos.getSelectionModel().getSelectedItem().getId();
-
-                        obsProyectoList.remove(id);
-                    }
-                }*/
-            }
-        }
     }
 
     public int contadorProyectosActivos(){
