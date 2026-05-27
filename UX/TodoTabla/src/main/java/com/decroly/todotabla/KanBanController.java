@@ -4,15 +4,18 @@ import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.utils.ColumnaKanban;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.TareaCell;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -30,31 +33,9 @@ public class KanBanController implements Initializable {
     @FXML
     private ImageView returnBtn;
 
-    //LISTAS
+    //Contenedor
     @FXML
-    private ListView<Tarea> listViewBacklog;
-    private List<Tarea> tareasBacklog = new ArrayList<>();
-    private ObservableList<Tarea> obsTareasBacklog = FXCollections.observableList(tareasBacklog);
-
-    @FXML
-    private ListView<Tarea> listViewReady;
-    private List<Tarea> tareasReady = new ArrayList<>();
-    private ObservableList<Tarea> obsTareasReady = FXCollections.observableList(tareasReady);
-
-    @FXML
-    private ListView<Tarea> listViewProgress;
-    private List<Tarea> tareasInProgress = new ArrayList<>();
-    private ObservableList<Tarea> obsTareasProgress = FXCollections.observableList(tareasInProgress);
-
-    @FXML
-    private ListView<Tarea> listViewReview;
-    private List<Tarea> tareasInReview = new ArrayList<>();
-    private ObservableList<Tarea> obsTareasReview = FXCollections.observableList(tareasInReview);
-
-    @FXML
-    private ListView<Tarea> listViewDone;
-    private List<Tarea> tareasDone = new ArrayList<>();
-    ObservableList<Tarea> obsTareasDone = FXCollections.observableList(tareasDone);
+    private HBox contenedorColumnas;
     
     private List<Integrante> integrantes = new ArrayList<>();
     private ObservableList<Integrante> obsIntegrantes = FXCollections.observableList(integrantes);
@@ -65,8 +46,6 @@ public class KanBanController implements Initializable {
     private Proyecto proyectoSeleccionado;
     private List<Estado> estados;
 
-    private ListView<Tarea>[] tareasOrdenadas;
-
     @FXML
     private BorderPane root;
 
@@ -75,113 +54,90 @@ public class KanBanController implements Initializable {
     }
 
     @FXML
-    private Circle dotBacklog;
-    @FXML
-    private Label backlogTitle;
-
-    @FXML
-    private Circle dotReady;
-    @FXML
-    private Label readyTitle;
-
-    @FXML
-    private Circle dotProgress;
-    @FXML
-    private Label progressTitle;
-
-    @FXML
-    private Circle dotReview;
-    @FXML
-    private Label reviewTitle;
-
-    @FXML
-    private Circle dotDone;
-    @FXML
-    private Label doneTitle;
-
-    @FXML
     private Label proyectoTitulo;
+
+    private Map<Estado, ColumnaKanban> columnMap = new HashMap<>();
 
 
 
     public void initialize(URL url, ResourceBundle rb) {
         estados = EstadosBDD.getEstados();
-        tareasOrdenadas = new  ListView[estados.size()];
+        estados.sort(Comparator.comparingInt(Estado::getOrden));
         proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
         proyectoTitulo.setText("🔒 " + proyectoSeleccionado.getTitulo());
+
         actualizarTareas();
     }
 
     private void actualizarTareas() {
+        contenedorColumnas.getChildren().clear();
+        columnMap.clear();
+
         for (Estado estado : estados) {
-            switch (estado.getNombre()) {
-                case "Pendiente":
-                    tareasBacklog.clear();
-                    tareasBacklog.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
-                    tareasOrdenadas[estado.getOrden()-1] = listViewBacklog;
-                    dotBacklog.setStyle("-fx-fill: " + estado.getColor() +";");
-                    backlogTitle.setText(estado.getNombre() + " [" + tareasBacklog.size()+"]");
-                    break;
-                case "En Curso":
-                    tareasInProgress.clear();
-                    tareasInProgress.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
-                    tareasOrdenadas[estado.getOrden()-1] = listViewProgress;
-                    dotProgress.setStyle("-fx-fill: " + estado.getColor() +";");
-                    progressTitle.setText(estado.getNombre() + " [" + tareasInProgress.size()+"]");
-                    break;
-                case "Completado":
-                    tareasDone.clear();
-                    tareasDone.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
-                    tareasOrdenadas[estado.getOrden()-1] = listViewDone;
-                    dotDone.setStyle("-fx-fill: " + estado.getColor() +";");
-                    doneTitle.setText(estado.getNombre() + " [" + tareasDone.size()+"]");
-                    break;
-                case "En Revisión":
-                    tareasInReview.clear();
-                    tareasInReview.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
-                    tareasOrdenadas[estado.getOrden()-1] = listViewReview;
-                    dotReview.setStyle("-fx-fill: " + estado.getColor() +";");
-                    reviewTitle.setText(estado.getNombre() + " [" + tareasInReview.size()+"]");
-                    break;
-                case "Desplegable":
-                    tareasReady.clear();
-                    tareasReady.addAll(TareasBDD.getTareas(estado, proyectoSeleccionado).values());
-                    tareasOrdenadas[estado.getOrden()-1] = listViewReady;
-                    dotReady.setStyle("-fx-fill: " + estado.getColor() +";");
-                    readyTitle.setText(estado.getNombre() + " [" + tareasReady.size()+"]");
-                    break;
-                default:
-                    // TODO nuevos estados
-                    break;
-            }
+            columnMap.put(estado, addColumna(estado));
         }
+    }
 
-        Map<ListView<Tarea>, ObservableList<Tarea>> columnMap = new LinkedHashMap<>();
-        columnMap.put(listViewBacklog, obsTareasBacklog);
-        columnMap.put(listViewReady, obsTareasReady);
-        columnMap.put(listViewProgress, obsTareasProgress);
-        columnMap.put(listViewReview, obsTareasReview);
-        columnMap.put(listViewDone, obsTareasDone);
+    private void actualizarTareas(String regex) {
+        contenedorColumnas.getChildren().clear();
+        columnMap.clear();
 
-
-        for (ListView<Tarea> listView : tareasOrdenadas) {
-            listView.setItems(TareaCell.sorted(columnMap.get(listView)));
-            listView.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
+        for (Estado estado : estados) {
+            columnMap.put(estado, addColumna(estado, regex));
         }
-        /*listViewBacklog.setItems(TareaCell.sorted(obsTareasBacklog));
-        listViewBacklog.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
+    }
 
-        listViewProgress.setItems(TareaCell.sorted(obsTareasProgress));
-        listViewProgress.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
+    private ColumnaKanban addColumna(Estado estado) {
+        ObservableList<Tarea> items = FXCollections.observableArrayList(
+                TareasBDD.getTareas(estado, proyectoSeleccionado).values()
+        );
+        ListView<Tarea> listView = constructorColumnas(estado, items);
+        return new ColumnaKanban(estado, listView, items);
+    }
 
-        listViewDone.setItems(TareaCell.sorted(obsTareasDone));
-        listViewDone.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
+    private ColumnaKanban addColumna(Estado estado, String regex) {
+        ObservableList<Tarea> items = FXCollections.observableArrayList(
+                TareasBDD.getTareas(regex, proyectoSeleccionado, estado)
+        );
+        ListView<Tarea> listView = constructorColumnas(estado, items);
+        return new ColumnaKanban(estado, listView, items);
+    }
 
-        listViewReview.setItems(TareaCell.sorted(obsTareasReview));
-        listViewReview.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});
+    private ListView<Tarea> constructorColumnas(Estado  estado, ObservableList<Tarea> items) {
+        // Circulo de Estado
+        Circle dot = new Circle(4);
+        dot.setStyle("-fx-fill: " + estado.getColor() + ";");
 
-        listViewReady.setItems(TareaCell.sorted(obsTareasReady));
-        listViewReady.setCellFactory(tareaListView -> new TareaCell(root, columnMap) {});*/
+        // Titulo con contador
+        Label title = new Label(estado.getNombre() + " [" + items.size() + "]");
+        title.getStyleClass().add("column-title");
+
+        // Actualización Automática
+        items.addListener((ListChangeListener<Tarea>) c ->
+                title.setText(estado.getNombre() + " [" + items.size() + "]")
+        );
+
+        // Titulo
+        HBox titleRow = new HBox(6, dot, title);
+        titleRow.setAlignment(Pos.CENTER_LEFT);
+
+        // ListView de Tarea
+        ListView<Tarea> listView = new ListView<>(TareaCell.sorted(items));
+        listView.setCellFactory(lv -> new TareaCell(root, columnMap));
+        listView.getStyleClass().add("kanban-list");
+        listView.setPrefHeight(579);
+        listView.setPrefWidth(260);
+        listView.setStyle("-fx-background-color: #0b0b0b;");
+        VBox.setVgrow(listView, Priority.ALWAYS);
+
+        // Columna creada
+        VBox column = new VBox(titleRow, listView);
+        column.getStyleClass().add("column");
+        column.setStyle("-fx-background-color: #0b0b0b;");
+
+        // Se añade a su hija
+        contenedorColumnas.getChildren().add(column);
+        return listView;
     }
 
 
@@ -220,7 +176,6 @@ public class KanBanController implements Initializable {
 
 //            listViewTareas.setItems(obsTareas);
 
-            actualizarTareas();
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
             actualizarTareas();
@@ -236,9 +191,7 @@ public class KanBanController implements Initializable {
     @FXML
     public void buscarTarea(ActionEvent event) {
         String name = ""; // Señalar barra de busqueda
-        obsTareasReady.addAll(TareasBDD.getTarea(name, EstadoPrograma.getInstance().getProyectoActivo()));
+        actualizarTareas(name);
 
     }
-
-
 }

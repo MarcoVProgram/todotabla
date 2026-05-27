@@ -5,9 +5,7 @@ import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
 
 import java.sql.*;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TareasBDD {
     public static boolean insertar(Tarea t) {
@@ -245,16 +243,17 @@ public class TareasBDD {
         return tarea;
     }
 
-    public static HashSet<Tarea> getTarea(String nombre, Proyecto p) {
-        HashSet<Tarea> tareas = null;
+    public static List<Tarea> getTareas(String nombre, Proyecto p, Estado e) {
+        List<Tarea> tareas = new LinkedList<>();
 
-        String sql = "SELECT * FROM tarea WHERE nombre LIKE ? AND proyecto_ID = ?;";
+        String sql = "SELECT * FROM tarea WHERE nombre LIKE ? AND proyecto_ID = ? AND  estado = ?;";
 
         try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(sql)) {
 
             stmnt.setString(1, "%"+nombre+"%");
             stmnt.setInt(2, p.getId());
+            stmnt.setString(3, e.getNombre());
             ResultSet table = stmnt.executeQuery();
 
             while (table.next()) {
@@ -265,10 +264,27 @@ public class TareasBDD {
                         ProyetosBDD.getProyecto(table.getInt("proyecto_ID"))));
             }
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
             return null;
         }
 
         return tareas;
+    }
+
+    public static int getMayorPrioridad(Proyecto p, Estado e) {
+        int prioridad = 0;
+
+        String sql = "SELECT * FROM tarea WHERE nombre LIKE ? AND proyecto_ID = ? AND  estado = ?;";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+
+
+        } catch (Exception ex) {
+            return 0;
+        }
+
+        return prioridad;
     }
 }

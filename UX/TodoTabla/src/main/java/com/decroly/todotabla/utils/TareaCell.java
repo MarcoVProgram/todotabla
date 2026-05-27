@@ -1,6 +1,7 @@
 package com.decroly.todotabla.utils;
 
 import com.decroly.todotabla.model.Asignacion;
+import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.AsignacionesBDD;
 import com.decroly.todotabla.utils.constants.ColoresPrioridad;
@@ -12,7 +13,6 @@ import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorInput;
@@ -40,12 +40,12 @@ public class TareaCell extends ListCell<Tarea> {
     private double dragOffsetX;
     private double dragOffsetY;
     private final BorderPane root;
-    private final Map<ListView<Tarea>, ObservableList<Tarea>> columnMap;
+    private final Map<Estado, ColumnaKanban> columnMap;
     private ImageView ghost;
     private ColorInput tintInput;
 
     //Constructor
-    public TareaCell(BorderPane root, Map<ListView<Tarea>, ObservableList<Tarea>> columnMap) {
+    public TareaCell(BorderPane root, Map<Estado, ColumnaKanban> columnMap) {
         this.root = root;
         this.columnMap = columnMap;
 
@@ -230,10 +230,10 @@ public class TareaCell extends ListCell<Tarea> {
         card.setOpacity(1);
     }
 
-    private ListView<Tarea> getTargetListView(double screenX, double screenY) {
+    /*private ListView<Tarea> getTargetListView(double screenX, double screenY) {
         return columnMap.keySet().stream()
                 .filter(lv -> lv.localToScreen(lv.getBoundsInLocal()).contains(screenX, screenY))
                 .findFirst()
                 .orElse(null);
-    }
+    }*/
 }

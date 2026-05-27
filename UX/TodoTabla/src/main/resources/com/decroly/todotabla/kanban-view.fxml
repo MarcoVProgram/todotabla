@@ -92,56 +92,8 @@
     <!-- ================= BOARD ================= -->
     <center>
         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" styleClass="scroll" vbarPolicy="NEVER">
-
-            <HBox spacing="24" styleClass="board">
-
-                <!-- COLUMN TEMPLATE -->
-                <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
-                    <HBox alignment="CENTER_LEFT" spacing="6">
-                        <Circle fx:id="dotBacklog" radius="4" styleClass="dot-green" />
-                        <Label fx:id="backlogTitle" styleClass="column-title" text="Pendiente" />
-                    </HBox>
-
-                    <Label styleClass="column-desc" text="Estas son las tareas que no se han empezado" />
-               <ListView fx:id="listViewBacklog" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
-                </VBox>
-
-                <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
-                    <HBox spacing="6">
-                        <Circle fx:id="dotProgress" radius="4" styleClass="dot-yellow" />
-                        <Label fx:id="progressTitle" styleClass="column-title" text="En Curso" />
-                    </HBox>
-                    <Label styleClass="column-desc" text="Estas son tareas que están siendo desarrolladas" />
-               <ListView fx:id="listViewProgress" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
-                </VBox>
-
-                <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
-                    <HBox spacing="6">
-                        <Circle fx:id="dotDone" radius="4" styleClass="dot-red" />
-                        <Label fx:id="doneTitle" styleClass="column-title" text="Completado" />
-                    </HBox>
-                    <Label styleClass="column-desc" text="Estas son tareas completadas" />
-               <ListView fx:id="listViewDone" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
-                </VBox>
-
-                <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
-                    <HBox spacing="6">
-                        <Circle fx:id="dotReview" radius="4" styleClass="dot-purple" />
-                        <Label fx:id="reviewTitle" styleClass="column-title" text="En Revisión" />
-                    </HBox>
-                    <Label styleClass="column-desc" text="Estas son tareas pendientes a revisión" />
-               <ListView fx:id="listViewReview" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
-                </VBox>
-
-                <VBox style="-fx-background-color: #0b0b0b;" styleClass="column">
-                    <HBox spacing="6">
-                        <Circle fx:id="dotReady" radius="4" styleClass="dot-blue" />
-                        <Label fx:id="readyTitle" styleClass="column-title" text="Desplegable" />
-                    </HBox>
-                    <Label styleClass="column-desc" text="Estas son tareas que pueden ser usadas" />
-               <ListView fx:id="listViewReady" prefHeight="579.0" prefWidth="260.0" style="-fx-background-color: #0b0b0b;" styleClass="kanban-list" />
-                </VBox>
-
+            <!--Lista de Tareas a crear-->
+            <HBox fx:id="contenedorColumnas" spacing="24" styleClass="board">
             </HBox>
         </ScrollPane>
     </center>
