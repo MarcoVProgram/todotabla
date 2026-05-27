@@ -271,17 +271,23 @@ public class TareasBDD {
         return tareas;
     }
 
-    public static int getMayorPrioridad(Proyecto p, Estado e) {
+    public static int getMayorPrioridad(Proyecto p) {
         int prioridad = 0;
 
-        String sql = "SELECT * FROM tarea WHERE nombre LIKE ? AND proyecto_ID = ? AND  estado = ?;";
+        String sql = "SELECT prioridad FROM tarea WHERE proyecto_ID = ? ORDER BY prioridad DESC LIMIT 1;";
 
         try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+            stmnt.setInt(1, p.getId());
 
+            ResultSet table = stmnt.executeQuery();
+            while (table.next()) {
+                prioridad = table.getInt("prioridad");
+            }
 
 
         } catch (Exception ex) {
+            ex.printStackTrace();
             return 0;
         }
 

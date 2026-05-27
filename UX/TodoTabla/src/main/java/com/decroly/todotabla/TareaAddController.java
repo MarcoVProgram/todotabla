@@ -81,17 +81,17 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
 
         //obtener valores campos
         String nombre = nombreTareaFormCrear.getText();
-        int prioridad = PrioridadTareaFormCrear.getValue();
 
         List<Usuario> usuariosSeleccionados = listViewUsuarios.getSelectionModel().getSelectedItems();
 
 
         //valores extra necesarios
         Proyecto idProyecto = EstadoPrograma.getInstance().getProyectoActivo();
+        int prioridad = TareasBDD.getMayorPrioridad(idProyecto);
 
         Tarea tareo = new Tarea(
                 nombre, prioridad,
-                EstadosBDD.getEstado("Backlog"), idProyecto
+                EstadosBDD.getEstado("Pendiente"), idProyecto
         );
         boolean insertarExito = TareasBDD.insertar(tareo);
         if (insertarExito) {
