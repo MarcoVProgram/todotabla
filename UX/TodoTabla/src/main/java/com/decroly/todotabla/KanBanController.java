@@ -149,7 +149,7 @@ public class KanBanController implements Initializable {
     }
 
     @FXML
-    private void abrirVentanaTarea() { //panel tarea
+    private void abrirVentanaCrearTarea() { //panel tarea
         try {
 
             if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
@@ -180,12 +180,69 @@ public class KanBanController implements Initializable {
             ventanaSecundaria.showAndWait();
             actualizarTareas();
 
-            // TODO Hay que refrescar las listas del Kanban controller
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void abrirVentanaEditarTarea() { //panel tarea
+        try {
+
+            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                return;
+            }
+
+            // Cargar el archivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view-mod.fxml"));
+            Parent root = loader.load();
+
+            // Crear una nueva ventana (Stage)
+            ventanaSecundaria = new Stage();
+            ventanaSecundaria.setTitle("Editar tarea");
+            ventanaSecundaria.setScene(new Scene(root));
+
+            ventanaSecundaria.setResizable(false);
+
+            // Mostrar la ventana
+            ventanaSecundaria.showAndWait();
+            actualizarTareas();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void abrirVentanaBorrarTarea() { //panel tarea
+        try {
+
+            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                return;
+            }
+
+            // Cargar el archivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view-remove.fxml"));
+            Parent root = loader.load();
+
+            // Crear una nueva ventana (Stage)
+            ventanaSecundaria = new Stage();
+            ventanaSecundaria.setTitle("Borrar tarea");
+            ventanaSecundaria.setScene(new Scene(root));
+
+            ventanaSecundaria.setResizable(false);
+
+            // Mostrar la ventana
+            ventanaSecundaria.showAndWait();
+            actualizarTareas();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @FXML

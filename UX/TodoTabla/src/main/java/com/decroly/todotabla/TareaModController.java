@@ -1,9 +1,6 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Tarea;
-import com.decroly.todotabla.model.Usuario;
-import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.collections.FXCollections;

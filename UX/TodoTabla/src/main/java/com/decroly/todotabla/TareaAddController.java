@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -27,17 +28,19 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
 
 
     @FXML
-    public ListView<Usuario> listViewUsuarios;
+    private ListView<Usuario> listViewIntegrantes;
+    private List<Usuario> misUsuarios = new ArrayList<>();
     private ObservableList<Usuario> listaUsuarios;
 
 
+
     public void initialize(URL url, ResourceBundle rb) {
-        listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listViewIntegrantes.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         listarUsuarios();
     }
 
     private void listarUsuarios() {
-        listaUsuarios = FXCollections.observableList(new ArrayList<>());
+        listaUsuarios = FXCollections.observableList(misUsuarios);
 
         Map<Integer, Integrante> integrantes = IntegrantesBDD.getIntegrantes(
                 EstadoPrograma.getInstance().getProyectoActivo()
@@ -48,9 +51,34 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
 
             while (integranteIterator.hasNext()){
                 Usuario user = integranteIterator.next().getIdUsuario();
-                listaUsuarios.add(user);
+                misUsuarios.add(user);
             }
         }
+
+        listViewIntegrantes.setItems(listaUsuarios);
+        listViewIntegrantes.setCellFactory(listaTareas -> new ListCell<>(){
+            @Override
+            protected void updateItem(Usuario u, boolean empty) {
+                super.updateItem(u, empty);
+
+                if (empty || u == null) {
+                    setGraphic(null);
+                    setText(null);
+                    setStyle("-fx-background-color: transparent;");
+                    return;
+                }
+
+                Label titulo = new Label(u.getNombre());
+                titulo.getStyleClass().add("titulo-tarea");
+
+                VBox card = new VBox(8, titulo);
+                card.getStyleClass().add("kanban-list");
+
+                setGraphic(card);
+
+            }
+        });
+
 
         // TODO rehacer esto para hacer lo con usuarios recomendablemente
         /*listViewUsuarios.setCellFactory(listaTareas -> new ListCell<Tarea>() {
@@ -82,7 +110,7 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
         //obtener valores campos
         String nombre = nombreTareaFormCrear.getText();
 
-        List<Usuario> usuariosSeleccionados = listViewUsuarios.getSelectionModel().getSelectedItems();
+        List<Usuario> usuariosSeleccionados = listViewIntegrantes.getSelectionModel().getSelectedItems();
 
 
         //valores extra necesarios
