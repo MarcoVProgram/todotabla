@@ -4,6 +4,7 @@ import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 public class UsuariosController implements Initializable {
@@ -35,6 +37,12 @@ public class UsuariosController implements Initializable {
 
     @FXML
     public Button anadirBtnParticipantes;
+    
+    @FXML
+    public ListView<Integrante> integrantesLV;
+    List<Integrante> integrantesList = new ArrayList<>();
+    ObservableList<Integrante> obsIntegrantesList = FXCollections.observableList(integrantesList);
+    
 
     private static Stage ventanaSecundaria;
 
@@ -88,10 +96,6 @@ public class UsuariosController implements Initializable {
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
 
-
-
-        final String[] rolSeleccionado = {""};
-
         //si click derecho o doble click izq, mostrar popup para seleccionar rol
         listViewUsuarios.setOnMouseClicked(event -> {
             if(event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2){
@@ -113,13 +117,31 @@ public class UsuariosController implements Initializable {
                     dialog.setHeaderText("Asignar rol al usuario");
 
                     Optional<String> result = dialog.showAndWait();
+                    
+
 
                     result.ifPresent(rol -> {
                         System.out.println("Rol seleccionado: " + rol);
-                        rolSeleccionado[0] = rol;
+                        final Integrante i;
+
+                        i = new Integrante(rol, ProyectoController.getFechaProyecto().getValue(), null, 
+                                listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
+
+                        IntegrantesBDD.insertar(i);
+
+                        Integrante i2 = IntegrantesBDD.getIntegrante(i.getId());
+                        
+                        if(i2 != null && i2.getId() != -1){
+                            showAlert("Exito","Se ingreso correctamente al usuario " + UsuariosBDD.getUsuario(listViewUsuarios.getSelectionModel().getSelectedItem().getId() + 
+                                    " con nombre " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre() + " al proyecto actual " + EstadoPrograma.getInstance().getProyectoActivo().getTitulo()));
+
+                        }else{
+                            showAlert("Error", "No se pudo agregar correctamente el integrante " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre() + " al proyecto actual " + EstadoPrograma.getInstance().getProyectoActivo().getTitulo());
+                        }
                     });
             }
         });
+        integrantesLV.setItems(obsIntegrantesList);
     }
 
 

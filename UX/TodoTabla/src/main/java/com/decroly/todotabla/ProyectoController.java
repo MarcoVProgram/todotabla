@@ -30,7 +30,11 @@ public class ProyectoController implements Initializable{
     private TextField tituloProyecto;
 
     @FXML
-    private DatePicker fechaProyecto;
+    private static DatePicker fechaProyecto;
+
+    public static DatePicker getFechaProyecto() {
+        return fechaProyecto;
+    }
 
     private static Stage ventanaSecundaria;
 
