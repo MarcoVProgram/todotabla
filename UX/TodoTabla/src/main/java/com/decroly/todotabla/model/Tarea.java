@@ -1,7 +1,5 @@
 package com.decroly.todotabla.model;
 
-import java.time.LocalDate;
-
 public class Tarea {
 
     private int id;
