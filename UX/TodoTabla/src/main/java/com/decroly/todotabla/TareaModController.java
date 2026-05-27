@@ -1,7 +1,9 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.Proyecto;
+import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.collections.FXCollections;
@@ -14,6 +16,7 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -32,6 +35,7 @@ public class TareaModController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listarTareas();
+
     }
 
     private void listarTareas() {
@@ -65,27 +69,24 @@ public class TareaModController implements Initializable {
     }
 
     private void actualizarTareas() {
-        Map<Integer, Tarea> todasTareasDelUProyecto = TareasBDD.getTareas(
+        Map<Integer, Tarea> todasTareasDelProyecto = TareasBDD.getTareas(
                 EstadoPrograma.getInstance().getProyectoActivo()
         );
 
-        if (todasTareasDelUProyecto != null) {
-            listaTareas.addAll((TareasBDD.getTareas()).values());
+        if (todasTareasDelProyecto != null) {
+            listaTareas.addAll(todasTareasDelProyecto.values());
             listViewTareas.refresh();
         }
 
     }
 
-    // TODO No se como cambiar la signacion sin meter muchas cosas en la ventana
+    // TODO No se como cambiar la asignacion sin meter muchas cosas en la ventana
     public void modTarea(ActionEvent event) {
         boolean actualizarExito = true;
 
         //obtener valores campos
         String nombre = nombreTareaFormEditar.getText();
         int prioridad = prioridadTareaFormCrear.getValue();
-
-        //valores extra necesarios
-        Proyecto idProyecto = EstadoPrograma.getInstance().getProyectoActivo();
 
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 

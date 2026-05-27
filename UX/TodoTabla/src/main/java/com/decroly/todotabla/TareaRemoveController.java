@@ -50,12 +50,12 @@ public class TareaRemoveController {
     }
 
     private void actualizarTareas() {
-        Map<Integer, Tarea> todasTareasDelUProyecto = TareasBDD.getTareas(
+        Map<Integer, Tarea> todasTareasDelProyecto = TareasBDD.getTareas(
                 EstadoPrograma.getInstance().getProyectoActivo()
         );
 
-        if (todasTareasDelUProyecto != null) {
-            listaTareas.addAll((TareasBDD.getTareas()).values());
+        if (todasTareasDelProyecto != null) {
+            listaTareas.addAll(todasTareasDelProyecto.values());
             listViewTareas.refresh();
         }
 

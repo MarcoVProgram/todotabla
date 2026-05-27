@@ -1,9 +1,6 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.Integrante;
-import com.decroly.todotabla.model.Proyecto;
-import com.decroly.todotabla.model.Tarea;
-import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.*;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.collections.FXCollections;
@@ -13,10 +10,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.util.*;
 
 public class TareaAddController implements Initializable { // TODO Comprobar su funcinamiento
 
@@ -36,11 +31,6 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
     private ObservableList<Usuario> listaUsuarios;
 
 
-
-    //lista tareas
-    List<Usuario> tareas = new ArrayList<>();
-    ObservableList<Usuario> obsTareas = FXCollections.observableList(tareas);
-
     public void initialize(URL url, ResourceBundle rb) {
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         listarUsuarios();
@@ -49,14 +39,17 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
     private void listarUsuarios() {
         listaUsuarios = FXCollections.observableList(new ArrayList<>());
 
-        Iterator<Integrante> integrantes =
-                IntegrantesBDD.getIntegrantes(
-                        EstadoPrograma.getInstance().getProyectoActivo()
-                ).values().iterator();
+        Map<Integer, Integrante> integrantes = IntegrantesBDD.getIntegrantes(
+                EstadoPrograma.getInstance().getProyectoActivo()
+        );
+        if (integrantes != null) {
+            Iterator<Integrante> integranteIterator =
+                    integrantes.values().iterator();
 
-        while (integrantes.hasNext()){
-            Usuario user = integrantes.next().getIdUsuario();
-            listaUsuarios.add(user);
+            while (integranteIterator.hasNext()){
+                Usuario user = integranteIterator.next().getIdUsuario();
+                listaUsuarios.add(user);
+            }
         }
 
         // TODO rehacer esto para hacer lo con usuarios recomendablemente
@@ -85,17 +78,28 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
     //--------AGREGAR TAREA-------------
     @FXML
     private void addTarea(){
-        boolean added = false;
 
         //obtener valores campos
         String nombre = nombreTareaFormCrear.getText();
         int prioridad = PrioridadTareaFormCrear.getValue();
 
-        //valores extra necesarios // TODO cambiar esto para seleccionar otros proyectos
+        List<Usuario> usuariosSeleccionados = listViewUsuarios.getSelectionModel().getSelectedItems();
+
+
+        //valores extra necesarios
         Proyecto idProyecto = EstadoPrograma.getInstance().getProyectoActivo();
 
-        boolean insertarExito = TareasBDD.insertar(new Tarea(nombre, prioridad, 
-                EstadosBDD.getEstado("Backlog"), EstadoPrograma.getInstance().getProyectoActivo()));
+        Tarea tareo = new Tarea(
+                nombre, prioridad,
+                EstadosBDD.getEstado("Backlog"), idProyecto
+        );
+        boolean insertarExito = TareasBDD.insertar(tareo);
+        if (insertarExito) {
+            for (Usuario u: usuariosSeleccionados) {
+                Asignacion a = new Asignacion(u, tareo, LocalDate.now(), LocalDate.MAX); // TODO No se como asignar la fecha de fin
+                insertarExito = (insertarExito && AsignacionesBDD.insertar(a));
+            }
+        }
         if (insertarExito) {
             (new Alert(Alert.AlertType.INFORMATION,"Se añadio correctamente", ButtonType.OK)).show();
         }
