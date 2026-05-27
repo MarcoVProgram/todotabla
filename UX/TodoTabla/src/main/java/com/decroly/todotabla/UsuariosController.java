@@ -1,5 +1,6 @@
 package com.decroly.todotabla;
 
+import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.Usuario;
@@ -16,14 +17,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class UsuariosController implements Initializable {
     @FXML
@@ -33,6 +32,9 @@ public class UsuariosController implements Initializable {
 
     @FXML
     public TextField buscarUsuario;
+
+    @FXML
+    public Button anadirBtnParticipantes;
 
     private static Stage ventanaSecundaria;
 
@@ -83,18 +85,41 @@ public class UsuariosController implements Initializable {
             }
         });
 
-        listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-//        listViewUsuarios.setOnMouseClicked(event -> {
-//            if(event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2){
-//                try {
-//                    abrirVentanaPrincipal();
-//
-//                } catch (IOException e) {
-//                    showAlert("Ocurrió un error inesperado y no se puede acceder al proyecto", "Cagaste");
-//                }
-//            }
-//        });
+
+
+
+        final String[] rolSeleccionado = {""};
+
+        //si click derecho o doble click izq, mostrar popup para seleccionar rol
+        listViewUsuarios.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2){
+                    //Popup combobox
+                    List<String> roles = List.of(
+                            "Product Owner",
+                            "Scrum Master",
+                            "Developer",
+                            "Tester",
+                            "Designer",
+                            "DevOps",
+                            "Stakeholder"
+                    );
+
+                    ChoiceDialog<String> dialog =
+                            new ChoiceDialog<>("Developer", roles);
+
+                    dialog.setTitle("Seleccionar Rol");
+                    dialog.setHeaderText("Asignar rol al usuario");
+
+                    Optional<String> result = dialog.showAndWait();
+
+                    result.ifPresent(rol -> {
+                        System.out.println("Rol seleccionado: " + rol);
+                        rolSeleccionado[0] = rol;
+                    });
+            }
+        });
     }
 
 
