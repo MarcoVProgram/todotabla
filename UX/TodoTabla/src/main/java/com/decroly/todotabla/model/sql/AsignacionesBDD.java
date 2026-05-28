@@ -3,6 +3,7 @@ package com.decroly.todotabla.model.sql;
 import com.decroly.todotabla.model.Asignacion;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.utils.AppErrorHandler;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ public class AsignacionesBDD {
             estado = (stmnt.executeUpdate() == 1);
 
         } catch (Exception e) {
+            AppErrorHandler.manejar(e, "insertar(Asignacion i)");
             return false;
         }
 
@@ -58,6 +60,7 @@ public class AsignacionesBDD {
                     conexion.nativeSQL("ROLLBACK;");
                 }
             } catch (Exception e) {
+                AppErrorHandler.manejar(e, "actualizar(Asignacion i)");
                 return false;
             }
         }
@@ -94,6 +97,7 @@ public class AsignacionesBDD {
                    conexion.nativeSQL("ROLLBACK;");
                }
             } catch (Exception e) {
+                AppErrorHandler.manejar(e, "borrar(Asignacion i)");
                 return false;
             }
         }
@@ -130,6 +134,7 @@ public class AsignacionesBDD {
             }
 
         } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getAsignaciones()");
             return null;
         }
 
@@ -166,6 +171,7 @@ public class AsignacionesBDD {
             }
 
         } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getAsignaciones(Tarea tarea_ID)");
             return null;
         }
 
@@ -202,6 +208,7 @@ public class AsignacionesBDD {
             }
 
         } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getAsignacions(Usuario usuario_ID)");
             return null;
         }
 
@@ -236,6 +243,7 @@ public class AsignacionesBDD {
             }
 
         } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getAsignacion(int id)");
             return null;
         }
 
