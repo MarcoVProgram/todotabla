@@ -34,7 +34,11 @@ public class ProyectoController implements Initializable{
     }
 
     @FXML
-    private DatePicker fechaProyecto;
+    private static DatePicker fechaProyecto;
+
+    public static DatePicker getFechaProyecto() {
+        return fechaProyecto;
+    }
 
     @FXML
     private Button anadirUsuariosBtn;

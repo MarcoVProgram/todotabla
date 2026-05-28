@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.UsuariosController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.UsuariosController">
    <children>
       <GridPane prefHeight="400.0" prefWidth="600.0">
         <columnConstraints>
@@ -27,7 +27,7 @@
                   <HBox prefHeight="359.0" prefWidth="600.0">
                      <children>
                         <ListView fx:id="listViewUsuarios" prefHeight="359.0" prefWidth="299.0" styleClass="project-list" />
-                        <ListView prefHeight="359.0" prefWidth="249.0" styleClass="project-list">
+                        <ListView fx:id="listViewIntegrantes" prefHeight="359.0" prefWidth="249.0" styleClass="project-list">
                            <HBox.margin>
                               <Insets left="50.0" />
                            </HBox.margin>
