@@ -79,7 +79,9 @@ public class ProyectoController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        fechaProyecto.setValue(LocalDate.now());
+        if(fechaProyecto != null){
+            fechaProyecto.setValue(LocalDate.now());
+        }
     }
 
     @FXML
