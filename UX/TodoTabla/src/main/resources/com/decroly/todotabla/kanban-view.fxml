@@ -61,6 +61,7 @@
                <HBox.margin>
                   <Insets />
                </HBox.margin></Label>
+            <Button fx:id="gestionarUsuarios" disable="true" prefHeight="27.0" prefWidth="168.0" styleClass="btn" text="Gestionar usuarios" />
 
                 <Button fx:id="addTarea" onAction="#abrirVentanaCrearTarea" prefHeight="27.0" prefWidth="130.0" styleClass="btnAdd" text="Crear Tarea">
                <HBox.margin>

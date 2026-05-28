@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox alignment="CENTER" maxHeight="720.0" maxWidth="720.0" minHeight="420.0" minWidth="420.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.ProyectoController">
+<VBox alignment="CENTER" maxHeight="720.0" maxWidth="720.0" minHeight="420.0" minWidth="420.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.ProyectoController">
    <children>
       <Label styleClass="logo" text="Crear proyecto">
          <VBox.margin>
@@ -50,9 +49,10 @@
             <Insets bottom="80.0" />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER_RIGHT">
+      <HBox alignment="CENTER_RIGHT" spacing="150.0">
          <children>
-            <Button defaultButton="true" mnemonicParsing="false" onAction="#guardar" text="Guardar">
+            <Button fx:id="anadirUsuariosBtn" mnemonicParsing="false" onMouseClicked="#abrirVentanaUsuarios" styleClass="btnAdd" text="addUsuarios" />
+            <Button fx:id="crearProyecto" defaultButton="true" mnemonicParsing="false" onAction="#guardar" text="Guardar">
                <HBox.margin>
                   <Insets right="30.0" />
                </HBox.margin>

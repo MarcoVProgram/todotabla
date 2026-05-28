@@ -362,6 +362,19 @@
     -fx-text-fill: #e6edf3;
     -fx-wrap-text: true;
 }
+.subTitulo-tarea {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6edf3;
+    -fx-wrap-text: true;
+}
+
+.subTitulo2-tarea {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6edf3;
+    -fx-wrap-text: true;
+}
 
 .prioridad-label {
     -fx-font-size: 11px;
