@@ -87,14 +87,15 @@ public class UsuariosController implements Initializable {
 
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-
-
-
         final String[] rolSeleccionado = {""};
 
-        //si click derecho o doble click izq, mostrar popup para seleccionar rol
-        listViewUsuarios.setOnMouseClicked(event -> {
-            if(event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2){
+//        if(ProyectoController.getTituloProyecto() != null) {
+//            ProyectoController.getAnadirUsuariosBtn().setDisable(false);
+//            ProyectoController.getCrearProyecto().setDisable(false);
+
+            //si click derecho o doble click izq, mostrar popup para seleccionar rol
+            listViewUsuarios.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
                     //Popup combobox
                     List<String> roles = List.of(
                             "Product Owner",
@@ -118,8 +119,16 @@ public class UsuariosController implements Initializable {
                         System.out.println("Rol seleccionado: " + rol);
                         rolSeleccionado[0] = rol;
                     });
-            }
-        });
+                }
+            });
+//            if(!rolSeleccionado.equals("")){
+//                Integrante i = new Integrante(rolSeleccionado[0], )
+//            }
+//        }
+//        else{
+////            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
+////            ProyectoController.getCrearProyecto().setDisable(true);
+//        }
     }
 
 
