@@ -201,7 +201,7 @@ public class KanBanController implements Initializable {
             actualizarTareas();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            AppErrorHandler.manejar(e, "abrirVentanaCrearTarea");
         }
     }
 
@@ -230,7 +230,7 @@ public class KanBanController implements Initializable {
             actualizarTareas();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            AppErrorHandler.manejar(e,  "abrirVentanaEditarTarea (fxml)");
         }
     }
 
