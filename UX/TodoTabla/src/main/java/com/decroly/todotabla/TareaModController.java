@@ -1,6 +1,7 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.collections.FXCollections;
@@ -9,13 +10,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class TareaModController implements Initializable {
 
@@ -25,13 +25,25 @@ public class TareaModController implements Initializable {
     @FXML
     public Spinner<Integer> prioridadTareaFormCrear;
 
+    public BorderPane personaPanelTareaForm;
+
     @FXML
     public ListView<Tarea> listViewTareas;
     private ObservableList<Tarea> listaTareas;
 
+    @FXML
+    public ListView<Usuario> listViewUsuarios;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listarTareas();
+        personaPanelTareaForm.setVisible(false);
+
+        listViewUsuarios.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
+                personaPanelTareaForm.setVisible(false);
+            }
+        });
 
     }
 
@@ -77,7 +89,6 @@ public class TareaModController implements Initializable {
 
     }
 
-    // TODO No se como cambiar la asignacion sin meter muchas cosas en la ventana
     public void modTarea(ActionEvent event) {
         boolean actualizarExito = true;
 
@@ -104,4 +115,8 @@ public class TareaModController implements Initializable {
         }
     }
 
+    private void nadie() {
+        listViewUsuarios.getSelectionModel().select(null);
+        personaPanelTareaForm.setVisible(false);
+    }
 }
