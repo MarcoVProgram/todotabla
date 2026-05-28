@@ -1,6 +1,7 @@
 package com.decroly.todotabla.model.sql;
 
 import com.decroly.todotabla.model.Proyecto;
+import com.decroly.todotabla.utils.AppErrorHandler;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ProyetosBDD {
-    public static boolean insertar(Proyecto p){
+    public static boolean insertar(Proyecto p) throws Exception{
         boolean estado = false;
 
         try (Connection conexion = BDD.getConnection();
@@ -22,13 +23,11 @@ public class ProyetosBDD {
 
             estado = (stmnt.executeUpdate() == 1);
 
-        }  catch (Exception e) {
-            return false;
         }
 
         return estado;
     }
-    public static boolean actualizar(Proyecto p) {
+    public static boolean actualizar(Proyecto p) throws Exception {
         boolean estado = false;
 
         if (p != null) {
@@ -55,15 +54,13 @@ public class ProyetosBDD {
                 } else {
                     conexion.nativeSQL("ROLLBACK;");
                 }
-            } catch (Exception e) {
-                return false;
             }
         }
 
         return estado;
     }
 
-    public static boolean archivar(Proyecto p)  {
+    public static boolean archivar(Proyecto p) throws Exception {
         boolean estado = false;
 
         if (p != null && p.getFechaCierre() == null) {
@@ -74,7 +71,7 @@ public class ProyetosBDD {
         return estado;
     }
 
-    public static boolean borrar(Proyecto p) {
+    public static boolean borrar(Proyecto p) throws Exception {
         if (p != null) {
             try (Connection  conexion = BDD.getConnection();
                     PreparedStatement stmnt = conexion.prepareStatement("" +
@@ -84,14 +81,12 @@ public class ProyetosBDD {
                 stmnt.setInt(1, p.getId());
 
                 return (stmnt.executeUpdate() == 1);
-            } catch (Exception e) {
-                return false;
             }
         }
         return false;
     }
 
-    public static Map<Integer, Proyecto> getProyectos() {
+    public static Map<Integer, Proyecto> getProyectos() throws Exception {
         Map<Integer, Proyecto> proyectos = new LinkedHashMap<>();
 
         try (Connection conexion = BDD.getConnection();
@@ -114,14 +109,12 @@ public class ProyetosBDD {
                 proyectos.put(pro.getId(), pro);
             }
 
-        } catch (Exception e) {
-            return null;
         }
 
         return proyectos;
     }
 
-    public static Proyecto getProyecto(int id) {
+    public static Proyecto getProyecto(int id) throws Exception{
         Proyecto proyecto = null;
 
         try (Connection conexion = BDD.getConnection();
@@ -143,8 +136,6 @@ public class ProyetosBDD {
                 );
             }
 
-        } catch (Exception e) {
-            return null;
         }
 
         return proyecto;

@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class AsignacionesBDD {
     
-        public static boolean insertar(Asignacion i) {
+        public static boolean insertar(Asignacion i) throws Exception {
         boolean estado = false;
 
         String sql = "INSERT INTO asignacion VALUES (NULL, ?, ?, ?, NULL)";
@@ -26,15 +26,12 @@ public class AsignacionesBDD {
 
             estado = (stmnt.executeUpdate() == 1);
 
-        } catch (Exception e) {
-            AppErrorHandler.manejar(e, "insertar(Asignacion i)");
-            return false;
         }
 
         return estado;
     }
 
-    public static boolean actualizar(Asignacion i) {
+    public static boolean actualizar(Asignacion i) throws Exception {
         boolean estado = false;
 
         if (i != null) {
@@ -59,16 +56,13 @@ public class AsignacionesBDD {
                 } else {
                     conexion.nativeSQL("ROLLBACK;");
                 }
-            } catch (Exception e) {
-                AppErrorHandler.manejar(e, "actualizar(Asignacion i)");
-                return false;
             }
         }
 
         return estado;
     }
 
-    public static boolean archivar(Asignacion i) {
+    public static boolean archivar(Asignacion i) throws Exception {
         boolean estado = false;
 
         if (i != null && i.getFechaFin() == null) {
@@ -79,7 +73,7 @@ public class AsignacionesBDD {
         return estado;
     }
 
-    public static boolean borrar(Asignacion i) {
+    public static boolean borrar(Asignacion i) throws Exception {
         boolean estado = false;
 
         if (i != null) {
@@ -96,16 +90,13 @@ public class AsignacionesBDD {
                } else {
                    conexion.nativeSQL("ROLLBACK;");
                }
-            } catch (Exception e) {
-                AppErrorHandler.manejar(e, "borrar(Asignacion i)");
-                return false;
             }
         }
 
         return estado;
     }
 
-    public static Map<Integer, Asignacion> getAsignaciones() {
+    public static Map<Integer, Asignacion> getAsignaciones() throws Exception {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
 
         String sql = "TABLE asignacion";
@@ -133,15 +124,12 @@ public class AsignacionesBDD {
                 asignaciones.put(asignacion.getId(), asignacion);
             }
 
-        } catch (Exception e) {
-            AppErrorHandler.manejar(e, "getAsignaciones()");
-            return null;
         }
 
         return asignaciones;
     }
     
-    public static Map<Integer, Asignacion> getAsignaciones(Tarea tarea_ID) {
+    public static Map<Integer, Asignacion> getAsignaciones(Tarea tarea_ID) throws Exception {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
 
         String sql = "SELECT * FROM asignacion WHERE tarea_ID = ?;";
@@ -170,15 +158,12 @@ public class AsignacionesBDD {
                 asignaciones.put(asignacion.getId(), asignacion);
             }
 
-        } catch (Exception e) {
-            AppErrorHandler.manejar(e, "getAsignaciones(Tarea tarea_ID)");
-            return null;
         }
 
         return asignaciones;
     }
     
-    public static Map<Integer, Asignacion> getAsignacions(Usuario usuario_ID) {
+    public static Map<Integer, Asignacion> getAsignacions(Usuario usuario_ID) throws Exception {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
 
         String sql = "SELECT * FROM asignacion WHERE usuario_ID = ?;";
@@ -207,15 +192,12 @@ public class AsignacionesBDD {
                 asignaciones.put(asignacion.getId(), asignacion);
             }
 
-        } catch (Exception e) {
-            AppErrorHandler.manejar(e, "getAsignacions(Usuario usuario_ID)");
-            return null;
         }
 
         return asignaciones;
     }
 
-    public static Asignacion getAsignacion(int id) {
+    public static Asignacion getAsignacion(int id) throws Exception {
         Asignacion asignacion = null;
 
         String sql = "SELECT * FROM asignacion WHERE id = ?;";
@@ -242,9 +224,6 @@ public class AsignacionesBDD {
                 );
             }
 
-        } catch (Exception e) {
-            AppErrorHandler.manejar(e, "getAsignacion(int id)");
-            return null;
         }
 
         return asignacion;

@@ -1,12 +1,13 @@
 package com.decroly.todotabla.model.sql;
 
 import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.utils.AppErrorHandler;
 
 import java.sql.*;
 import java.util.*;
 
 public class UsuariosBDD {
-    public static boolean insertar(Usuario m){
+    public static boolean insertar(Usuario m) throws Exception {
         boolean estado = false;
 
         try (Connection conexion = BDD.getConnection();
@@ -20,15 +21,11 @@ public class UsuariosBDD {
 
             estado = (stmnt.executeUpdate() == 1);
 
-        }  catch (Exception e) {
-            return false;
         }
-
-
         return estado;
     }
 
-    public static boolean actualizar(Usuario m) {
+    public static boolean actualizar(Usuario m) throws Exception {
         boolean estado = false;
 
         if (m != null) {
@@ -57,16 +54,13 @@ public class UsuariosBDD {
                 } else {
                     conexion.nativeSQL("ROLLBACK;");
                 }
-            }  catch (Exception e) {
-                return false;
             }
-
         }
 
         return estado;
     }
 
-    public static boolean borrar(Usuario m)  {
+    public static boolean borrar(Usuario m) throws Exception {
         boolean estado = false;
 
         if (m != null) {
@@ -83,15 +77,13 @@ public class UsuariosBDD {
                } else {
                    conexion.nativeSQL("ROLLBACK;");
                }
-            } catch (Exception e) {
-                return false;
             }
         }
 
         return estado;
     }
 
-    public static Map<Integer, Usuario> getUsuarios() {
+    public static Map<Integer, Usuario> getUsuarios() throws Exception{
         Map<Integer, Usuario> miembros = new LinkedHashMap<>();
 
         try (Connection conexion = BDD.getConnection();
@@ -108,14 +100,11 @@ public class UsuariosBDD {
                 miembros.put(uzer.getId(), uzer);
             }
 
-        } catch (Exception e) {
-            return null;
         }
-
         return miembros;
     }
 
-    public static Usuario getUsuario(int id) {
+    public static Usuario getUsuario(int id) throws Exception {
         try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement(
                 "SELECT * FROM usuario WHERE id = ?;"
@@ -133,13 +122,10 @@ public class UsuariosBDD {
             return uzer;
 
 
-        } catch (Exception e) {
-            return null;
         }
-
     }
 
-    public static Usuario getUsuario(String nombre) {
+    public static Usuario getUsuario(String nombre) throws Exception {
         try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement(
                 "SELECT * FROM usuario WHERE nombre LIKE ?;"
@@ -157,9 +143,6 @@ public class UsuariosBDD {
             return uzer;
 
 
-        } catch (Exception e) {
-            return null;
         }
-
     }
 }

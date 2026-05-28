@@ -7,6 +7,7 @@ import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
+import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,7 +54,11 @@ public class UsuariosController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        obsUsuarioList.addAll(UsuariosBDD.getUsuarios().values());
+        try {
+            obsUsuarioList.addAll(UsuariosBDD.getUsuarios().values());
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getUsuarios");
+        }
         listViewUsuarios.setItems(obsUsuarioList);
 
         actualizarUsuarios();
@@ -131,17 +136,20 @@ public class UsuariosController implements Initializable {
 
         if (!rolSeleccionado[0].equals("")) {
             Integrante i = new Integrante(rolSeleccionado[0], LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
-            IntegrantesBDD.insertar(i);
 
-            Integrante exist = IntegrantesBDD.getIntegrante(i.getId());
+            boolean exist;
+            try {
+                IntegrantesBDD.insertar(i);
+                exist = true;
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, "insertar");
+                exist = false;
+            }
 
-            if(exist != null){
+            if(exist){
                 showAlert("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
                 + ", al proyecto actual " + EstadoPrograma.getInstance().getProyectoActivo().getTitulo());
 
-            }else{
-                showAlert("Error", "Ocurrió un error inesperado al intentar insertar al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-                        + ", al proyecto actual " + EstadoPrograma.getInstance().getProyectoActivo().getTitulo());
             }
         }
 
@@ -155,7 +163,13 @@ public class UsuariosController implements Initializable {
 
 
     private void actualizarUsuarios() {
-        Map<Integer, Usuario> todosUsuarios = UsuariosBDD.getUsuarios();
+        Map<Integer, Usuario> todosUsuarios;
+        try {
+            todosUsuarios = UsuariosBDD.getUsuarios();
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getUsuarios");
+            todosUsuarios = null;
+        }
         if (todosUsuarios != null) {
             listViewUsuarios.refresh();
         }

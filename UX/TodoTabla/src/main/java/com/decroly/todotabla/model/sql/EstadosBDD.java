@@ -1,6 +1,7 @@
 package com.decroly.todotabla.model.sql;
 
 import com.decroly.todotabla.model.Estado;
+import com.decroly.todotabla.utils.AppErrorHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EstadosBDD {
-    public static boolean insertar(Estado e) {
+    public static boolean insertar(Estado e) throws Exception {
         boolean estado = false;
 
         String sql = "INSERT INTO estado VALUES (?, ?, ?)";
@@ -23,13 +24,11 @@ public class EstadosBDD {
 
             estado = (stmnt.executeUpdate() == 1);
 
-        } catch (Exception ex) {
-            return false;
         }
 
         return estado;
     }
-    public static boolean actualizar(Estado e) {
+    public static boolean actualizar(Estado e) throws Exception {
         boolean estado = false;
 
         if (e != null) {
@@ -55,15 +54,13 @@ public class EstadosBDD {
                 } else {
                     conexion.nativeSQL("ROLLBACK;");
                 }
-            } catch (Exception ex) {
-                return false;
             }
         }
 
         return estado;
     }
 
-    public static boolean borrar(Estado e) {
+    public static boolean borrar(Estado e) throws Exception {
         boolean estado = false;
 
         if (e != null) {
@@ -83,15 +80,13 @@ public class EstadosBDD {
                 } else {
                     conexion.nativeSQL("ROLLBACK;");
                 }
-            } catch (Exception ex) {
-                return false;
             }
         }
 
         return estado;
     }
 
-    public static List<Estado> getEstados() {
+    public static List<Estado> getEstados() throws Exception {
         List<Estado> estados = new LinkedList<>();
 
         String sql = "SELECT * FROM `todotabla`.`estado` ";
@@ -108,14 +103,11 @@ public class EstadosBDD {
 
                 estados.add(newEstado);
             }
-        } catch (Exception ex) {
-            return null;
         }
-
         return estados;
     }
 
-    public static Estado getEstado(String estadoNombre) {
+    public static Estado getEstado(String estadoNombre) throws Exception {
         Estado estado = null;
 
         String sql = "SELECT * FROM `todotabla`.`estado` WHERE nombre = ? ";
@@ -132,8 +124,6 @@ public class EstadosBDD {
                         rs.getInt("orden"));
             }
 
-        } catch (Exception ex) {
-            return null;
         }
 
         return estado;

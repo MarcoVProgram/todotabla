@@ -2,6 +2,7 @@ package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,11 +21,15 @@ public class TareaRemoveController {
     private ObservableList<Tarea> listaTareas;
 
     private void listarTareas() {
-        listaTareas = FXCollections.observableList(
-                new ArrayList<>(TareasBDD.getTareas(
-                        EstadoPrograma.getInstance().getProyectoActivo()
-                ).values())
-        );
+        try {
+            listaTareas = FXCollections.observableList(
+                    new ArrayList<>(TareasBDD.getTareas(
+                            EstadoPrograma.getInstance().getProyectoActivo()
+                    ).values())
+            );
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getTareas");
+        }
 
         listViewTareas.setItems(listaTareas);
         listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
@@ -50,9 +55,15 @@ public class TareaRemoveController {
     }
 
     private void actualizarTareas() {
-        Map<Integer, Tarea> todasTareasDelProyecto = TareasBDD.getTareas(
-                EstadoPrograma.getInstance().getProyectoActivo()
-        );
+        Map<Integer, Tarea> todasTareasDelProyecto;
+        try {
+            todasTareasDelProyecto = TareasBDD.getTareas(
+                    EstadoPrograma.getInstance().getProyectoActivo()
+            );
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getTareas");
+            todasTareasDelProyecto = null;
+        }
 
         if (todasTareasDelProyecto != null) {
             listaTareas.addAll(todasTareasDelProyecto.values());
@@ -72,7 +83,11 @@ public class TareaRemoveController {
         )).show();
 
         for (Tarea t: listaDeTareas) {
-            estado = TareasBDD.borrar(t);
+            try {
+                estado = TareasBDD.borrar(t);
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, "borrarTareas");
+            }
         }
 
         if (estado) {

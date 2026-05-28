@@ -8,6 +8,7 @@ import com.decroly.todotabla.model.sql.ProyetosBDD;
 
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
+import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -64,16 +65,15 @@ public class ProyectoController implements Initializable{
                 fechaProyecto.getValue(),
                 null
         );
-        if (ProyetosBDD.insertar(p)) {
-            (new Alert(Alert.AlertType.INFORMATION,
-                    "Se ha creado correctamente",
-                    ButtonType.OK
-            )).showAndWait();
-        } else {
-            (new Alert(Alert.AlertType.WARNING,
-                    "No se ha podido crear",
-                    ButtonType.OK
-            )).showAndWait();
+        try {
+            if (ProyetosBDD.insertar(p)) {
+                (new Alert(Alert.AlertType.INFORMATION,
+                        "Se ha creado correctamente",
+                        ButtonType.OK
+                )).showAndWait();
+            }
+        } catch (Exception ex) {
+            AppErrorHandler.manejar(ex, "insertar");
         }
     }
 
@@ -118,7 +118,7 @@ public class ProyectoController implements Initializable{
             // TODO Hay que refrescar las listas del Kanban controller
 
         } catch (IOException e) {
-            e.printStackTrace();
+            AppErrorHandler.manejar(e, "abrirVentanaUsuarios");
         }
     }
 }

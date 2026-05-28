@@ -4,6 +4,7 @@ module com.decroly.todotabla {
     requires java.sql;
     requires jdk.jdi;
     requires java.desktop;
+    requires org.slf4j;
 
 
     opens com.decroly.todotabla to javafx.fxml;

@@ -3,6 +3,7 @@ package com.decroly.todotabla;
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.BDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
+import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
@@ -122,7 +123,11 @@ public class MainController implements Initializable {
         }
 
         List<Proyecto> allProyectos = new LinkedList<>();
-        allProyectos.addAll(ProyetosBDD.getProyectos().values());
+        try {
+            allProyectos.addAll(ProyetosBDD.getProyectos().values());
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getProyectos");
+        }
 
 
         listViewProyectos.getItems().addAll();
@@ -203,7 +208,7 @@ public class MainController implements Initializable {
                     abrirVentanaPrincipal();
 
                 } catch (IOException e) {
-                    showAlert("Ocurrió un error inesperado y no se puede acceder al proyecto", "Cagaste");
+                    AppErrorHandler.manejar(e, "abrirVentanaPrincipal");
                 }
             }
         });
@@ -304,16 +309,8 @@ public class MainController implements Initializable {
             // TODO Hay que refrescar las listas del Kanban controller
 
         } catch (IOException e) {
-            e.printStackTrace();
+            AppErrorHandler.manejar(e, "abrirVentanaProyecto (fxml)");
         }
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     public int contadorProyectosActivos(){

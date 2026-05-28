@@ -4,10 +4,7 @@ import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
-import com.decroly.todotabla.utils.ColumnaKanban;
-import com.decroly.todotabla.utils.EstadoPrograma;
-import com.decroly.todotabla.utils.Navigator;
-import com.decroly.todotabla.utils.TareaCell;
+import com.decroly.todotabla.utils.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -64,7 +61,11 @@ public class KanBanController implements Initializable {
 
 
     public void initialize(URL url, ResourceBundle rb) {
-        estados = EstadosBDD.getEstados();
+        try {
+            estados = EstadosBDD.getEstados();
+        } catch (Exception ex) {
+            AppErrorHandler.manejar(ex, "getEstados");
+        }
         estados.sort(Comparator.comparingInt(Estado::getOrden));
         proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
         proyectoTitulo.setText("🔒 " + proyectoSeleccionado.getTitulo());
@@ -91,17 +92,33 @@ public class KanBanController implements Initializable {
     }
 
     private ColumnaKanban addColumna(Estado estado) {
-        ObservableList<Tarea> items = FXCollections.observableArrayList(
-                TareasBDD.getTareas(estado, proyectoSeleccionado).values()
-        );
+
+        ObservableList<Tarea> items;
+
+        try {
+            items = FXCollections.observableArrayList(
+                    TareasBDD.getTareas(estado, proyectoSeleccionado).values()
+            );
+        } catch (Exception ex) {
+            AppErrorHandler.manejar(ex, "getTareas");
+            items = FXCollections.observableArrayList();
+        }
+
         ListView<Tarea> listView = constructorColumnas(estado, items);
         return new ColumnaKanban(estado, listView, items);
     }
 
     private ColumnaKanban addColumna(Estado estado, String regex) {
-        ObservableList<Tarea> items = FXCollections.observableArrayList(
-                TareasBDD.getTareas(regex, proyectoSeleccionado, estado)
-        );
+        ObservableList<Tarea> items;
+
+        try {
+            items = FXCollections.observableArrayList(
+                    TareasBDD.getTareas(regex, proyectoSeleccionado, estado)
+            );
+        } catch (Exception ex) {
+            AppErrorHandler.manejar(ex, "getTareas");
+            items = FXCollections.observableArrayList();
+        }
         ListView<Tarea> listView = constructorColumnas(estado, items);
         return new ColumnaKanban(estado, listView, items);
     }
@@ -242,7 +259,7 @@ public class KanBanController implements Initializable {
             actualizarTareas();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            AppErrorHandler.manejar(e, "abrirVentanaEditarTarea");
         }
     }
 
