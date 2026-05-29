@@ -13,16 +13,13 @@ public class AppErrorHandler {
     public static void manejar(Exception ex, String metodoCulpable) {
         logger.error("Error en: {}", metodoCulpable, ex);
 
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error en: " + metodoCulpable);
-            alert.setContentText(ex.getMessage());
-            alert.showAndWait();
-        });
-
         Runnable showAlert = () -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.getDialogPane().getStylesheets().add(
+                AppErrorHandler.class.getResource("/com/decroly/todotabla/style.css").toExternalForm()
+            );
+            alert.getDialogPane().getStyleClass().add("error-alert");
+
             alert.setTitle("Error");
             alert.setHeaderText("Error en: " + metodoCulpable);
             alert.setContentText(ex.getMessage());
