@@ -101,26 +101,6 @@ public class MainController implements Initializable {
     
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            Connection x = BDD.getConnection();
-            x.close();
-        } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "No se ha podido conectar a la base de datos, saliendo", ButtonType.CLOSE);
-            alert.showAndWait();
-            Platform.exit();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "No se ha podido acceder a los archivos de configuracion, saliendo", ButtonType.CLOSE);
-            alert.showAndWait();
-            Platform.exit();
-        } catch (URISyntaxException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Ha habido un fallo al convertir URL a URI, saliendo", ButtonType.CLOSE);
-            alert.showAndWait();
-            Platform.exit();
-        } catch (ClassNotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "No se ha podido encontrar driver de JDBC, saliendo", ButtonType.CLOSE);
-            alert.showAndWait();
-            Platform.exit();
-        }
 
         List<Proyecto> allProyectos = new LinkedList<>();
         try {
@@ -269,7 +249,6 @@ public class MainController implements Initializable {
                 }
             }
         });
-
     }
 
 

@@ -20,5 +20,19 @@ public class AppErrorHandler {
             alert.setContentText(ex.getMessage());
             alert.showAndWait();
         });
+
+        Runnable showAlert = () -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error en: " + metodoCulpable);
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        };
+
+        if (Platform.isFxApplicationThread()) {
+            showAlert.run();
+        } else {
+            Platform.runLater(showAlert);
+        }
     }
 }
