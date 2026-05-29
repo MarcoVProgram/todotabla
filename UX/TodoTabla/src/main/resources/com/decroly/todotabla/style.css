@@ -1,6 +1,23 @@
 .root {
     -fx-background-color: #0d1117;
     -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    error-header:   #dc2626;
+    error-text:     #fecaca;
+    error-body:     #1e1e1e;
+
+    warning-header: #d97706;
+    warning-text:   #fde68a;
+    warning-body:   #1e1e1e;
+
+    success-header: #16a34a;
+    success-text:   #bbf7d0;
+    success-body:   #1e1e1e;
+
+    inform-header:  #2563eb;
+    inform-text:    #bae6fd;
+    inform-body:    #1e1e1e;
+
+    content-text:   #cccccc;
 }
 
 /* TOPBAR */
@@ -412,3 +429,139 @@
 /*.proyectoArchivadoDeseleccionado{*/
 /*    -fx-font-weight: normal;*/
 /*}*/
+
+/* Alerts */
+/* === ERROR === */
+.error-alert {
+    -fx-background-color: error-body;
+}
+
+.error-alert .header-panel {
+    -fx-background-color: error-header;
+}
+
+.error-alert .header-panel .label {
+    -fx-text-fill: error-text;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.error-alert .content.label {
+    -fx-text-fill: content-text;
+    -fx-font-size: 13px;
+}
+
+.error-alert .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: error-header;
+    -fx-border-color: error-header;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.error-alert .button:hover {
+    -fx-background-color: error-header;
+    -fx-text-fill: white;
+}
+
+
+/* === WARNING === */
+.warning-alert {
+    -fx-background-color: warning-body;
+}
+
+.warning-alert .header-panel {
+    -fx-background-color: warning-header;
+}
+
+.warning-alert .header-panel .label {
+    -fx-text-fill: warning-text;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.warning-alert .content.label {
+    -fx-text-fill: content-text;
+    -fx-font-size: 13px;
+}
+
+.warning-alert .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: warning-header;
+    -fx-border-color: warning-header;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.warning-alert .button:hover {
+    -fx-background-color: warning-header;
+    -fx-text-fill: white;
+}
+
+
+/* === SUCCESS === */
+.success-alert {
+    -fx-background-color: success-body;
+}
+
+.success-alert .header-panel {
+    -fx-background-color: success-header;
+}
+
+.success-alert .header-panel .label {
+    -fx-text-fill: success-text;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.success-alert .content.label {
+    -fx-text-fill: content-text;
+    -fx-font-size: 13px;
+}
+
+.success-alert .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: success-header;
+    -fx-border-color: success-header;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.success-alert .button:hover {
+    -fx-background-color: success-header;
+    -fx-text-fill: white;
+}
+
+
+/* === INFO === */
+.inform-alert {
+    -fx-background-color: inform-body;
+}
+
+.inform-alert .header-panel {
+    -fx-background-color: inform-header;
+}
+
+.inform-alert .header-panel .label {
+    -fx-text-fill: inform-text;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.inform-alert .content.label {
+    -fx-text-fill: content-text;
+    -fx-font-size: 13px;
+}
+
+.inform-alert .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: inform-header;
+    -fx-border-color: inform-header;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.inform-alert .button:hover {
+    -fx-background-color: inform-header;
+    -fx-text-fill: white;
+}
