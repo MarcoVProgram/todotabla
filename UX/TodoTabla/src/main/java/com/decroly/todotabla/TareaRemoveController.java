@@ -4,6 +4,7 @@ import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -77,10 +78,7 @@ public class TareaRemoveController {
         boolean estado = false;
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 
-        (new Alert(Alert.AlertType.INFORMATION,
-                "Se borro correctamente",
-                ButtonType.OK
-        )).show();
+        Notificator.informar("Borrar Tarea", "Se ha borrado correctamente");
 
         for (Tarea t: listaDeTareas) {
             try {
@@ -91,16 +89,10 @@ public class TareaRemoveController {
         }
 
         if (estado) {
-            (new Alert(Alert.AlertType.INFORMATION,
-                    "Se borro correctamente",
-                    ButtonType.OK
-            )).show();
+            Notificator.informar("Borrar Tarea", "Se ha borrado correctamente");
             actualizarTareas();
         } else {
-            (new Alert(Alert.AlertType.WARNING,
-                    "No se ha podido borrar",
-                    ButtonType.OK
-            )).showAndWait();
+            Notificator.advertencia("Borrar Tarea", "No se ha podido borrar");
         }
     }
 }

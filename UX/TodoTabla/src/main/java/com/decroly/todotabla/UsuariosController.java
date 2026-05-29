@@ -9,6 +9,7 @@ import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -31,15 +32,8 @@ import java.util.*;
 public class UsuariosController implements Initializable {
     @FXML
     public ListView<Usuario> listViewUsuarios;
-
     @FXML
-    public ListView<Integrante> listViewIntegrantes;
-
-    Map<Integer, Integrante> integrantesList = new HashMap<>();
-    ObservableMap<Integer, Integrante> obsIntegrantesList = FXCollections.observableMap(integrantesList);
-
-
-
+    public ListView listViewIntegrantes;
 
     List<Usuario> usuarioList = new ArrayList<>();
     ObservableList<Usuario> obsUsuarioList = FXCollections.observableList(usuarioList);
@@ -106,11 +100,13 @@ public class UsuariosController implements Initializable {
 
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
+        final String[] rolSeleccionado = {""};
+
 //        if(ProyectoController.getTituloProyecto() != null) {
 //            ProyectoController.getAnadirUsuariosBtn().setDisable(false);
 //            ProyectoController.getCrearProyecto().setDisable(false);
 
-
+        //si click derecho o doble click izq, mostrar popup para seleccionar rol
         listViewUsuarios.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
                 //Popup combobox
@@ -134,81 +130,32 @@ public class UsuariosController implements Initializable {
 
                 result.ifPresent(rol -> {
                     System.out.println("Rol seleccionado: " + rol);
-
-
-                    if (rol != null) {
-                        Integrante i = new Integrante(rol, LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
-                        Integrante exist = null;
-                        try {
-                            IntegrantesBDD.insertar(i);
-                            exist = IntegrantesBDD.getIntegrante(i.getId());
-
-                        } catch (Exception e) {
-                            e.getStackTrace();
-                        }
-
-                        if (exist != null) {
-                            showAlert("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-                                    + ", al proyecto actual ");
-
-                        } else {
-                            showAlert("Error", "Ocurrió un error inesperado al intentar insertar al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-                                    + ", al proyecto actual ");
-                        }
-                    }
+                    rolSeleccionado[0] = rol;
                 });
             }
         });
 
-        listViewIntegrantes.setCellFactory(integrantesList -> new ListCell<Integrante>() {
+        if (!rolSeleccionado[0].equals("")) {
+            Integrante i = new Integrante(rolSeleccionado[0], LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
 
-            @Override
-            protected void updateItem(Integrante user, boolean empty) {
-                super.updateItem(user, empty);
-
-                if (empty || user == null) {
-
-                    setGraphic(null);
-
-                } else {
-
-                    // Título
-                    Label rol = new Label(user.getRol());
-                    Label nombre = new Label(user.getIdUsuario().getNombre());
-
-                    rol.getStyleClass().add("titulo-tarea");
-                    nombre.getStyleClass().add("subTitulo-tarea");
-
-                    // Fecha entrada proyecto
-                    Label fecha = new Label(String.valueOf(user.getFechaEntrada()));
-
-                    fecha.getStyleClass().add("subTitulo2-tarea");
-
-                    // Card completa
-                    VBox card = new VBox(10, rol, nombre, fecha);
-
-                    card.getStyleClass().add("task-card");
-
-                    setGraphic(card);
-                }
+            boolean exist;
+            try {
+                IntegrantesBDD.insertar(i);
+                exist = true;
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, "insertar");
+                exist = false;
             }
-        });
 
-        Map<Integer, Integrante> map = null;
-        try {
-            map = IntegrantesBDD.getIntegrantes(
-                    EstadoPrograma.getInstance().getProyectoActivo()
-            );
-        } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            if(exist){
+                Notificator.exito("Inserción al Proyecto", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                + ", al proyecto actual " + EstadoPrograma.getInstance().getProyectoActivo().getTitulo());
+
+            }
         }
 
-        ObservableList<Integrante> obsIntegrantesList =
-                FXCollections.observableArrayList(map.values());
-
-        listViewIntegrantes.setItems(obsIntegrantesList);
-
-
+//        Map<Integer, Integrante> integrantesList = IntegrantesBDD.getIntegrantes(EstadoPrograma.getInstance().getProyectoActivo());
+//        ObservableMap<Integer, Integrante> obsIntegrantesList = FXCollections.observableMap(integrantesList);
     }
 //        else{
 ////            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
@@ -228,13 +175,4 @@ public class UsuariosController implements Initializable {
             listViewUsuarios.refresh();
         }
     }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
 }
