@@ -121,15 +121,19 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
             tareo = null;
         }
 
-        boolean insertarExito = false;
+        int key = -1;
         if (tareo != null) {
             try {
-                insertarExito = TareasBDD.insertar(tareo);
+                key = TareasBDD.insertar(tareo);
             } catch (Exception e) {
                 AppErrorHandler.manejar(e, "insertar");
             }
         }
+
+        boolean insertarExito = (key != -1);
         if (insertarExito) {
+            try {
+                tareo = TareasBDD.getTarea(key);
             for (Usuario u: usuariosSeleccionados) {
                 Asignacion a = new Asignacion(u, tareo, LocalDate.now(), LocalDate.MAX); // TODO No se como asignar la fecha de fin
                 try {
@@ -137,7 +141,11 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
                 } catch (Exception e) {
                     AppErrorHandler.manejar(e, "insertar");
                     insertarExito = false;
+                    break;
                 }
+            }
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, "Obtener la tarea");
             }
         }
         if (insertarExito) {

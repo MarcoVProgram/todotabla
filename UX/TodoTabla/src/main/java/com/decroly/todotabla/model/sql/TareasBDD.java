@@ -9,8 +9,9 @@ import java.sql.*;
 import java.util.*;
 
 public class TareasBDD {
-    public static boolean insertar(Tarea t) throws Exception {
+    public static int insertar(Tarea t) throws Exception {
         boolean estado = false;
+        int clave = -1;
 
         String sql = "INSERT INTO tarea VALUES (NULL, ?, ?, ?, ?)";
         try (Connection conexion = BDD.getConnection();
@@ -23,8 +24,15 @@ public class TareasBDD {
 
             estado = (stmnt.executeUpdate() == 1);
 
+            if (estado) {
+                ResultSet keys = stmnt.getGeneratedKeys();
+                while (keys.next()) {
+                    clave = keys.getInt(1);
+                }
+            }
+
         }
-        return estado;
+        return clave;
     }
 
     public static boolean actualizar(Tarea t) throws Exception {

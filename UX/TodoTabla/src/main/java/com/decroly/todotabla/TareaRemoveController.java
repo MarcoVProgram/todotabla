@@ -9,17 +9,25 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-public class TareaRemoveController {
+public class TareaRemoveController implements Initializable {
 
     @FXML
     public ListView<Tarea> listViewTareas;
     private ObservableList<Tarea> listaTareas;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        listarTareas();
+    }
 
     private void listarTareas() {
         try {
@@ -32,7 +40,6 @@ public class TareaRemoveController {
             AppErrorHandler.manejar(e, "getTareas");
         }
 
-        listViewTareas.setItems(listaTareas);
         listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
             @Override
             protected void updateItem(Tarea tarea, boolean empty) {
@@ -53,6 +60,7 @@ public class TareaRemoveController {
             }
         });
 
+        listViewTareas.setItems(listaTareas);
     }
 
     private void actualizarTareas() {
@@ -78,8 +86,6 @@ public class TareaRemoveController {
         boolean estado = false;
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 
-        Notificator.informar("Borrar Tarea", "Se ha borrado correctamente");
-
         for (Tarea t: listaDeTareas) {
             try {
                 estado = TareasBDD.borrar(t);
@@ -95,4 +101,5 @@ public class TareaRemoveController {
             Notificator.advertencia("Borrar Tarea", "No se ha podido borrar");
         }
     }
+
 }
