@@ -106,17 +106,26 @@ public class TareaModController implements Initializable {
     }
 
     public void modTarea(ActionEvent event) {
-        boolean actualizarExito = true;
+        boolean actualizarExito = false;
 
         //obtener valores campos
         String nombre = nombreTareaFormEditar.getText();
-        int prioridad = prioridadTareaFormCrear.getValue();
+        Integer prioridad = null;
+
+        try {
+            prioridad = prioridadTareaFormCrear.getValue();
+        } catch (NullPointerException e) {
+            prioridad = null;
+        }
 
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 
+        actualizarExito = !listaDeTareas.isEmpty();
         for (Tarea tarea : listaDeTareas) {
             tarea.setNombre(nombre);
-            tarea.setPrioridad(prioridad);
+            if (prioridad != null) {
+                tarea.setPrioridad(prioridad);
+            }
 
             try {
                 actualizarExito = actualizarExito && TareasBDD.actualizar(tarea);
@@ -144,15 +153,21 @@ public class TareaModController implements Initializable {
 
     @FXML
     private void abrirPersonaPanel() {
+        listarUsuarios();
         personaPanelTareaForm.setVisible(true);
     }
 
     private void listarUsuarios() {
         listaUsuarios = FXCollections.observableList(new ArrayList<>());
 
-        Map<Integer, Integrante> integrantes = IntegrantesBDD.getIntegrantes(
-                EstadoPrograma.getInstance().getProyectoActivo()
-        );
+        Map<Integer, Integrante> integrantes = null;
+        try {
+            integrantes = IntegrantesBDD.getIntegrantes(
+                    EstadoPrograma.getInstance().getProyectoActivo()
+            );
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, e.getCause().toString());
+        }
 
         if (integrantes != null) {
             Iterator<Integrante> integranteIterator =
@@ -163,6 +178,8 @@ public class TareaModController implements Initializable {
                 listaUsuarios.add(user);
             }
         }
+
+        listViewUsuarios.setItems(listaUsuarios);
 
         listViewUsuarios.setCellFactory(listaTareas -> new ListCell<>(){
             @Override
