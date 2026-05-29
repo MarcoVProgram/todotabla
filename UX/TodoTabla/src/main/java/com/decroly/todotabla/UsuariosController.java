@@ -130,33 +130,84 @@ public class UsuariosController implements Initializable {
 
                 result.ifPresent(rol -> {
                     System.out.println("Rol seleccionado: " + rol);
-                    rolSeleccionado[0] = rol;
+
+
+                    if (rol != null) {
+                        Integrante i = new Integrante(rol, LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
+                        Integrante exist = null;
+                        try {
+                            IntegrantesBDD.insertar(i);
+                            exist = IntegrantesBDD.getIntegrante(i.getId());
+
+                        } catch (Exception e) {
+                            e.getStackTrace();
+                        }
+
+                        if (exist != null) {
+                            Notificator.exito("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                                    + ", al proyecto actual ");
+
+                        } else {
+                            Notificator.error("Error", "Ocurrió un error inesperado al intentar insertar al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                                    + ", al proyecto actual ");
+                        }
+                    }
                 });
             }
         });
 
-        if (!rolSeleccionado[0].equals("")) {
-            Integrante i = new Integrante(rolSeleccionado[0], LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
+        listViewIntegrantes.setCellFactory(integrantesList -> new ListCell<Integrante>() {
 
-            boolean exist;
-            try {
-                IntegrantesBDD.insertar(i);
-                exist = true;
-            } catch (Exception e) {
-                AppErrorHandler.manejar(e, "insertar");
-                exist = false;
+            @Override
+            protected void updateItem(Integrante user, boolean empty) {
+                super.updateItem(user, empty);
+
+                if (empty || user == null) {
+
+                    setGraphic(null);
+
+                } else {
+
+                    // Título
+                    Label rol = new Label(user.getRol());
+                    Label nombre = new Label(user.getIdUsuario().getNombre());
+
+                    rol.getStyleClass().add("titulo-tarea");
+                    nombre.getStyleClass().add("subTitulo-tarea");
+
+                    // Fecha entrada proyecto
+                    Label fecha = new Label(String.valueOf(user.getFechaEntrada()));
+
+                    fecha.getStyleClass().add("subTitulo2-tarea");
+
+                    // Card completa
+                    VBox card = new VBox(10, rol, nombre, fecha);
+
+                    card.getStyleClass().add("task-card");
+
+                    setGraphic(card);
+                }
             }
+        });
 
-            if(exist){
-                Notificator.exito("Inserción al Proyecto", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-                + ", al proyecto actual " + EstadoPrograma.getInstance().getProyectoActivo().getTitulo());
-
-            }
+        Map<Integer, Integrante> map = null;
+        try {
+            map = IntegrantesBDD.getIntegrantes(
+                    EstadoPrograma.getInstance().getProyectoActivo()
+            );
+        } catch (Exception e) {
+            System.out.println(e.getStackTrace());
         }
+
+        ObservableList<Integrante> obsIntegrantesList =
+                FXCollections.observableArrayList(map.values());
+
+        listViewIntegrantes.setItems(obsIntegrantesList);
+
+    }
 
 //        Map<Integer, Integrante> integrantesList = IntegrantesBDD.getIntegrantes(EstadoPrograma.getInstance().getProyectoActivo());
 //        ObservableMap<Integer, Integrante> obsIntegrantesList = FXCollections.observableMap(integrantesList);
-    }
 //        else{
 ////            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
 ////            ProyectoController.getCrearProyecto().setDisable(true);
