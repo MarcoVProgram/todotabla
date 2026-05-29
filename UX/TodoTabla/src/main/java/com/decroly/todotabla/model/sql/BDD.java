@@ -24,9 +24,7 @@ public class BDD {
     public static synchronized Connection getConnection() throws IOException, SQLException, ClassNotFoundException, URISyntaxException {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
-        if (configURL != null) {
-
-            try (
+        try (
                 FileReader configFile = new FileReader(new File(configURL.toURI()));
                 BufferedReader configReader = new BufferedReader(configFile);
             ) {
@@ -39,9 +37,9 @@ public class BDD {
 //                    conexion = DriverManager.getConnection(url, user, password);
 //                }
                 return DriverManager.getConnection(url, user, password);
+            } catch (NullPointerException e) {
+                throw new IOException(e);
             }
-        }
-        return null;
     }
 /*
     public static Connection getConnection(boolean restart) throws Exception {
