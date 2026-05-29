@@ -55,15 +55,9 @@ public class UsuariosController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            obsUsuarioList.addAll(UsuariosBDD.getUsuarios().values());
-        } catch (Exception e) {
-            AppErrorHandler.manejar(e, "getUsuarios");
-        }
-        listViewUsuarios.setItems(obsUsuarioList);
-
         actualizarUsuarios();
 
+        //==============MODIFICAR LISTVIEW USUARIOS===================
         listViewUsuarios.setCellFactory(usuarioList -> new ListCell<Usuario>() {
 
             @Override
@@ -100,13 +94,13 @@ public class UsuariosController implements Initializable {
 
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-        final String[] rolSeleccionado = {""};
-
 //        if(ProyectoController.getTituloProyecto() != null) {
 //            ProyectoController.getAnadirUsuariosBtn().setDisable(false);
 //            ProyectoController.getCrearProyecto().setDisable(false);
 
         //si click derecho o doble click izq, mostrar popup para seleccionar rol
+
+        //==============CREAR POPUP AL CLICKEAR USUARIO PARA AÑADIR===================
         listViewUsuarios.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
                 //Popup combobox
@@ -156,6 +150,8 @@ public class UsuariosController implements Initializable {
             }
         });
 
+        //==============MODIFICAR LISTVIEW INTEGRANTES===================
+
         listViewIntegrantes.setCellFactory(integrantesList -> new ListCell<Integrante>() {
 
             @Override
@@ -190,7 +186,9 @@ public class UsuariosController implements Initializable {
             }
         });
 
+        //=================LISTA INTEGRANTES===================
         Map<Integer, Integrante> map = null;
+
         try {
             map = IntegrantesBDD.getIntegrantes(
                     EstadoPrograma.getInstance().getProyectoActivo()
@@ -203,6 +201,28 @@ public class UsuariosController implements Initializable {
                 FXCollections.observableArrayList(map.values());
 
         listViewIntegrantes.setItems(obsIntegrantesList);
+
+        //===========LISTA USUARIOS================
+
+        Set<Integer> idsIntegrantes = new HashSet<>();
+
+        for (Integrante i : obsIntegrantesList) {
+            idsIntegrantes.add(i.getIdUsuario().getId());
+        }
+
+        obsUsuarioList.clear();
+
+        try {
+            for (Usuario u : UsuariosBDD.getUsuarios().values()) {
+                if (!idsIntegrantes.contains(u.getId())) {
+                    obsUsuarioList.add(u);
+                }
+            }
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getUsuarios");
+        }
+
+        listViewUsuarios.setItems(obsUsuarioList);
 
     }
 
