@@ -32,7 +32,7 @@ public class UsuariosController implements Initializable {
     @FXML
     public ListView<Usuario> listViewUsuarios;
     @FXML
-    public ListView listViewIntegrantes;
+    public ListView<Integrante> listViewIntegrantes;
 
     List<Usuario> usuarioList = new ArrayList<>();
     ObservableList<Usuario> obsUsuarioList = FXCollections.observableList(usuarioList);
@@ -129,29 +129,111 @@ public class UsuariosController implements Initializable {
 
                 result.ifPresent(rol -> {
                     System.out.println("Rol seleccionado: " + rol);
-                    rolSeleccionado[0] = rol;
+
+                    Integrante i = new Integrante(rol, LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
+
+                    boolean exist;
+                    try {
+                        IntegrantesBDD.insertar(i);
+                        exist = true;
+                    } catch (Exception e) {
+                        AppErrorHandler.manejar(e, "insertar");
+                        exist = false;
+                    }
+
+                    if(exist){
+                        showAlert("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                                + ", al proyecto actual " + EstadoPrograma.getInstance().getProyectoActivo().getTitulo());
+
+                    }
                 });
             }
         });
 
-        if (!rolSeleccionado[0].equals("")) {
-            Integrante i = new Integrante(rolSeleccionado[0], LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
+        listViewUsuarios.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
+                //Popup combobox
+                List<String> roles = List.of(
+                        "Product Owner",
+                        "Scrum Master",
+                        "Developer",
+                        "Tester",
+                        "Designer",
+                        "DevOps",
+                        "Stakeholder"
+                );
 
-            boolean exist;
-            try {
-                IntegrantesBDD.insertar(i);
-                exist = true;
-            } catch (Exception e) {
-                AppErrorHandler.manejar(e, "insertar");
-                exist = false;
+                ChoiceDialog<String> dialog =
+                        new ChoiceDialog<>("Developer", roles);
+
+                dialog.setTitle("Seleccionar Rol");
+                dialog.setHeaderText("Asignar rol al usuario");
+
+                Optional<String> result = dialog.showAndWait();
+
+                result.ifPresent(rol -> {
+                    System.out.println("Rol seleccionado: " + rol);
+
+
+                    if (rol != null) {
+                        Integrante i = new Integrante(rol, LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
+                        Integrante exist = null;
+                        try {
+                            IntegrantesBDD.insertar(i);
+                            exist = IntegrantesBDD.getIntegrante(i.getId());
+
+                        } catch (Exception e) {
+                            e.getStackTrace();
+                        }
+
+                        if (exist != null) {
+                            showAlert("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                                    + ", al proyecto actual ");
+
+                        } else {
+                            showAlert("Error", "Ocurrió un error inesperado al intentar insertar al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                                    + ", al proyecto actual ");
+                        }
+                    }
+                });
             }
+        });
 
-            if(exist){
-                showAlert("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-                + ", al proyecto actual " + EstadoPrograma.getInstance().getProyectoActivo().getTitulo());
+        listViewIntegrantes.setCellFactory(integrantesList -> new ListCell<Integrante>() {
 
+            @Override
+            protected void updateItem(Integrante user, boolean empty) {
+                super.updateItem(user, empty);
+
+                if (empty || user == null) {
+
+                    setGraphic(null);
+
+                } else {
+
+                    // Título
+                    Label rol = new Label(user.getRol());
+                    Label nombre = new Label(user.getIdUsuario().getNombre());
+
+                    rol.getStyleClass().add("titulo-tarea");
+                    nombre.getStyleClass().add("subTitulo-tarea");
+
+                    // Fecha entrada proyecto
+                    Label fecha = new Label(String.valueOf(user.getFechaEntrada()));
+
+                    fecha.getStyleClass().add("subTitulo2-tarea");
+
+                    // Card completa
+                    VBox card = new VBox(10, rol, nombre, fecha);
+
+                    card.getStyleClass().add("task-card");
+
+                    setGraphic(card);
+                }
             }
-        }
+        });
+
+
 
 //        Map<Integer, Integrante> integrantesList = IntegrantesBDD.getIntegrantes(EstadoPrograma.getInstance().getProyectoActivo());
 //        ObservableMap<Integer, Integrante> obsIntegrantesList = FXCollections.observableMap(integrantesList);
@@ -182,8 +264,5 @@ public class UsuariosController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
-
 
 }

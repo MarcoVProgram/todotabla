@@ -296,6 +296,43 @@ public class KanBanController implements Initializable {
 //        }
 //    }
 
+@FXML
+private void abrirVentanaUsuarios() { //panel usuarios
+    try {
+
+        if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+            System.out.println("No se puede volver a abrir, hay una sesion existente");
+            return;
+        }
+
+        // Cargar el archivo FXML
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-form.fxml"));
+        Parent root = loader.load();
+
+        // Crear una nueva ventana (Stage)
+        ventanaSecundaria = new Stage();
+        ventanaSecundaria.setTitle("Añadir usuarios");
+        ventanaSecundaria.setScene(new Scene(root));
+
+        ventanaSecundaria.setResizable(false);
+
+        if(ventanaSecundaria.isFocused()){
+            ventanaSecundaria.setAlwaysOnTop(true);
+        }else{
+            ventanaSecundaria.setAlwaysOnTop(false);
+        }
+
+//            listViewTareas.setItems(obsTareas);
+
+        // Mostrar la ventana
+        ventanaSecundaria.showAndWait();
+
+        // TODO Hay que refrescar las listas del Kanban controller
+
+    } catch (IOException e) {
+        AppErrorHandler.manejar(e, "abrirVentanaUsuarios");
+    }
+}
 
 
     @FXML

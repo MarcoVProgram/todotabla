@@ -28,18 +28,10 @@ import java.util.ResourceBundle;
 public class ProyectoController implements Initializable{
 
     @FXML
-    private static TextField tituloProyecto;
-
-    public static TextField getTituloProyecto() {
-        return tituloProyecto;
-    }
+    private TextField tituloProyecto;
 
     @FXML
-    private static DatePicker fechaProyecto;
-
-    public static DatePicker getFechaProyecto() {
-        return fechaProyecto;
-    }
+    private DatePicker fechaProyecto;
 
     @FXML
     private Button anadirUsuariosBtn;
