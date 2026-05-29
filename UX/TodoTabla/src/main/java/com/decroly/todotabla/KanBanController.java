@@ -273,7 +273,7 @@ public class KanBanController implements Initializable {
 //            }
 //
 //            // Cargar el archivo FXML
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-form.fxml"));
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantes.fxml"));
 //            Parent root = loader.load();
 //
 //            // Crear una nueva ventana (Stage)
@@ -306,7 +306,7 @@ private void abrirVentanaUsuarios() { //panel usuarios
         }
 
         // Cargar el archivo FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-form.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantes.fxml"));
         Parent root = loader.load();
 
         // Crear una nueva ventana (Stage)

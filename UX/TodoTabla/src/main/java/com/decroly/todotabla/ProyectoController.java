@@ -10,10 +10,12 @@ import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -36,6 +38,9 @@ public class ProyectoController implements Initializable{
 
     @FXML
     private Button anadirUsuariosBtn;
+
+    @FXML
+    private Node root;
 
 
     @FXML
@@ -87,7 +92,7 @@ public class ProyectoController implements Initializable{
             }
 
             // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-form.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantes.fxml"));
             Parent root = loader.load();
 
             // Crear una nueva ventana (Stage)
@@ -113,5 +118,11 @@ public class ProyectoController implements Initializable{
         } catch (IOException e) {
             AppErrorHandler.manejar(e, "abrirVentanaUsuarios");
         }
+    }
+
+    @FXML
+    private void irAUsuariosview() throws IOException { //abrir panel kanban
+        Stage stage = (Stage) root.getScene().getWindow();
+        Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formUsuarios.fxml");
     }
 }

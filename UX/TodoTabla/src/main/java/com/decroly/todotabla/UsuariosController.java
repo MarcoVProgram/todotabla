@@ -9,6 +9,7 @@ import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +17,7 @@ import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -34,6 +36,9 @@ public class UsuariosController implements Initializable {
     public ListView<Usuario> listViewUsuarios;
     @FXML
     public ListView listViewIntegrantes;
+
+    @FXML
+    private Node root;
 
     List<Usuario> usuarioList = new ArrayList<>();
     ObservableList<Usuario> obsUsuarioList = FXCollections.observableList(usuarioList);
@@ -150,42 +155,6 @@ public class UsuariosController implements Initializable {
             }
         });
 
-        //==============MODIFICAR LISTVIEW INTEGRANTES===================
-
-        listViewIntegrantes.setCellFactory(integrantesList -> new ListCell<Integrante>() {
-
-            @Override
-            protected void updateItem(Integrante user, boolean empty) {
-                super.updateItem(user, empty);
-
-                if (empty || user == null) {
-
-                    setGraphic(null);
-
-                } else {
-
-                    // Título
-                    Label rol = new Label(user.getRol());
-                    Label nombre = new Label(user.getIdUsuario().getNombre());
-
-                    rol.getStyleClass().add("titulo-tarea");
-                    nombre.getStyleClass().add("subTitulo-tarea");
-
-                    // Fecha entrada proyecto
-                    Label fecha = new Label(String.valueOf(user.getFechaEntrada()));
-
-                    fecha.getStyleClass().add("subTitulo2-tarea");
-
-                    // Card completa
-                    VBox card = new VBox(10, rol, nombre, fecha);
-
-                    card.getStyleClass().add("task-card");
-
-                    setGraphic(card);
-                }
-            }
-        });
-
         //=================LISTA INTEGRANTES===================
         Map<Integer, Integrante> map = null;
 
@@ -194,13 +163,12 @@ public class UsuariosController implements Initializable {
                     EstadoPrograma.getInstance().getProyectoActivo()
             );
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            Notificator.advertencia("Mapa vacio", "Creando nuevo mapa");
+            map = new HashMap<>();
         }
 
         ObservableList<Integrante> obsIntegrantesList =
                 FXCollections.observableArrayList(map.values());
-
-        listViewIntegrantes.setItems(obsIntegrantesList);
 
         //===========LISTA USUARIOS================
 
@@ -245,5 +213,11 @@ public class UsuariosController implements Initializable {
         if (todosUsuarios != null) {
             listViewUsuarios.refresh();
         }
+    }
+
+    @FXML
+    private void volverVentanaPrincipal() throws IOException { //abrir panel kanban
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.close();
     }
 }
