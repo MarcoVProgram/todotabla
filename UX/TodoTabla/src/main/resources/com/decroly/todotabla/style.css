@@ -1,0 +1,414 @@
+.root {
+    -fx-background-color: #0d1117;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* TOPBAR */
+.topbar {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-width: 0 0 1 0;
+}
+
+.logo {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.breadcrumb {
+    -fx-text-fill: #5a92d7;
+}
+
+
+.icon {
+    -fx-text-fill: #c9d1d9;
+    -fx-font-size: 16px;
+}
+
+/* NOTICE */
+.notice-blue {
+    -fx-background-color: #1f6feb;
+}
+
+.notice-text {
+    -fx-text-fill: white;
+}
+
+/* TITLE */
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+/* INPUT */
+.search, .search-large {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #8b949e;
+}
+
+.search-large {
+    -fx-padding: 8 12;
+}
+
+.descTarea{
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #8b949e;
+}
+
+/* BUTTON */
+.btn {
+    -fx-background-color: #21262d;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+}
+
+.btnAdd {
+    -fx-background-color: #006222;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-border-color: #05ab3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+}
+.btnAdd:hover{
+    -fx-background-color: #00792a;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-border-color: #09dd55;
+}
+
+.btnRemove {
+    -fx-background-color: #451003;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+}
+
+.btnEdit{
+    -fx-background-color: #eae35e;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+}
+
+.btn:hover {
+    -fx-background-color: #30363d;
+}
+
+/* BOARD */
+.scroll {
+    -fx-background: #0d1117;
+}
+
+.board {
+    -fx-padding: 20;
+}
+
+/* COLUMN */
+.column {
+    -fx-min-width: 260;
+    -fx-spacing: 6;
+}
+
+.column-title {
+    -fx-text-fill: #c9d1d9;
+    -fx-font-weight: bold;
+}
+
+.column-desc {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 12px;
+}
+
+/* DOT COLORS */
+.dot-green { -fx-fill: #3fb950; }
+.dot-blue { -fx-fill: #58a6ff; }
+.dot-yellow { -fx-fill: #d29922; }
+.dot-purple { -fx-fill: #a371f7; }
+.dot-red { -fx-fill: #f85149; }
+
+/* AVATAR */
+.avatar {
+    -fx-fill: #30363d;
+}
+
+.title-bar {
+}
+
+.filter-bar {
+}
+
+/*tareas kanban*/
+.kanban-list {
+    -fx-background-color: transparent;
+    -fx-padding: 10 4;
+}
+
+.kanban-list .viewport {
+    -fx-background-color: transparent;
+}
+
+.kanban-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 6;
+    -fx-font-size: 14px;
+
+    -fx-cursor: hand;
+}
+
+.kanban-list .list-cell:hover {
+    -fx-background-color: transparent;
+}
+
+.kanban-list .list-cell:selected {
+    -fx-background-color: transparent;
+}
+
+/*estilos para nuevo main*/
+.root-pane {
+    -fx-background-color: #0d1117;
+}
+
+/*estilos seleccion del proyecto*/
+.project-list {
+    -fx-background-color: transparent;
+    -fx-padding: 10 4;
+}
+
+.project-list .viewport {
+    -fx-background-color: transparent;
+}
+
+.project-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 6;
+    -fx-font-size: 14px;
+
+    -fx-cursor: hand;
+}
+
+/* SEARCH */
+
+.search-container {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 0 14 0 14;
+}
+
+.search-icon {
+    -fx-text-fill: #7d8590;
+    -fx-font-size: 15px;
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #7d8590;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.clear-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+}
+
+/* BUTTON */
+
+.project-button {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 18 0 18;
+    -fx-cursor: hand;
+}
+
+/* PANEL */
+
+.panel-container {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.panel-header {
+    -fx-border-color: transparent transparent #30363d transparent;
+    -fx-padding: 0 16 0 16;
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.header-subtitle {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 15px;
+}
+
+/* BADGES */
+
+.badge-active {
+    -fx-background-color: #21262d;
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-padding: 2 8 2 8;
+    -fx-font-size: 12px;
+}
+
+.badge-inactive {
+    -fx-background-color: #21262d;
+    -fx-background-radius: 10;
+    -fx-text-fill: #8b949e;
+    -fx-padding: 2 8 2 8;
+    -fx-font-size: 12px;
+}
+
+/* SORT */
+
+.sort-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+/* ISSUE */
+
+.issue-item {
+    -fx-padding: 0 16 0 16;
+}
+
+.issue-icon {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+}
+
+.issue-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.private-badge {
+    -fx-background-color: transparent;
+    -fx-border-color: #6e7681;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-text-fill: #c9d1d9;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 10 3 10;
+}
+
+.issue-subtitle {
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 13px;
+}
+
+/* MENU */
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8b949e;
+    -fx-font-size: 18px;
+    -fx-cursor: hand;
+}
+
+/*TAREAS BACKLOG*/
+.task-card {
+    -fx-background-color: #161b22;
+    -fx-padding: 14 16;
+    -fx-background-radius: 8;
+
+    -fx-border-color: #30363d;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 10, 0, 0, 3);
+
+    /*-fx-pref-width: 248;*/
+    -fx-cursor: hand;
+}
+
+.task-card:hover {
+    -fx-border-color: #6e7681;
+    -fx-background-color: #1c2128;
+}
+
+.titulo-tarea {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6edf3;
+    -fx-wrap-text: true;
+}
+.subTitulo-tarea {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6edf3;
+    -fx-wrap-text: true;
+}
+
+.subTitulo2-tarea {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6edf3;
+    -fx-wrap-text: true;
+}
+
+.prioridad-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #8b949e;
+    -fx-font-family: "Monospace";
+}
+
+.prioridad-dot {
+    -fx-background-radius: 50;
+    -fx-min-width: 8;
+    -fx-min-height: 8;
+    -fx-max-width: 8;
+    -fx-max-height: 8;
+}
+
+.avatar-container {
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-border-color: #30363d;
+    -fx-border-width: 1.5;
+}
+
+/*.proyectosAbiertos{*/
+/*    -fx-font-weight: bold;*/
+/*}*/
+
+/*.proyectoAbiertoDeseleccionado {*/
+/*    -fx-font-weight: normal;*/
+/*}*/
+
+/*.proyectosArchivados{*/
+/*    -fx-font-weight: bold;*/
+/*}*/
+
+/*.proyectoArchivadoDeseleccionado{*/
+/*    -fx-font-weight: normal;*/
+/*}*/
