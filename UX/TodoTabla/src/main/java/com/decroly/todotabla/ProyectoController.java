@@ -10,6 +10,7 @@ import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Notificator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -67,10 +68,9 @@ public class ProyectoController implements Initializable{
         );
         try {
             if (ProyetosBDD.insertar(p)) {
-                (new Alert(Alert.AlertType.INFORMATION,
-                        "Se ha creado correctamente",
-                        ButtonType.OK
-                )).showAndWait();
+                Notificator.exito("Inserción", "Se ha insertado correctamente");
+            } else {
+                Notificator.error("Error", "Error al insertar");
             }
         } catch (Exception ex) {
             AppErrorHandler.manejar(ex, "insertar");
@@ -89,6 +89,7 @@ public class ProyectoController implements Initializable{
         try {
 
             if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+                Notificator.advertencia("Sesión no válida", "No se puede volver a abrir, hay una sesión existente");
                 System.out.println("No se puede volver a abrir, hay una sesion existente");
                 return;
             }

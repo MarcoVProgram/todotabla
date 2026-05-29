@@ -4,6 +4,7 @@ import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.*;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -140,7 +141,7 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
             }
         }
         if (insertarExito) {
-            (new Alert(Alert.AlertType.INFORMATION,"Se añadio correctamente", ButtonType.OK)).show();
+            Notificator.exito("Creación de Tarea", "Se ha creado la tarea con éxito, puede cerrar esta ventana");
         }
     }
 

@@ -9,6 +9,7 @@ import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -147,7 +148,7 @@ public class UsuariosController implements Initializable {
             }
 
             if(exist){
-                showAlert("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                Notificator.exito("Inserción al Proyecto", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
                 + ", al proyecto actual " + EstadoPrograma.getInstance().getProyectoActivo().getTitulo());
 
             }
@@ -174,16 +175,4 @@ public class UsuariosController implements Initializable {
             listViewUsuarios.refresh();
         }
     }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-
-
-
 }

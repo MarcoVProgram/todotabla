@@ -7,11 +7,13 @@ import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
@@ -137,11 +139,11 @@ public class TareaModController implements Initializable {
 
 
         if (actualizarExito) {
-            (new Alert(Alert.AlertType.INFORMATION,"Se edito correctamente", ButtonType.OK)).show();
+            Notificator.exito("Actualización de Tarea", "Se ha actualizado la tarea correctamente");
             this.actualizarTareas();
         }
         else {
-            (new Alert(Alert.AlertType.ERROR,"No se pudo editar", ButtonType.OK)).show();
+            Notificator.error("Actualización de Tarea", "No se pudo modificar la tarea");
         }
     }
 
