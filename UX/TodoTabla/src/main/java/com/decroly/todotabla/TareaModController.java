@@ -1,7 +1,9 @@
 package com.decroly.todotabla;
 
+import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.collections.FXCollections;
@@ -33,6 +35,7 @@ public class TareaModController implements Initializable {
 
     @FXML
     public ListView<Usuario> listViewUsuarios;
+    public ObservableList<Usuario> listaUsuarios;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -115,8 +118,57 @@ public class TareaModController implements Initializable {
         }
     }
 
+    @FXML
     private void nadie() {
         listViewUsuarios.getSelectionModel().select(null);
         personaPanelTareaForm.setVisible(false);
     }
+
+    @FXML
+    private void abrirPersonaPanel() {
+        personaPanelTareaForm.setVisible(true);
+    }
+
+    private void listarUsuarios() {
+        listaUsuarios = FXCollections.observableList(new ArrayList<>());
+
+        Map<Integer, Integrante> integrantes = IntegrantesBDD.getIntegrantes(
+                EstadoPrograma.getInstance().getProyectoActivo()
+        );
+
+        if (integrantes != null) {
+            Iterator<Integrante> integranteIterator =
+                    integrantes.values().iterator();
+
+            while (integranteIterator.hasNext()){
+                Usuario user = integranteIterator.next().getIdUsuario();
+                listaUsuarios.add(user);
+            }
+        }
+
+        listViewUsuarios.setCellFactory(listaTareas -> new ListCell<>(){
+            @Override
+            protected void updateItem(Usuario u, boolean empty) {
+                super.updateItem(u, empty);
+
+                if (empty || u == null) {
+                    setGraphic(null);
+                    setText(null);
+                    setStyle("-fx-background-color: transparent;");
+                    return;
+                }
+
+                Label titulo = new Label(u.getNombre());
+                titulo.getStyleClass().add("titulo-tarea");
+
+                VBox card = new VBox(8, titulo);
+                card.getStyleClass().add("kanban-list");
+
+                setGraphic(card);
+
+            }
+        });
+
+    }
+
 }

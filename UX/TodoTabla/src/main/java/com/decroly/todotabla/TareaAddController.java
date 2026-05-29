@@ -79,28 +79,6 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
             }
         });
 
-
-        // TODO rehacer esto para hacer lo con usuarios recomendablemente
-        /*listViewUsuarios.setCellFactory(listaTareas -> new ListCell<Tarea>() {
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-                } else {
-
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    VBox card = new VBox(8, titulo);
-                    card.getStyleClass().add("kanban-list");
-
-                    setGraphic(card);
-                }
-            }
-        });*/
-
     }
 
     //--------AGREGAR TAREA-------------
