@@ -5,6 +5,7 @@ import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,11 +52,16 @@ public class TareaModController implements Initializable {
     }
 
     private void listarTareas() {
-        listaTareas = FXCollections.observableList(
-                new ArrayList<>(TareasBDD.getTareas(
-                        EstadoPrograma.getInstance().getProyectoActivo()
-                ).values())
-        );
+        try {
+            listaTareas = FXCollections.observableList(
+                    new ArrayList<>(TareasBDD.getTareas(
+                            EstadoPrograma.getInstance().getProyectoActivo()
+                    ).values())
+            );
+        }  catch (Exception e) {
+            AppErrorHandler.manejar(e, "getTareas");
+            listaTareas = FXCollections.observableArrayList();
+        }
 
         listViewTareas.setItems(listaTareas);
         listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
@@ -81,9 +87,16 @@ public class TareaModController implements Initializable {
     }
 
     private void actualizarTareas() {
-        Map<Integer, Tarea> todasTareasDelProyecto = TareasBDD.getTareas(
-                EstadoPrograma.getInstance().getProyectoActivo()
-        );
+        Map<Integer, Tarea> todasTareasDelProyecto;
+
+        try {
+            todasTareasDelProyecto = TareasBDD.getTareas(
+                    EstadoPrograma.getInstance().getProyectoActivo()
+            );
+        }  catch (Exception e) {
+            AppErrorHandler.manejar(e, "actualizarTareas");
+            todasTareasDelProyecto = null;
+        }
 
         if (todasTareasDelProyecto != null) {
             listaTareas.addAll(todasTareasDelProyecto.values());
@@ -105,7 +118,12 @@ public class TareaModController implements Initializable {
             tarea.setNombre(nombre);
             tarea.setPrioridad(prioridad);
 
-            actualizarExito = actualizarExito && TareasBDD.actualizar(tarea);
+            try {
+                actualizarExito = actualizarExito && TareasBDD.actualizar(tarea);
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, "actualizarTarea");
+                actualizarExito = false;
+            }
         }
 
 

@@ -2,6 +2,7 @@ package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.*;
+import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,9 +43,16 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
     private void listarUsuarios() {
         listaUsuarios = FXCollections.observableList(misUsuarios);
 
-        Map<Integer, Integrante> integrantes = IntegrantesBDD.getIntegrantes(
-                EstadoPrograma.getInstance().getProyectoActivo()
-        );
+        Map<Integer, Integrante> integrantes;
+        try {
+            integrantes = IntegrantesBDD.getIntegrantes(
+                    EstadoPrograma.getInstance().getProyectoActivo()
+            );
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getIntegrantes");
+            integrantes = null;
+        }
+
         if (integrantes != null) {
             Iterator<Integrante> integranteIterator =
                     integrantes.values().iterator();
@@ -93,24 +101,46 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
 
         //valores extra necesarios
         Proyecto idProyecto = EstadoPrograma.getInstance().getProyectoActivo();
-        int prioridad = TareasBDD.getMayorPrioridad(idProyecto);
+        int prioridad;
+        try {
+            prioridad = TareasBDD.getMayorPrioridad(idProyecto);
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getMayorPrioridad");
+            prioridad = 0;
+        }
 
-        Tarea tareo = new Tarea(
-                nombre, prioridad,
-                EstadosBDD.getEstado("Pendiente"), idProyecto
-        );
-        boolean insertarExito = TareasBDD.insertar(tareo);
+        Tarea tareo;
+        try {
+            tareo = new Tarea(
+                    nombre, prioridad,
+                    EstadosBDD.getEstado("Pendiente"), idProyecto
+            );
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getEstado");
+            tareo = null;
+        }
+
+        boolean insertarExito = false;
+        if (tareo != null) {
+            try {
+                insertarExito = TareasBDD.insertar(tareo);
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, "insertar");
+            }
+        }
         if (insertarExito) {
             for (Usuario u: usuariosSeleccionados) {
                 Asignacion a = new Asignacion(u, tareo, LocalDate.now(), LocalDate.MAX); // TODO No se como asignar la fecha de fin
-                insertarExito = (insertarExito && AsignacionesBDD.insertar(a));
+                try {
+                    insertarExito = (insertarExito && AsignacionesBDD.insertar(a));
+                } catch (Exception e) {
+                    AppErrorHandler.manejar(e, "insertar");
+                    insertarExito = false;
+                }
             }
         }
         if (insertarExito) {
             (new Alert(Alert.AlertType.INFORMATION,"Se añadio correctamente", ButtonType.OK)).show();
-        }
-        else {
-            (new Alert(Alert.AlertType.ERROR,"No se pudo añadir", ButtonType.OK)).show();
         }
     }
 

@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TareaCell extends ListCell<Tarea> {
@@ -125,7 +126,14 @@ public class TareaCell extends ListCell<Tarea> {
         estadoLabel.setText(tarea.getEstado().getNombre());
 
         // Avatar Letra
-        Map<Integer, Asignacion> asignados = AsignacionesBDD.getAsignaciones(tarea);
+        Map<Integer, Asignacion> asignados;
+        try {
+            asignados = AsignacionesBDD.getAsignaciones(tarea);
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getAsignaciones");
+            asignados = new HashMap<>();
+        }
+
         String initials = "";
 
         boolean hasActiveAsignees = false;

@@ -3,6 +3,7 @@ package com.decroly.todotabla.model.sql;
 import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.utils.AppErrorHandler;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 public class IntegrantesBDD {
 
-    public static boolean insertar(Integrante i) {
+    public static boolean insertar(Integrante i) throws Exception {
         boolean estado = false;
 
         try (Connection conexion = BDD.getConnection();
@@ -26,14 +27,12 @@ public class IntegrantesBDD {
 
             estado = (stmnt.executeUpdate() == 1);
 
-        } catch (Exception e) {
-            return false;
         }
 
         return estado;
     }
 
-    public static boolean actualizar(Integrante i) {
+    public static boolean actualizar(Integrante i) throws Exception {
         boolean estado = false;
 
         if (i != null) {
@@ -60,15 +59,13 @@ public class IntegrantesBDD {
                 } else {
                     conexion.nativeSQL("ROLLBACK;");
                 }
-            } catch (Exception e) {
-                return false;
             }
         }
 
         return estado;
     }
 
-    public static boolean borrar(Integrante i) {
+    public static boolean borrar(Integrante i) throws Exception {
         boolean estado = false;
 
         if (i != null) {
@@ -85,15 +82,13 @@ public class IntegrantesBDD {
                } else {
                    conexion.nativeSQL("ROLLBACK;");
                }
-            } catch (Exception e) {
-                return false;
             }
         }
 
         return estado;
     }
 
-    public static Map<Integer, Integrante> getIntegrantes() {
+    public static Map<Integer, Integrante> getIntegrantes() throws Exception {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
         try (Connection conexion = BDD.getConnection();
@@ -119,14 +114,11 @@ public class IntegrantesBDD {
                 integrantes.put(integrante.getId(), integrante);
             }
 
-        } catch (Exception e) {
-            return null;
         }
-
         return integrantes;
     }
 
-    public static Map<Integer, Integrante> getIntegrantes(Proyecto proyecto_ID) {
+    public static Map<Integer, Integrante> getIntegrantes(Proyecto proyecto_ID) throws Exception {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
         try (Connection conexion = BDD.getConnection();
@@ -152,14 +144,11 @@ public class IntegrantesBDD {
                 integrantes.put(integrante.getId(), integrante);
             }
 
-        } catch (Exception e) {
-            return null;
         }
-
         return integrantes;
     }
 
-    public static Map<Integer, Integrante> getIntegrantes(Usuario usuario_ID) {
+    public static Map<Integer, Integrante> getIntegrantes(Usuario usuario_ID) throws Exception {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
         try (Connection conexion = BDD.getConnection();
@@ -185,14 +174,11 @@ public class IntegrantesBDD {
                 integrantes.put(integrante.getId(), integrante);
             }
 
-        } catch (Exception e) {
-            return null;
         }
-
         return integrantes;
     }
 
-    public static Integrante getIntegrante(int id) {
+    public static Integrante getIntegrante(int id) throws Exception {
         Integrante integrante = null;
 
         try (Connection conexion = BDD.getConnection();
@@ -216,8 +202,6 @@ public class IntegrantesBDD {
                 );
             }
 
-        } catch (Exception e) {
-            return null;
         }
 
         return integrante;

@@ -2,6 +2,7 @@ package com.decroly.todotabla.model.sql;
 
 import com.decroly.todotabla.model.HistorialTareas;
 import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.utils.AppErrorHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 public class HistorialTareasBDD {
 
-    public static boolean borrar(HistorialTareas ht) {
+    public static boolean borrar(HistorialTareas ht) throws Exception {
         boolean estado = false;
 
         if (ht != null) {
@@ -29,15 +30,13 @@ public class HistorialTareasBDD {
                } else {
                    conexion.nativeSQL("ROLLBACK;");
                }
-            } catch (Exception e) {
-                return false;
             }
         }
 
         return estado;
     }
 
-    public static Map<Integer, HistorialTareas> getHistorialTareas() {
+    public static Map<Integer, HistorialTareas> getHistorialTareas() throws Exception {
         Map<Integer, HistorialTareas> historialTareas = new LinkedHashMap<>();
 
         String sql = "TABLE historial_tareas;";
@@ -56,14 +55,11 @@ public class HistorialTareasBDD {
                 historialTareas.put(tarea.getId(), tarea);
             }
 
-        } catch (Exception e) {
-            return null;
         }
-
         return historialTareas;
     }
 
-    public static Map<Integer, HistorialTareas> getHistorialTareas(Tarea tarea_id) {
+    public static Map<Integer, HistorialTareas> getHistorialTareas(Tarea tarea_id) throws Exception {
         Map<Integer, HistorialTareas> historialTareas = new LinkedHashMap<>();
 
         String sql = "SELECT * FROM historial_tareas WHERE tarea_id = ?;";
@@ -84,14 +80,12 @@ public class HistorialTareasBDD {
                 historialTareas.put(tarea.getId(), tarea);
             }
 
-        } catch (Exception e) {
-            return null;
         }
 
         return historialTareas;
     }
 
-    public static HistorialTareas getHistorialTarea(int id) {
+    public static HistorialTareas getHistorialTarea(int id) throws Exception {
         HistorialTareas tareas = null;
 
         String sql = "SELECT * FROM historial_tareas WHERE id = ?;";
@@ -109,8 +103,6 @@ public class HistorialTareasBDD {
                 );
             }
 
-        } catch (Exception e) {
-            return null;
         }
 
         return tareas;
