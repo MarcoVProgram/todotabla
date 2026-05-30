@@ -20,18 +20,33 @@ import java.util.*;
 public class TareaModController implements Initializable {
 
     @FXML
-    public TextField nombreTareaFormEditar;
+    public TextField nombreTareaFormCrear;
 
     @FXML
     public Spinner<Integer> prioridadTareaFormCrear;
 
     @FXML
     public ListView<Tarea> listViewTareas;
+
+
     private ObservableList<Tarea> listaTareas;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listarTareas();
+
+        listViewTareas.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if(newValue != null){
+                        nombreTareaFormCrear.setText(newValue.getNombre());
+                        prioridadTareaFormCrear.getValueFactory().setValue(newValue.getPrioridad());
+                        
+                    }else{
+                        Notificator.error("No se actualizo la tarea", "El valor antiguo de la tarea y el nuevo coincide");
+                    }
+
+                }
+        );
 
     }
 
@@ -48,6 +63,7 @@ public class TareaModController implements Initializable {
         }
 
         listViewTareas.setItems(listaTareas);
+
         listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
             @Override
             protected void updateItem(Tarea tarea, boolean empty) {
@@ -68,6 +84,10 @@ public class TareaModController implements Initializable {
             }
         });
 
+        prioridadTareaFormCrear.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1)
+        );
+
     }
 
     private void actualizarTareas() {
@@ -83,7 +103,7 @@ public class TareaModController implements Initializable {
         }
 
         if (todasTareasDelProyecto != null) {
-            listaTareas.addAll(todasTareasDelProyecto.values());
+            listaTareas.setAll(todasTareasDelProyecto.values());
             listViewTareas.refresh();
         }
 
@@ -93,30 +113,30 @@ public class TareaModController implements Initializable {
     public void modTarea(ActionEvent event) {
         boolean actualizarExito = true;
 
-        //obtener valores campos
-        String nombre = nombreTareaFormEditar.getText();
+        String nombre = nombreTareaFormCrear.getText();
         int prioridad = prioridadTareaFormCrear.getValue();
 
-        ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
+        Tarea tarea = listViewTareas.getSelectionModel().getSelectedItem();
 
-        for (Tarea tarea : listaDeTareas) {
-            tarea.setNombre(nombre);
-            tarea.setPrioridad(prioridad);
-
-            try {
-                actualizarExito = actualizarExito && TareasBDD.actualizar(tarea);
-            } catch (Exception e) {
-                AppErrorHandler.manejar(e, "actualizarTarea");
-                actualizarExito = false;
-            }
+        if (tarea == null) {
+            Notificator.error("Error", "Selecciona una tarea");
+            return;
         }
 
+        tarea.setNombre(nombre);
+        tarea.setPrioridad(prioridad);
+
+        try {
+            actualizarExito = TareasBDD.actualizar(tarea);
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "actualizarTarea");
+            actualizarExito = false;
+        }
 
         if (actualizarExito) {
             Notificator.exito("Actualización de Tarea", "Se ha actualizado la tarea correctamente");
             this.actualizarTareas();
-        }
-        else {
+        } else {
             Notificator.error("Actualización de Tarea", "No se pudo modificar la tarea");
         }
     }
