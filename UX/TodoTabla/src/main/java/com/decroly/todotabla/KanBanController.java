@@ -146,7 +146,8 @@ public class KanBanController implements Initializable {
         listView.setCellFactory(lv -> new TareaCell(root, columnMap));
         listView.getStyleClass().add("kanban-list");
         listView.setPrefHeight(579);
-        listView.setPrefWidth(260);
+        listView.setMaxWidth(Double.MAX_VALUE);
+        listView.setMinWidth(150);
         listView.setStyle("-fx-background-color: #0b0b0b;");
         VBox.setVgrow(listView, Priority.ALWAYS);
 
@@ -154,6 +155,9 @@ public class KanBanController implements Initializable {
         VBox column = new VBox(titleRow, listView);
         column.getStyleClass().add("column");
         column.setStyle("-fx-background-color: #0b0b0b;");
+        column.setMaxWidth(Double.MAX_VALUE);
+        column.setMinWidth(150);
+        HBox.setHgrow(column, Priority.ALWAYS);
 
         // Se añade a su hija
         contenedorColumnas.getChildren().add(column);
@@ -239,7 +243,7 @@ public class KanBanController implements Initializable {
         try {
 
             if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                System.out.println("No se puede volver a abrir, hay una sesión existente");
                 return;
             }
 

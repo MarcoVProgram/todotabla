@@ -189,6 +189,14 @@
     -fx-background-color: transparent;
 }
 
+.ghostChosen {
+    -fx-border-color: #2563eb;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+    -fx-background-color: #1a2744;
+    -fx-background-radius: 6px;
+}
+
 /*estilos para nuevo main*/
 .root-pane {
     -fx-background-color: #0d1117;
