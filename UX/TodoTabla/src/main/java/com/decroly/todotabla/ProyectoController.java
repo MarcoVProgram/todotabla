@@ -1,9 +1,7 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.Estado;
-import com.decroly.todotabla.model.Proyecto;
-import com.decroly.todotabla.model.Tarea;
-import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.*;
+import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 
 import com.decroly.todotabla.model.sql.TareasBDD;
@@ -56,23 +54,41 @@ public class ProyectoController implements Initializable{
 //    @FXML
 //    private Button addButtom;
 
+    ProyetosBDD proyecto = new ProyetosBDD();
+
+
+
     @FXML
-    private void guardar() {
+    private void guardar() throws Exception {
         Proyecto p = new Proyecto(
                 tituloProyecto.getText(),
                 fechaProyecto.getValue(),
                 null
         );
+        EstadoPrograma.getInstance().setProyectoActivo(p);
+
+        Proyecto proyecto = EstadoPrograma.getInstance().getProyectoActivo();
+
+
         try {
             if (ProyetosBDD.insertar(p)) {
                 Notificator.exito("Inserción", "Se ha insertado correctamente");
+
             } else {
                 Notificator.error("Error", "Error al insertar");
             }
         } catch (Exception ex) {
             AppErrorHandler.manejar(ex, "insertar");
         }
+
+        int id = ProyetosBDD.
+
+        for (Integrante i : proyecto.getIntegrantes()) {
+            IntegrantesBDD.insertar(i);
+        }
     }
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -80,6 +96,7 @@ public class ProyectoController implements Initializable{
             fechaProyecto.setValue(LocalDate.now());
         }
     }
+
 
     @FXML
     private void abrirVentanaUsuarios() { //panel usuarios
@@ -125,4 +142,5 @@ public class ProyectoController implements Initializable{
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formUsuarios.fxml");
     }
+
 }

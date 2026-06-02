@@ -181,23 +181,30 @@ public class UsuariosController implements Initializable {
 
                 result.ifPresent(rol -> {
 
+
                     try {
+
+                        Proyecto proyectoActivo = EstadoPrograma.getInstance().getProyectoActivo();
+
+                        if (proyectoActivo == null) {
+                            Notificator.error("Error", "No hay proyecto activo");
+                            return;
+                        }
+
                         Integrante i = new Integrante(
                                 rol,
                                 LocalDate.now(),
                                 null,
                                 seleccionado,
-                                EstadoPrograma.getInstance().getProyectoActivo()
+                                proyectoActivo
                         );
 
-                        IntegrantesBDD.insertar(i);
+                        proyectoActivo.getIntegrantes().add(i);
 
                         Notificator.exito(
                                 "Éxito",
-                                "Usuario añadido correctamente al proyecto"
+                                "Integrante añadido temporalmente"
                         );
-
-                        actualizarUsuarios();
 
                     } catch (Exception e) {
                         AppErrorHandler.manejar(e, "insertar integrante");
@@ -210,6 +217,8 @@ public class UsuariosController implements Initializable {
                 });
             }
         });
+
+
 
         //=================LISTA INTEGRANTES===================
         Map<Integer, Integrante> map = null;
@@ -275,5 +284,11 @@ public class UsuariosController implements Initializable {
     private void volverVentanaPrincipal() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void irAProyectosview() throws IOException { //abrir panel kanban
+        Stage stage = (Stage) root.getScene().getWindow();
+        Navigator.changeScene(stage, "/com/decroly/todotabla/proyecto-form.fxml");
     }
 }
