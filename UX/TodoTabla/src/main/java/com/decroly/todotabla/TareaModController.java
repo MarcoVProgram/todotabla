@@ -81,6 +81,9 @@ public class TareaModController implements Initializable {
                     VBox card = new VBox(8, titulo);
                     card.getStyleClass().add("kanban-list");
 
+                    this.getStyleClass().add("task-card");
+                    this.setStyle("-fx-border-color: white");
+
                     setGraphic(card);
                 }
             }

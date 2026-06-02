@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ProyetosBDD {
-    public static boolean insertar(Proyecto p) throws Exception{
+    public static boolean insertar(Proyecto p) throws Exception{ // TODO obtener numero del id al insertar
         boolean estado = false;
 
         try (Connection conexion = BDD.getConnection();

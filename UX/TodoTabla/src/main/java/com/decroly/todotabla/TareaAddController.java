@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -71,9 +72,9 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
                 super.updateItem(u, empty);
 
                 if (empty || u == null) {
-                    setGraphic(null);
-                    setText(null);
-                    setStyle("-fx-background-color: transparent;");
+                    this.setGraphic(null);
+                    this.setText(null);
+                    this.setStyle("-fx-background-color: transparent;");
                     return;
                 }
 
@@ -82,6 +83,9 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
 
                 VBox card = new VBox(8, titulo);
                 card.getStyleClass().add("kanban-list");
+
+                this.getStyleClass().add("task-card");
+                this.setStyle("-fx-border-color: white");
 
                 setGraphic(card);
 

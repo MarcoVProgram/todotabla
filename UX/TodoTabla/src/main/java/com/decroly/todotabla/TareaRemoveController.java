@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -22,7 +23,8 @@ public class TareaRemoveController implements Initializable {
 
     @FXML
     public ListView<Tarea> listViewTareas;
-    private ObservableList<Tarea> listaTareas;
+    private ObservableList<Tarea> listaObsTareas;
+    private List<Tarea> listaTareas;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -31,10 +33,11 @@ public class TareaRemoveController implements Initializable {
 
     private void listarTareas() {
         try {
-            listaTareas = FXCollections.observableList(
-                    new ArrayList<>(TareasBDD.getTareas(
-                            EstadoPrograma.getInstance().getProyectoActivo()
-                    ).values())
+            listaTareas = new ArrayList<>(TareasBDD.getTareas(
+                    EstadoPrograma.getInstance().getProyectoActivo()
+            ).values());
+            listaObsTareas = FXCollections.observableList(
+                    listaTareas
             );
         } catch (Exception e) {
             AppErrorHandler.manejar(e, "getTareas");
@@ -60,7 +63,7 @@ public class TareaRemoveController implements Initializable {
             }
         });
 
-        listViewTareas.setItems(listaTareas);
+        listViewTareas.setItems(listaObsTareas);
     }
 
     private void actualizarTareas() {
@@ -75,7 +78,7 @@ public class TareaRemoveController implements Initializable {
         }
 
         if (todasTareasDelProyecto != null) {
-            listaTareas.addAll(todasTareasDelProyecto.values());
+            listaObsTareas.addAll(todasTareasDelProyecto.values());
             listViewTareas.refresh();
         }
 
