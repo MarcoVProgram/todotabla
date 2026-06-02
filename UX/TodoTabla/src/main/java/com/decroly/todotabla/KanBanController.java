@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
@@ -58,6 +59,9 @@ public class KanBanController implements Initializable {
 
     private Map<Estado, ColumnaKanban> columnMap = new HashMap<>();
 
+    @FXML
+    private TextField buscarTareaSearchBar;
+
 
 
     public void initialize(URL url, ResourceBundle rb) {
@@ -70,6 +74,8 @@ public class KanBanController implements Initializable {
         proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
         proyectoTitulo.setText("🔒 " + proyectoSeleccionado.getTitulo());
 
+        this.buscarTareaSearchBar.textProperty().addListener((observable) -> actualizarTareas());
+
         actualizarTareas();
     }
 
@@ -77,17 +83,15 @@ public class KanBanController implements Initializable {
         contenedorColumnas.getChildren().clear();
         columnMap.clear();
 
-        for (Estado estado : estados) {
-            columnMap.put(estado, addColumna(estado));
-        }
-    }
-
-    private void actualizarTareas(String regex) {
-        contenedorColumnas.getChildren().clear();
-        columnMap.clear();
-
-        for (Estado estado : estados) {
-            columnMap.put(estado, addColumna(estado, regex));
+        if (this.buscarTareaSearchBar.getText().isEmpty()) {
+            for (Estado estado : estados) {
+                columnMap.put(estado, addColumna(estado));
+            }
+        } else {
+            String regex = this.buscarTareaSearchBar.getText();
+            for (Estado estado : estados) {
+                columnMap.put(estado, addColumna(estado, regex));
+            }
         }
     }
 
@@ -299,13 +303,4 @@ public class KanBanController implements Initializable {
 //            e.printStackTrace();
 //        }
 //    }
-
-
-
-    @FXML
-    public void buscarTarea(ActionEvent event) {
-        String name = ""; // Señalar barra de busqueda
-        actualizarTareas(name);
-
-    }
 }
