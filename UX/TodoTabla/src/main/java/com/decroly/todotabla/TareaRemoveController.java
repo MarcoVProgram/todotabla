@@ -78,7 +78,7 @@ public class TareaRemoveController implements Initializable {
         }
 
         if (todasTareasDelProyecto != null) {
-            listaObsTareas.addAll(todasTareasDelProyecto.values());
+            listaTareas.addAll(todasTareasDelProyecto.values());
             listViewTareas.refresh();
         }
 
@@ -92,6 +92,7 @@ public class TareaRemoveController implements Initializable {
         for (Tarea t: listaDeTareas) {
             try {
                 estado = TareasBDD.borrar(t);
+                listaObsTareas.remove(t);
             } catch (Exception e) {
                 AppErrorHandler.manejar(e, "borrarTareas");
             }

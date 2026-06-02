@@ -27,10 +27,6 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
     public TextField nombreTareaFormCrear;
 
     @FXML
-    public Spinner<Integer> PrioridadTareaFormCrear;
-
-
-    @FXML
     private ListView<Usuario> listViewIntegrantes;
     private List<Usuario> misUsuarios = new ArrayList<>();
     private ObservableList<Usuario> listaUsuarios;

@@ -13,7 +13,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
@@ -27,8 +26,6 @@ public class TareaModController implements Initializable {
     @FXML
     public TextField nombreTareaFormEditar;
 
-    @FXML
-    public Spinner<Integer> prioridadTareaFormCrear;
 
     public BorderPane personaPanelTareaForm;
 
@@ -115,22 +112,13 @@ public class TareaModController implements Initializable {
 
         //obtener valores campos
         String nombre = nombreTareaFormEditar.getText();
-        Integer prioridad = null;
 
-        try {
-            prioridad = prioridadTareaFormCrear.getValue();
-        } catch (NullPointerException e) {
-            prioridad = null;
-        }
 
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 
         actualizarExito = !listaDeTareas.isEmpty();
         for (Tarea tarea : listaDeTareas) {
             tarea.setNombre(nombre);
-            if (prioridad != null) {
-                tarea.setPrioridad(prioridad);
-            }
 
             try {
                 actualizarExito = actualizarExito && TareasBDD.actualizar(tarea);
