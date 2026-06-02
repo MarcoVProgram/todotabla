@@ -61,11 +61,15 @@
                                               <Insets top="25.0" />
                                           </VBox.margin>
                                       </HBox>
-                                      <ListView fx:id="listViewTareas" prefHeight="557.0" prefWidth="1382.0" style="-fx-background-color: #2c2c2c;">
-                                          <VBox.margin>
-                                              <Insets top="100.0" />
-                                          </VBox.margin>
-                                      </ListView>
+                              <VBox>
+                                 <VBox.margin>
+                                    <Insets top="100.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <Label text="Tareas editables" />
+                                            <ListView fx:id="listViewTareas" prefHeight="557.0" prefWidth="1382.0" style="-fx-background-color: #2c2c2c;" />
+                                 </children>
+                              </VBox>
                                       <HBox alignment="TOP_RIGHT" prefHeight="74.0" prefWidth="1342.0">
                                           <children>
                                               <Button onAction="#modTarea" styleClass="btnAdd" text="Editar tarea">
@@ -88,6 +92,7 @@
                <content>
                   <VBox spacing="15.0">
                      <children>
+                        <Label text="Usuarios asignables" />
                         <ListView fx:id="listViewUsuarios" prefHeight="557.0" prefWidth="1382.0" style="-fx-background-color: #2c2c2c;" />
                         <HBox prefHeight="74.0" prefWidth="1342.0">
                            <children>
