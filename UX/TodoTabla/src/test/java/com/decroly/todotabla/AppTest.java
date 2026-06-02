@@ -2,6 +2,7 @@ package com.decroly.todotabla;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.beans.Transient;
 import java.sql.Connection;
 
 import org.junit.jupiter.api.Test;
@@ -23,8 +24,8 @@ public class AppTest {
         assertTrue(patata);
     }
 
-    // mayo test
-    @Test
+    
+    @BeforeAll
     public void getConnectioIsCorrect() {
         boolean estado = false;
         try {
@@ -36,5 +37,15 @@ public class AppTest {
         assertTrue(estado);
     }
 
-    
+    // mayo test
+    @Test
+    public void macarrones() {
+        // TODO MARIO tiene que comprobar algo aqui. Repito MARIO
+    }
+
+    // ko test
+    @Test
+    public void wow() {
+        // TODO MARCO tiene que comprobar algo aqui si quiere hacerlo aqui. Repito MARCO
+    }
 }
