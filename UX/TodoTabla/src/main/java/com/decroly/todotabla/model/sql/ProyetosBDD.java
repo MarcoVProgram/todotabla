@@ -36,7 +36,7 @@ public class ProyetosBDD {
                          "UPDATE `todotabla`.`proyecto` " +
                                  "SET " +
                                  "`titulo` = ?, " +
-                                 "`fecha_cierre` = ?, " +
+                                 "`fecha_cierre` = ? " +
                                  "WHERE `id` = ?; "
                  )
             ) {

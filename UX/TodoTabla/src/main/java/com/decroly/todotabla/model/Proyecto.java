@@ -1,6 +1,7 @@
 package com.decroly.todotabla.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Proyecto {
 
@@ -54,5 +55,17 @@ public class Proyecto {
                 ", fechaCreacion=" + fechaCreacion +
                 ", fechaFin=" + fechaCierre +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Proyecto proyecto = (Proyecto) o;
+        return id == proyecto.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

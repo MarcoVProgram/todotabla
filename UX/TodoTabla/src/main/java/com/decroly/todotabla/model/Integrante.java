@@ -1,6 +1,7 @@
 package com.decroly.todotabla.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Integrante {
 
@@ -70,5 +71,17 @@ public class Integrante {
                 ", idMiembro=" + idUsuario.getId() +
                 ", idProyecto=" + idProyecto.getId() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Integrante that = (Integrante) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

@@ -1,6 +1,7 @@
 package com.decroly.todotabla.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Asignacion {
 
@@ -58,5 +59,17 @@ public class Asignacion {
                 ", fechaAsignacion=" + fechaAsignacion +
                 ", fechaFin=" + fechaFin +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Asignacion that = (Asignacion) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

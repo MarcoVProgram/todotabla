@@ -1,5 +1,7 @@
 package com.decroly.todotabla.model;
 
+import java.util.Objects;
+
 public class Estado {
     private String nombre;
     private String color;
@@ -39,5 +41,17 @@ public class Estado {
         sb.append(", orden=").append(orden);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Estado estado = (Estado) o;
+        return Objects.equals(nombre, estado.nombre);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(nombre);
     }
 }
