@@ -1,10 +1,12 @@
-package com.decroly.todotabla.utils;
+package com.decroly.todotabla.utils.cells;
 
 import com.decroly.todotabla.model.Asignacion;
 import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.AsignacionesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.utils.AppErrorHandler;
+import com.decroly.todotabla.utils.ColumnaKanban;
 import com.decroly.todotabla.utils.constants.ColoresPrioridad;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -29,7 +31,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TareaCell extends ListCell<Tarea> {
+public class TareaMovableCell extends ListCell<Tarea> {
 
     //Variables a dibujar
     private final Label titulo;
@@ -49,7 +51,7 @@ public class TareaCell extends ListCell<Tarea> {
     private Node lastHoveredCell;
 
     //Constructor
-    public TareaCell(BorderPane root, Map<Estado, ColumnaKanban> columnMap) {
+    public TareaMovableCell(BorderPane root, Map<Estado, ColumnaKanban> columnMap) {
         this.root = root;
         this.columnMap = columnMap;
 

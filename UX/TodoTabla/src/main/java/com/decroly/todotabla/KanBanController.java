@@ -5,15 +5,14 @@ import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.*;
+import com.decroly.todotabla.utils.cells.TareaMovableCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -160,8 +159,8 @@ public class KanBanController implements Initializable {
         titleRow.setAlignment(Pos.CENTER_LEFT);
 
         // ListView de Tarea
-        ListView<Tarea> listView = new ListView<>(TareaCell.sorted(filtered));
-        listView.setCellFactory(lv -> new TareaCell(root, columnMap));
+        ListView<Tarea> listView = new ListView<>(TareaMovableCell.sorted(filtered));
+        listView.setCellFactory(lv -> new TareaMovableCell(root, columnMap));
         listView.getStyleClass().add("kanban-list");
         listView.setPrefHeight(579);
         listView.setMaxWidth(Double.MAX_VALUE);
