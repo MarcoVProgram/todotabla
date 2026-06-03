@@ -56,47 +56,28 @@ public class ProyectoController implements Initializable{
 
 
     @FXML
-    private void guardar() throws Exception {
-        Proyecto proyecto = EstadoPrograma.getInstance().getProyectoActivo();
-
-        if(proyecto == null){
-            proyecto = new Proyecto(
+    private void guardar() {
+        Proyecto proyecto = new Proyecto(
                     tituloProyecto.getText(),
                     fechaProyecto.getValue(),
                     null
             );
-            EstadoPrograma.getInstance().setProyectoActivo(proyecto);
-        }
-
-        int idGen = -1;
-
-
         try {
-            if (proyecto.getId() == -1) {
-                idGen = ProyetosBDD.insertar(proyecto);
-            } else {
-                ProyetosBDD.actualizar(proyecto);
-                idGen = proyecto.getId();
-            }
-
-            if(idGen != -1){
-            Notificator.exito("Inserción", "Se ha insertado correctamente");
-
-            } else {
-                Notificator.error("Error", "Error al insertar");
-
+            int index = ProyetosBDD.insertar(proyecto);
+            if (index != -1) {
+                proyecto = new Proyecto(
+                        index,
+                    tituloProyecto.getText(),
+                    fechaProyecto.getValue(),
+                    null
+            );
             }
         } catch (Exception ex) {
             AppErrorHandler.manejar(ex, "insertar");
         }
 
-        for (Integrante i : proyecto.getIntegrantes()) {
-            if(i.getId() > 0){
-                IntegrantesBDD.insertar(i);
-            }
-        }
+        EstadoPrograma.getInstance().setProyectoActivo(proyecto);
     }
-
 
 
     @Override
