@@ -34,11 +34,11 @@ public class EstadoPrograma {
         this.proyectoActivo = proyectoActivo;
     }
 
-    public boolean hayProyecto() {
-        return proyectoActivo != null;
-    }
-
-    public boolean esBorrador() {
-        return proyectoActivo != null && proyectoActivo.getId() == null;
-    }
+//    public boolean hayProyecto() {
+//        return proyectoActivo != null;
+//    }
+//
+//    public boolean esBorrador() {
+//        return proyectoActivo != null && proyectoActivo.getId() = null;
+//    }
 }
