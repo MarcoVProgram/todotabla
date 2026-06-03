@@ -1,6 +1,9 @@
 package com.decroly.todotabla;
 
+import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
@@ -10,8 +13,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -22,16 +26,27 @@ public class TareaModController implements Initializable {
     @FXML
     public TextField nombreTareaFormEditar;
 
-    @FXML
-    public Spinner<Integer> prioridadTareaFormCrear;
+
+    public BorderPane personaPanelTareaForm;
 
     @FXML
     public ListView<Tarea> listViewTareas;
     private ObservableList<Tarea> listaTareas;
 
+    @FXML
+    public ListView<Usuario> listViewUsuarios;
+    public ObservableList<Usuario> listaUsuarios;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listarTareas();
+        personaPanelTareaForm.setVisible(false);
+
+        listViewUsuarios.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
+                personaPanelTareaForm.setVisible(false);
+            }
+        });
 
     }
 
@@ -63,6 +78,9 @@ public class TareaModController implements Initializable {
                     VBox card = new VBox(8, titulo);
                     card.getStyleClass().add("kanban-list");
 
+                    this.getStyleClass().add("task-card");
+                    this.setStyle("-fx-border-color: white");
+
                     setGraphic(card);
                 }
             }
@@ -89,19 +107,18 @@ public class TareaModController implements Initializable {
 
     }
 
-    // TODO No se como cambiar la asignacion sin meter muchas cosas en la ventana
     public void modTarea(ActionEvent event) {
-        boolean actualizarExito = true;
+        boolean actualizarExito = false;
 
         //obtener valores campos
         String nombre = nombreTareaFormEditar.getText();
-        int prioridad = prioridadTareaFormCrear.getValue();
+
 
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 
+        actualizarExito = !listaDeTareas.isEmpty();
         for (Tarea tarea : listaDeTareas) {
             tarea.setNombre(nombre);
-            tarea.setPrioridad(prioridad);
 
             try {
                 actualizarExito = actualizarExito && TareasBDD.actualizar(tarea);
@@ -119,6 +136,67 @@ public class TareaModController implements Initializable {
         else {
             Notificator.error("Actualización de Tarea", "No se pudo modificar la tarea");
         }
+    }
+
+    @FXML
+    private void nadie() {
+        listViewUsuarios.getSelectionModel().select(null);
+        personaPanelTareaForm.setVisible(false);
+    }
+
+    @FXML
+    private void abrirPersonaPanel() {
+        listarUsuarios();
+        personaPanelTareaForm.setVisible(true);
+    }
+
+    private void listarUsuarios() {
+        listaUsuarios = FXCollections.observableList(new ArrayList<>());
+
+        Map<Integer, Integrante> integrantes = null;
+        try {
+            integrantes = IntegrantesBDD.getIntegrantes(
+                    EstadoPrograma.getInstance().getProyectoActivo()
+            );
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, e.getCause().toString());
+        }
+
+        if (integrantes != null) {
+            Iterator<Integrante> integranteIterator =
+                    integrantes.values().iterator();
+
+            while (integranteIterator.hasNext()){
+                Usuario user = integranteIterator.next().getIdUsuario();
+                listaUsuarios.add(user);
+            }
+        }
+
+        listViewUsuarios.setItems(listaUsuarios);
+
+        listViewUsuarios.setCellFactory(listaTareas -> new ListCell<>(){
+            @Override
+            protected void updateItem(Usuario u, boolean empty) {
+                super.updateItem(u, empty);
+
+                if (empty || u == null) {
+                    setGraphic(null);
+                    setText(null);
+                    setStyle("-fx-background-color: transparent;");
+                    return;
+                }
+
+                Label titulo = new Label(u.getNombre());
+                titulo.getStyleClass().add("titulo-tarea");
+
+                VBox card = new VBox(8, titulo);
+                card.getStyleClass().add("kanban-list");
+
+                setGraphic(card);
+
+            }
+        });
+
     }
 
 }

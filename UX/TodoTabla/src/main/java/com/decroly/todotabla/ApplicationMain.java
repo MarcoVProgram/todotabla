@@ -2,7 +2,6 @@ package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.sql.BDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
-import com.decroly.todotabla.utils.Notificator;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;

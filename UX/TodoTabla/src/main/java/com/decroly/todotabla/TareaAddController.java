@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -24,10 +25,6 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
 
     @FXML
     public TextField nombreTareaFormCrear;
-
-    @FXML
-    public Spinner<Integer> PrioridadTareaFormCrear;
-
 
     @FXML
     private ListView<Usuario> listViewIntegrantes;
@@ -71,9 +68,9 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
                 super.updateItem(u, empty);
 
                 if (empty || u == null) {
-                    setGraphic(null);
-                    setText(null);
-                    setStyle("-fx-background-color: transparent;");
+                    this.setGraphic(null);
+                    this.setText(null);
+                    this.setStyle("-fx-background-color: transparent;");
                     return;
                 }
 
@@ -83,32 +80,13 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
                 VBox card = new VBox(8, titulo);
                 card.getStyleClass().add("kanban-list");
 
+                this.getStyleClass().add("task-card");
+                this.setStyle("-fx-border-color: white");
+
                 setGraphic(card);
 
             }
         });
-
-
-        // TODO rehacer esto para hacer lo con usuarios recomendablemente
-        /*listViewUsuarios.setCellFactory(listaTareas -> new ListCell<Tarea>() {
-            @Override
-            protected void updateItem(Tarea tarea, boolean empty) {
-                super.updateItem(tarea, empty);
-
-                if (empty || tarea == null) {
-                    setGraphic(null);
-                } else {
-
-                    Label titulo = new Label(tarea.getNombre());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    VBox card = new VBox(8, titulo);
-                    card.getStyleClass().add("kanban-list");
-
-                    setGraphic(card);
-                }
-            }
-        });*/
 
     }
 
@@ -143,15 +121,19 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
             tareo = null;
         }
 
-        boolean insertarExito = false;
+        int key = -1;
         if (tareo != null) {
             try {
-                insertarExito = TareasBDD.insertar(tareo);
+                key = TareasBDD.insertar(tareo);
             } catch (Exception e) {
                 AppErrorHandler.manejar(e, "insertar");
             }
         }
+
+        boolean insertarExito = (key != -1);
         if (insertarExito) {
+            try {
+                tareo = TareasBDD.getTarea(key);
             for (Usuario u: usuariosSeleccionados) {
                 Asignacion a = new Asignacion(u, tareo, LocalDate.now(), LocalDate.MAX); // TODO No se como asignar la fecha de fin
                 try {
@@ -159,7 +141,11 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
                 } catch (Exception e) {
                     AppErrorHandler.manejar(e, "insertar");
                     insertarExito = false;
+                    break;
                 }
+            }
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, "Obtener la tarea");
             }
         }
         if (insertarExito) {
