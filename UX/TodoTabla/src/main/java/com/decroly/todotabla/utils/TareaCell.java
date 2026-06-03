@@ -298,7 +298,7 @@ public class TareaCell extends ListCell<Tarea> {
                 t.setPrioridad(tareaChosen.getPrioridad());
             } else {
                 try {
-                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto()));
+                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto())+1);
                 } catch (Exception ex) {
                     AppErrorHandler.manejar(ex, "getMayorPrioridad");
                 }
