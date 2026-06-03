@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.KanBanController">
+<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.KanBanController">
 
     <!-- ================= HEADER ================= -->
     <top>
@@ -79,7 +79,7 @@
 
                 <TextField fx:id="buscarTareaSearchBar" prefHeight="33.0" prefWidth="800.0" promptText="Introduce una palabra clave para la búsqueda" styleClass="search-large" HBox.hgrow="ALWAYS" />
 
-                <Button fx:id="gestionarUsuarios" prefHeight="27.0" prefWidth="130.0" styleClass="btn" text="Gestionar Usuarios">
+                <Button fx:id="gestionarUsuarios" onMouseClicked="#abrirVentanaIntegrantes" prefHeight="27.0" prefWidth="130.0" styleClass="btn" text="Gestionar Usuarios">
                <HBox.margin>
                   <Insets right="30.0" />
                </HBox.margin></Button>

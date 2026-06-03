@@ -152,4 +152,10 @@ public class IntegrantesController implements Initializable {
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formUsuarios.fxml");
     }
+
+    @FXML
+    private void Salir() throws IOException { //abrir panel kanban
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.close();
+    }
 }

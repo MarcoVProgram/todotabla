@@ -271,36 +271,41 @@ public class KanBanController implements Initializable {
         }
     }
 
-//    @FXML
-//    private void abrirVentanaUsuarios() { //panel gestión usuarios
-//        try {
-//
-//            if(ventanaTerciaria != null && ventanaTerciaria.isShowing()){
-//                System.out.println("No se puede volver a abrir, hay una sesion existente");
-//                return;
-//            }
-//
-//            // Cargar el archivo FXML
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-form.fxml"));
-//            Parent root = loader.load();
-//
-//            // Crear una nueva ventana (Stage)
-//            ventanaTerciaria = new Stage();
-//            ventanaTerciaria.setTitle("Gestionar usuarios");
-//            ventanaTerciaria.setScene(new Scene(root));
-//
-//            ventanaTerciaria.setResizable(false);
-//            ventanaTerciaria.setAlwaysOnTop(false);
-//
-////            listViewTareas.setItems(obsTareas);
-//
-//            // Mostrar la ventana
-//            ventanaTerciaria.showAndWait();
-//
-//            // TODO Hay que refrescar las listas del Kanban controller
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @FXML
+    private void abrirVentanaIntegrantes() { //panel gestión usuarios
+        try {
+
+            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                return;
+            }
+
+            // Cargar el archivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantes.fxml"));
+            Parent root = loader.load();
+
+            // Crear una nueva ventana (Stage)
+            ventanaSecundaria = new Stage();
+            ventanaSecundaria.setTitle("Gestionar usuarios");
+            ventanaSecundaria.setScene(new Scene(root));
+
+            ventanaSecundaria.setResizable(false);
+
+            if(ventanaSecundaria.isFocused()){
+                ventanaSecundaria.setAlwaysOnTop(true);
+            }else{
+                ventanaSecundaria.setAlwaysOnTop(false);
+            }
+
+//            listViewTareas.setItems(obsTareas);
+
+            // Mostrar la ventana
+            ventanaSecundaria.showAndWait();
+
+            // TODO Hay que refrescar las listas del Kanban controller
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

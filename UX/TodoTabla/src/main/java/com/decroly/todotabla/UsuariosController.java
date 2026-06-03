@@ -281,8 +281,8 @@ public class UsuariosController implements Initializable {
     }
 
     @FXML
-    private void irAProyectosview() throws IOException { //abrir panel kanban
+    private void irAIntegrantesview() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
-        Navigator.changeScene(stage, "/com/decroly/todotabla/proyecto-form.fxml");
+        Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formIntegrantes.fxml");
     }
 }
