@@ -12,6 +12,8 @@ public class EstadoPrograma {
 
     private String tituloProyecto;
 
+    private List<Integrante> integrantesTemp;
+
     public String getTituloProyecto() {
         return tituloProyecto;
     }
@@ -30,15 +32,11 @@ public class EstadoPrograma {
         return proyectoActivo;
     }
 
+    public List<Integrante> getIntegrantesTemp() {
+        return integrantesTemp;
+    }
+
     public void setProyectoActivo(Proyecto proyectoActivo) {
         this.proyectoActivo = proyectoActivo;
     }
-
-//    public boolean hayProyecto() {
-//        return proyectoActivo != null;
-//    }
-//
-//    public boolean esBorrador() {
-//        return proyectoActivo != null && proyectoActivo.getId() = null;
-//    }
 }

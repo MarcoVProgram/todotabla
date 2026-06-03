@@ -77,6 +77,12 @@ public class ProyectoController implements Initializable{
         }
 
         EstadoPrograma.getInstance().setProyectoActivo(proyecto);
+
+        if(!EstadoPrograma.getInstance().getIntegrantesTemp().isEmpty()){
+            for(Integrante i : EstadoPrograma.getInstance().getIntegrantesTemp()){
+                proyecto.getIntegrantes().add(i);
+            }
+        }
     }
 
 

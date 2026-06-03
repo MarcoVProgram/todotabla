@@ -5,6 +5,7 @@ import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
+import com.decroly.todotabla.model.sql.ProyetosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
@@ -183,23 +184,17 @@ public class UsuariosController implements Initializable {
 
 
                     try {
-
-                        Proyecto proyectoActivo = EstadoPrograma.getInstance().getProyectoActivo();
-
-                        if (proyectoActivo == null) {
-                            Notificator.error("Error", "No hay proyecto activo");
-                            return;
-                        }
+                        Proyecto proyecto = EstadoPrograma.getInstance().getProyectoActivo();
 
                         Integrante i = new Integrante(
                                 rol,
                                 LocalDate.now(),
                                 null,
                                 seleccionado,
-                                proyectoActivo
+                                proyecto
                         );
 
-                        proyectoActivo.getIntegrantes().add(i);
+                        EstadoPrograma.getInstance().getIntegrantesTemp().add(i);
 
                         Notificator.exito(
                                 "Éxito",
