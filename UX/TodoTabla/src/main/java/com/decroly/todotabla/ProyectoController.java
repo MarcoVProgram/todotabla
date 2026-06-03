@@ -1,19 +1,19 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.Estado;
-import com.decroly.todotabla.model.Proyecto;
-import com.decroly.todotabla.model.Tarea;
-import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.*;
+import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -29,53 +29,62 @@ import java.util.ResourceBundle;
 public class ProyectoController implements Initializable{
 
     @FXML
-    private static TextField tituloProyecto;
-
-    public static TextField getTituloProyecto() {
-        return tituloProyecto;
-    }
+    private TextField tituloProyecto;
 
     @FXML
-    private static DatePicker fechaProyecto;
-
-    public static DatePicker getFechaProyecto() {
-        return fechaProyecto;
-    }
+    private DatePicker fechaProyecto;
 
     @FXML
     private Button anadirUsuariosBtn;
+
+    @FXML
+    private Node root;
 
 
     @FXML
     private Button crearProyecto;
 
 
-    private static Stage ventanaSecundaria;
+    private Stage ventanaSecundaria;
 
-    public static Stage getVentanaSecundaria() {
-        return ventanaSecundaria;
-    }
 
 //    @FXML
 //    private Button addButtom;
 
+    ProyetosBDD proyecto = new ProyetosBDD();
+
+
+
     @FXML
     private void guardar() {
-        Proyecto p = new Proyecto(
-                tituloProyecto.getText(),
-                fechaProyecto.getValue(),
-                null
-        );
+        Proyecto proyecto = new Proyecto(
+                    tituloProyecto.getText(),
+                    fechaProyecto.getValue(),
+                    null
+            );
         try {
-            if (ProyetosBDD.insertar(p)) {
-                Notificator.exito("Inserción", "Se ha insertado correctamente");
-            } else {
-                Notificator.error("Error", "Error al insertar");
+            int index = ProyetosBDD.insertar(proyecto);
+            if (index != -1) {
+                proyecto = new Proyecto(
+                        index,
+                    tituloProyecto.getText(),
+                    fechaProyecto.getValue(),
+                    null
+            );
             }
         } catch (Exception ex) {
             AppErrorHandler.manejar(ex, "insertar");
         }
+
+        EstadoPrograma.getInstance().setProyectoActivo(proyecto);
+
+        if(!EstadoPrograma.getInstance().getIntegrantesTemp().isEmpty()){
+            for(Integrante i : EstadoPrograma.getInstance().getIntegrantesTemp()){
+                proyecto.getIntegrantes().add(i);
+            }
+        }
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -83,6 +92,7 @@ public class ProyectoController implements Initializable{
             fechaProyecto.setValue(LocalDate.now());
         }
     }
+
 
     @FXML
     private void abrirVentanaUsuarios() { //panel usuarios
@@ -95,7 +105,7 @@ public class ProyectoController implements Initializable{
             }
 
             // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-form.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantes.fxml"));
             Parent root = loader.load();
 
             // Crear una nueva ventana (Stage)
@@ -122,4 +132,11 @@ public class ProyectoController implements Initializable{
             AppErrorHandler.manejar(e, "abrirVentanaUsuarios");
         }
     }
+
+    @FXML
+    private void irAUsuariosview() throws IOException { //abrir panel kanban
+        Stage stage = (Stage) root.getScene().getWindow();
+        Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formUsuarios.fxml");
+    }
+
 }

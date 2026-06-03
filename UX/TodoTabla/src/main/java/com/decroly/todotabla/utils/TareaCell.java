@@ -4,12 +4,14 @@ import com.decroly.todotabla.model.Asignacion;
 import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.AsignacionesBDD;
+import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.constants.ColoresPrioridad;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -44,6 +46,7 @@ public class TareaCell extends ListCell<Tarea> {
     private final Map<Estado, ColumnaKanban> columnMap;
     private ImageView ghost;
     private ColorInput tintInput;
+    private Node lastHoveredCell;
 
     //Constructor
     public TareaCell(BorderPane root, Map<Estado, ColumnaKanban> columnMap) {
@@ -213,6 +216,11 @@ public class TareaCell extends ListCell<Tarea> {
         // Si el Fantasma no es Null
         if (ghost == null) return;
 
+        //Limpiar estilos
+        if (lastHoveredCell != null) {
+            lastHoveredCell.getStyleClass().remove("ghostChosen");
+        }
+
         // Mover el fantasma
         Point2D rootPos = root.sceneToLocal(
             e.getSceneX() - dragOffsetX,
@@ -222,14 +230,33 @@ public class TareaCell extends ListCell<Tarea> {
         ghost.setLayoutX(rootPos.getX());
         ghost.setLayoutY(rootPos.getY());
 
-        double sceneHeight = root.getScene().getHeight();
-        int band = (int) Math.min(8, (e.getSceneY() / sceneHeight) * 9);//Formula a ajustar para colores
-        //tintInput.setPaint(Color.web(ColoresPrioridad.getColores(band)).deriveColor(0, 1, 1, 0.4));
-
+        ColumnaKanban colHover = getColumna(e.getScreenX(), e.getScreenY());
+        if  (colHover != null) {
+            tintInput.setPaint(Color.web(colHover.estado().getColor(), 0.4));
+            ListCell<Tarea> tareaFocused = getHoveredListCell(colHover, e.getScreenX(), e.getScreenY());
+            if (tareaFocused != null && tareaFocused.getItem() != null) {
+                tareaFocused.getStyleClass().add("ghostChosen");
+                lastHoveredCell = tareaFocused;
+            } else {
+                lastHoveredCell = null;
+            }
+        }
+        else {
+            tintInput.setPaint(Color.TRANSPARENT);
+        }
     }
 
     private void onDragEnd(MouseEvent e) {
         // realizar los updates en base al resultado
+        if (ghost == null) return;
+        if (getItem() == null) return;
+        ColumnaKanban colChosen = getColumna(e.getScreenX(), e.getScreenY());
+        if  (colChosen != null) {
+            ListCell<Tarea> cellChosen = getHoveredListCell(colChosen, e.getScreenX(), e.getScreenY());
+            cellChosen.getStyleClass().remove("ghostChosen");
+            Tarea tareaFocused = getHoveredTarea(colChosen, e.getScreenX(), e.getScreenY());
+            moverTarea(colChosen, tareaFocused);
+        }
 
         // Adios fantasma
         root.getChildren().remove(ghost);
@@ -238,10 +265,62 @@ public class TareaCell extends ListCell<Tarea> {
         card.setOpacity(1);
     }
 
-    /*private ListView<Tarea> getTargetListView(double screenX, double screenY) {
-        return columnMap.keySet().stream()
-                .filter(lv -> lv.localToScreen(lv.getBoundsInLocal()).contains(screenX, screenY))
+    private ColumnaKanban getColumna(double screenX, double screenY) {
+        return columnMap.values().stream()
+                .filter(col -> col.lvTareas().localToScreen(col.lvTareas().getBoundsInLocal()).contains(screenX, screenY))
                 .findFirst()
                 .orElse(null);
-    }*/
+    }
+
+    private ListCell<Tarea> getHoveredListCell(ColumnaKanban colHover, double screenX, double screenY) {
+        return colHover.lvTareas().lookupAll(".list-cell").stream()
+                .filter(node -> node.localToScreen(node.getBoundsInLocal()).contains(screenX, screenY))
+                .findFirst()
+                .map(node -> (ListCell<Tarea>) node)
+                .orElse(null);
+    }
+
+    private Tarea getHoveredTarea(ColumnaKanban colHover, double screenX, double screenY) {
+        return colHover.lvTareas().lookupAll(".list-cell").stream()
+                .filter(node -> node.localToScreen(node.getBoundsInLocal()).contains(screenX, screenY))
+                .findFirst()
+                .map(node -> (ListCell<Tarea>) node)
+                .map(ListCell::getItem)
+                .orElse(null);
+    }
+
+    private void moverTarea(ColumnaKanban destino, Tarea tareaChosen) {
+        if (destino != null) {
+            Tarea t = getItem();
+            ColumnaKanban partida = columnMap.get(t.getEstado());
+
+            if (tareaChosen != null) {
+                t.setPrioridad(tareaChosen.getPrioridad());
+            } else {
+                try {
+                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto()));
+                } catch (Exception ex) {
+                    AppErrorHandler.manejar(ex, "getMayorPrioridad");
+                }
+            }
+
+            t.setEstado(destino.estado());
+            partida.olTareas().remove(t);
+            destino.olTareas().add(Math.max(Math.min(t.getPrioridad(), destino.olTareas().size()), 0), t);
+
+            actualizarLista(partida);
+            actualizarLista(destino);
+        }
+    }
+
+    private void actualizarLista(ColumnaKanban columnaEstadoKanban) {
+        for (int i = 0; i < columnaEstadoKanban.olTareas().size(); i++) {
+            columnaEstadoKanban.olTareas().get(i).setPrioridad(i);
+            try {
+                TareasBDD.actualizar(columnaEstadoKanban.olTareas().get(i));
+            } catch (Exception ex) {
+                AppErrorHandler.manejar(ex, "actualizar");
+            }
+        }
+    }
 }

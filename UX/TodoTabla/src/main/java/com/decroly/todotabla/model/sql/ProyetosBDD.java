@@ -10,22 +10,32 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ProyetosBDD {
-    public static boolean insertar(Proyecto p) throws Exception{ // TODO obtener numero del id al insertar
+    public static int insertar(Proyecto p) throws Exception{ // TODO obtener numero del id al insertar
         boolean estado = false;
+        int clave = -1;
 
         try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(
-                     "INSERT INTO proyecto VALUES (NULL, ?, ?, NULL)"
+                     "INSERT INTO proyecto VALUES (NULL, ?, ?, NULL)", Statement.RETURN_GENERATED_KEYS
              )
-        ) {
+        ){
+
             stmnt.setString(1, p.getTitulo());
             stmnt.setDate(2, Date.valueOf(p.getFechaCreacion()));
 
             estado = (stmnt.executeUpdate() == 1);
 
-        }
+            if (estado) {
+                ResultSet keys = stmnt.getGeneratedKeys();
+                while (keys.next()) {
+                    clave = keys.getInt(1);
+                    p.setId(clave);
+                }
+            }
 
-        return estado;
+        return clave;
+
+        }
     }
     public static boolean actualizar(Proyecto p) throws Exception {
         boolean estado = false;
@@ -36,7 +46,7 @@ public class ProyetosBDD {
                          "UPDATE `todotabla`.`proyecto` " +
                                  "SET " +
                                  "`titulo` = ?, " +
-                                 "`fecha_cierre` = ?, " +
+                                 "`fecha_cierre` = ? " +
                                  "WHERE `id` = ?; "
                  )
             ) {
