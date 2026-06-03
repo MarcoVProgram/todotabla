@@ -100,20 +100,45 @@
     -fx-background-radius: 6;
     -fx-padding: 6 12;
     -fx-border-color: #09dd55;
+    -fx-translate-y: 1px;
 }
 
 .btnRemove {
-    -fx-background-color: #451003;
+    -fx-background-color: #790000;
     -fx-text-fill: white;
+    -fx-border-color: #dd0909;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 1px;
     -fx-padding: 6 12;
 }
 
 .btnEdit{
-    -fx-background-color: #eae35e;
+    -fx-background-color: #a87807;
+    -fx-text-fill: white;
+    -fx-border-color: #d2b435;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 1px;
+    -fx-padding: 6 12;
+}
+
+.btnEdit:hover {
+    -fx-background-color: #bd890f;
     -fx-text-fill: white;
     -fx-background-radius: 6;
     -fx-padding: 6 12;
+    -fx-border-color: #ffe27c;
+    -fx-translate-y: 1px;
+}
+
+.btnRemove:hover {
+    -fx-background-color: #9d2a0c;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-border-color: #ff3333;
+    -fx-translate-y: 1px;
 }
 
 .btn:hover {

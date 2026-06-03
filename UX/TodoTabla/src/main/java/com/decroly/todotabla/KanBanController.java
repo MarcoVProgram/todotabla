@@ -13,13 +13,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -114,6 +118,25 @@ public class KanBanController implements Initializable {
         filteredTareas = new FilteredList<>(items, tarea -> true);
 
         ListView<Tarea> listView = constructorColumnas(estado, items, filteredTareas);
+
+        listView.setOnMouseClicked(event -> {
+            if (event.getButton() != MouseButton.SECONDARY && event.getClickCount() != 2) return;
+
+            //Comprobar que se hace click correctamente en la celda
+            Node clickedNode = event.getPickResult().getIntersectedNode();
+            while (clickedNode != null && !(clickedNode instanceof ListCell)) {
+                clickedNode = clickedNode.getParent();
+            }
+
+            //Nos quedamos con la celda que sea igual / Aviso, se necesita esta selección o selecciona la superior
+            if (clickedNode instanceof ListCell<?> cell && !cell.isEmpty()) {
+                Tarea selected = (Tarea) cell.getItem();
+                if (selected == null) return;
+                EstadoPrograma.getInstance().setTareaActiva(selected);
+                abrirVentanaHistorialTareas();
+            }
+        });
+
         return new ColumnaKanban(estado, listView, items, filteredTareas);
     }
 
@@ -162,9 +185,23 @@ public class KanBanController implements Initializable {
 
     //----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
     @FXML
-    private void returnToMain() throws IOException { //abrir pantalla principal (menú)
+    private void returnToMain() { //abrir pantalla principal (menú)
         Stage stage = (Stage) returnBtn.getScene().getWindow();
-        Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
+        try {
+            Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
+        } catch (Exception ex) {
+            AppErrorHandler.manejar(ex, "returnToMain");
+        }
+    }
+
+    @FXML
+    private void abrirVentanaHistorialTareas() {
+        Stage stage = (Stage) returnBtn.getScene().getWindow();
+        try {
+            Navigator.changeScene(stage, "/com/decroly/todotabla/historial-view.fxml");
+        } catch (Exception ex) {
+            AppErrorHandler.manejar(ex, "abrirVentanaHistorialTareas");
+        }
     }
 
     @FXML
