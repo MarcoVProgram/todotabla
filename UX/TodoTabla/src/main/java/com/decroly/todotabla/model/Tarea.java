@@ -1,5 +1,7 @@
 package com.decroly.todotabla.model;
 
+import java.util.Objects;
+
 public class Tarea {
 
     private int id;
@@ -66,5 +68,17 @@ public class Tarea {
                 ", estado=" + estado +
                 ", idProyecto=" + idProyecto.getId() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Tarea tarea = (Tarea) o;
+        return id == tarea.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

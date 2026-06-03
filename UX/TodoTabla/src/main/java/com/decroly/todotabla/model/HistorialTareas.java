@@ -1,6 +1,7 @@
 package com.decroly.todotabla.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class HistorialTareas {
 
@@ -46,5 +47,17 @@ public class HistorialTareas {
                 ", idTarea=" + idTarea.getId() +
                 ", fechaCambio=" + fechaCambio +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        HistorialTareas tareas = (HistorialTareas) o;
+        return id == tareas.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

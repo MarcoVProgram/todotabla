@@ -35,7 +35,7 @@ public class TareasBDD {
             String sql = "UPDATE `todotabla`.`tarea` " +
                     "SET " +
                     "`nombre` = ?, " +
-                    "`prioridad` = ? " +
+                    "`prioridad` = ?, " +
                     "`estado` = ? " +
                     "WHERE `id` = ?; ";
 

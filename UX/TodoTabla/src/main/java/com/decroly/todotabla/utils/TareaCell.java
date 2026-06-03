@@ -252,19 +252,10 @@ public class TareaCell extends ListCell<Tarea> {
         if (getItem() == null) return;
         ColumnaKanban colChosen = getColumna(e.getScreenX(), e.getScreenY());
         if  (colChosen != null) {
-            tintInput.setPaint(Color.web(colChosen.estado().getColor(), 0.4));
+            ListCell<Tarea> cellChosen = getHoveredListCell(colChosen, e.getScreenX(), e.getScreenY());
+            cellChosen.getStyleClass().remove("ghostChosen");
             Tarea tareaFocused = getHoveredTarea(colChosen, e.getScreenX(), e.getScreenY());
-            getItem().setEstado(colChosen.estado());
-            if (tareaFocused != null) {
-                getItem().setPrioridad(tareaFocused.getPrioridad()-1);
-            } else {
-                try {
-                    getItem().setPrioridad(TareasBDD.getMayorPrioridad(getItem().getIdProyecto()));
-                } catch (Exception ex) {
-                    AppErrorHandler.manejar(ex, "getMayorPrioridad");
-                }
-            }
-            System.out.println(getItem());
+            moverTarea(colChosen, tareaFocused);
         }
 
         // Adios fantasma
@@ -298,7 +289,35 @@ public class TareaCell extends ListCell<Tarea> {
                 .orElse(null);
     }
 
-    private void moverTarea(ColumnaKanban colHover) {
-        if (colHover != null) {}
+    private void moverTarea(ColumnaKanban destino, Tarea tareaChosen) {
+        if (destino != null) {
+            Tarea t = getItem();
+            ColumnaKanban partida = columnMap.get(t.getEstado());
+            System.out.println(partida);
+
+            if (tareaChosen != null) {
+                t.setPrioridad(tareaChosen.getPrioridad());
+            } else {
+                try {
+                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto()));
+                } catch (Exception ex) {
+                    AppErrorHandler.manejar(ex, "getMayorPrioridad");
+                }
+            }
+
+            t.setEstado(destino.estado());
+            System.out.println(t.getEstado());
+            partida.olTareas().remove(t);
+            destino.olTareas().add(Math.max(Math.min(t.getPrioridad(), destino.olTareas().size()), 0), t);
+
+            for (int i = 0; i < destino.olTareas().size(); i++) {
+                destino.olTareas().get(i).setPrioridad(i);
+                try {
+                    TareasBDD.actualizar(destino.olTareas().get(i));
+                } catch (Exception ex) {
+                    AppErrorHandler.manejar(ex, "actualizar");
+                }
+            }
+        }
     }
 }

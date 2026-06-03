@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
@@ -58,6 +59,9 @@ public class KanBanController implements Initializable {
 
     private Map<Estado, ColumnaKanban> columnMap = new HashMap<>();
 
+    @FXML
+    private TextField buscarTareaSearchBar;
+
 
 
     public void initialize(URL url, ResourceBundle rb) {
@@ -70,6 +74,8 @@ public class KanBanController implements Initializable {
         proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
         proyectoTitulo.setText("🔒 " + proyectoSeleccionado.getTitulo());
 
+        this.buscarTareaSearchBar.textProperty().addListener((observable) -> actualizarTareas());
+
         actualizarTareas();
     }
 
@@ -77,17 +83,15 @@ public class KanBanController implements Initializable {
         contenedorColumnas.getChildren().clear();
         columnMap.clear();
 
-        for (Estado estado : estados) {
-            columnMap.put(estado, addColumna(estado));
-        }
-    }
-
-    private void actualizarTareas(String regex) {
-        contenedorColumnas.getChildren().clear();
-        columnMap.clear();
-
-        for (Estado estado : estados) {
-            columnMap.put(estado, addColumna(estado, regex));
+        if (this.buscarTareaSearchBar.getText().isEmpty()) {
+            for (Estado estado : estados) {
+                columnMap.put(estado, addColumna(estado));
+            }
+        } else {
+            String regex = this.buscarTareaSearchBar.getText();
+            for (Estado estado : estados) {
+                columnMap.put(estado, addColumna(estado, regex));
+            }
         }
     }
 
@@ -277,7 +281,7 @@ public class KanBanController implements Initializable {
 //            }
 //
 //            // Cargar el archivo FXML
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantes.fxml"));
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-form.fxml"));
 //            Parent root = loader.load();
 //
 //            // Crear una nueva ventana (Stage)
@@ -299,50 +303,4 @@ public class KanBanController implements Initializable {
 //            e.printStackTrace();
 //        }
 //    }
-
-@FXML
-private void abrirVentanaUsuarios() { //panel usuarios
-    try {
-
-        if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-            System.out.println("No se puede volver a abrir, hay una sesion existente");
-            return;
-        }
-
-        // Cargar el archivo FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantes.fxml"));
-        Parent root = loader.load();
-
-        // Crear una nueva ventana (Stage)
-        ventanaSecundaria = new Stage();
-        ventanaSecundaria.setTitle("Añadir usuarios");
-        ventanaSecundaria.setScene(new Scene(root));
-
-        ventanaSecundaria.setResizable(false);
-
-        if(ventanaSecundaria.isFocused()){
-            ventanaSecundaria.setAlwaysOnTop(true);
-        }else{
-            ventanaSecundaria.setAlwaysOnTop(false);
-        }
-
-//            listViewTareas.setItems(obsTareas);
-
-        // Mostrar la ventana
-        ventanaSecundaria.showAndWait();
-
-        // TODO Hay que refrescar las listas del Kanban controller
-
-    } catch (IOException e) {
-        AppErrorHandler.manejar(e, "abrirVentanaUsuarios");
-    }
-}
-
-
-    @FXML
-    public void buscarTarea(ActionEvent event) {
-        String name = ""; // Señalar barra de busqueda
-        actualizarTareas(name);
-
-    }
 }
