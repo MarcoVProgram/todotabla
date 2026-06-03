@@ -69,6 +69,8 @@ public class TareaModController implements Initializable {
                 super.updateItem(tarea, empty);
 
                 if (empty || tarea == null) {
+
+                    this.setStyle("-fx-background-color: transparent");
                     setGraphic(null);
                 } else {
 
@@ -79,7 +81,8 @@ public class TareaModController implements Initializable {
                     card.getStyleClass().add("kanban-list");
 
                     this.getStyleClass().add("task-card");
-                    this.setStyle("-fx-border-color: white");
+
+                    this.setStyle("-fx-background-color: #161b22");
 
                     setGraphic(card);
                 }
