@@ -8,6 +8,7 @@ import com.decroly.todotabla.utils.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -74,7 +75,7 @@ public class KanBanController implements Initializable {
         proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
         proyectoTitulo.setText("🔒 " + proyectoSeleccionado.getTitulo());
 
-        this.buscarTareaSearchBar.textProperty().addListener((observable) -> actualizarTareas());
+        this.buscarTareaSearchBar.textProperty().addListener((observable) -> filtrarTareas());
 
         actualizarTareas();
     }
@@ -83,51 +84,41 @@ public class KanBanController implements Initializable {
         contenedorColumnas.getChildren().clear();
         columnMap.clear();
 
-        if (this.buscarTareaSearchBar.getText().isEmpty()) {
-            for (Estado estado : estados) {
-                columnMap.put(estado, addColumna(estado));
-            }
-        } else {
-            String regex = this.buscarTareaSearchBar.getText();
-            for (Estado estado : estados) {
-                columnMap.put(estado, addColumna(estado, regex));
-            }
+        for (Estado estado : estados) {
+            columnMap.put(estado, addColumna(estado));
+        }
+    }
+
+    private void filtrarTareas() {
+        for (Map.Entry<Estado, ColumnaKanban> entry : columnMap.entrySet()) {
+            entry.getValue().flTareas().setPredicate(tarea ->
+                    this.buscarTareaSearchBar.getText().isBlank() ||
+                            tarea.getNombre().toLowerCase().contains(this.buscarTareaSearchBar.getText().toLowerCase()) );
         }
     }
 
     private ColumnaKanban addColumna(Estado estado) {
 
         ObservableList<Tarea> items;
+        FilteredList<Tarea> filteredTareas;
 
         try {
             items = FXCollections.observableArrayList(
                     TareasBDD.getTareas(estado, proyectoSeleccionado).values()
             );
+
         } catch (Exception ex) {
             AppErrorHandler.manejar(ex, "getTareas");
             items = FXCollections.observableArrayList();
         }
+        filteredTareas = new FilteredList<>(items, tarea -> true);
 
-        ListView<Tarea> listView = constructorColumnas(estado, items);
-        return new ColumnaKanban(estado, listView, items);
+        ListView<Tarea> listView = constructorColumnas(estado, items, filteredTareas);
+        return new ColumnaKanban(estado, listView, items, filteredTareas);
     }
 
-    private ColumnaKanban addColumna(Estado estado, String regex) {
-        ObservableList<Tarea> items;
-
-        try {
-            items = FXCollections.observableArrayList(
-                    TareasBDD.getTareas(regex, proyectoSeleccionado, estado)
-            );
-        } catch (Exception ex) {
-            AppErrorHandler.manejar(ex, "getTareas");
-            items = FXCollections.observableArrayList();
-        }
-        ListView<Tarea> listView = constructorColumnas(estado, items);
-        return new ColumnaKanban(estado, listView, items);
-    }
-
-    private ListView<Tarea> constructorColumnas(Estado  estado, ObservableList<Tarea> items) {
+    private ListView<Tarea> constructorColumnas(Estado  estado, ObservableList<Tarea> items,
+                                                FilteredList<Tarea> filtered) {
         // Circulo de Estado
         Circle dot = new Circle(4);
         dot.setStyle("-fx-fill: " + estado.getColor() + ";");
@@ -146,7 +137,7 @@ public class KanBanController implements Initializable {
         titleRow.setAlignment(Pos.CENTER_LEFT);
 
         // ListView de Tarea
-        ListView<Tarea> listView = new ListView<>(TareaCell.sorted(items));
+        ListView<Tarea> listView = new ListView<>(TareaCell.sorted(filtered));
         listView.setCellFactory(lv -> new TareaCell(root, columnMap));
         listView.getStyleClass().add("kanban-list");
         listView.setPrefHeight(579);
