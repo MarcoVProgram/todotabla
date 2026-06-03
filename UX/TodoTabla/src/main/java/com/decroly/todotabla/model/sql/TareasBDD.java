@@ -1,20 +1,26 @@
 package com.decroly.todotabla.model.sql;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
-import com.decroly.todotabla.utils.AppErrorHandler;
-
-import java.sql.*;
-import java.util.*;
 
 public class TareasBDD {
-    public static boolean insertar(Tarea t) throws Exception {
+    public static int insertar(Tarea t) throws Exception {
         boolean estado = false;
+        int clave = -1;
 
         String sql = "INSERT INTO tarea VALUES (NULL, ?, ?, ?, ?)";
         try (Connection conexion = BDD.getConnection();
-             PreparedStatement stmnt = conexion.prepareStatement(sql)
+             PreparedStatement stmnt = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
             stmnt.setString(1, t.getNombre());
             stmnt.setInt(2, t.getPrioridad());
@@ -23,8 +29,15 @@ public class TareasBDD {
 
             estado = (stmnt.executeUpdate() == 1);
 
+            if (estado) {
+                ResultSet keys = stmnt.getGeneratedKeys();
+                while (keys.next()) {
+                    clave = keys.getInt(1);
+                }
+            }
+
         }
-        return estado;
+        return clave;
     }
 
     public static boolean actualizar(Tarea t) throws Exception {
@@ -37,7 +50,7 @@ public class TareasBDD {
                     "`nombre` = ?, " +
                     "`prioridad` = ?, " +
                     "`estado` = ? " +
-                    "WHERE `id` = ?; ";
+                    "WHERE `id` = ?;";
 
             try (Connection conexion = BDD.getConnection();
                  PreparedStatement stmnt = conexion.prepareStatement(sql)) {

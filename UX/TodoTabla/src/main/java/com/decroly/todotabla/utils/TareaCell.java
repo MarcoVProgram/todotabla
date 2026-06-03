@@ -293,7 +293,6 @@ public class TareaCell extends ListCell<Tarea> {
         if (destino != null) {
             Tarea t = getItem();
             ColumnaKanban partida = columnMap.get(t.getEstado());
-            System.out.println(partida);
 
             if (tareaChosen != null) {
                 t.setPrioridad(tareaChosen.getPrioridad());
@@ -306,17 +305,21 @@ public class TareaCell extends ListCell<Tarea> {
             }
 
             t.setEstado(destino.estado());
-            System.out.println(t.getEstado());
             partida.olTareas().remove(t);
             destino.olTareas().add(Math.max(Math.min(t.getPrioridad(), destino.olTareas().size()), 0), t);
 
-            for (int i = 0; i < destino.olTareas().size(); i++) {
-                destino.olTareas().get(i).setPrioridad(i);
-                try {
-                    TareasBDD.actualizar(destino.olTareas().get(i));
-                } catch (Exception ex) {
-                    AppErrorHandler.manejar(ex, "actualizar");
-                }
+            actualizarLista(partida);
+            actualizarLista(destino);
+        }
+    }
+
+    private void actualizarLista(ColumnaKanban columnaEstadoKanban) {
+        for (int i = 0; i < columnaEstadoKanban.olTareas().size(); i++) {
+            columnaEstadoKanban.olTareas().get(i).setPrioridad(i);
+            try {
+                TareasBDD.actualizar(columnaEstadoKanban.olTareas().get(i));
+            } catch (Exception ex) {
+                AppErrorHandler.manejar(ex, "actualizar");
             }
         }
     }

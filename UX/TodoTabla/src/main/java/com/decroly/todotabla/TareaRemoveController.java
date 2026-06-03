@@ -9,30 +9,40 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-public class TareaRemoveController {
+public class TareaRemoveController implements Initializable {
 
     @FXML
     public ListView<Tarea> listViewTareas;
-    private ObservableList<Tarea> listaTareas;
+    private ObservableList<Tarea> listaObsTareas;
+    private List<Tarea> listaTareas;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        listarTareas();
+    }
 
     private void listarTareas() {
         try {
-            listaTareas = FXCollections.observableList(
-                    new ArrayList<>(TareasBDD.getTareas(
-                            EstadoPrograma.getInstance().getProyectoActivo()
-                    ).values())
+            listaTareas = new ArrayList<>(TareasBDD.getTareas(
+                    EstadoPrograma.getInstance().getProyectoActivo()
+            ).values());
+            listaObsTareas = FXCollections.observableList(
+                    listaTareas
             );
         } catch (Exception e) {
             AppErrorHandler.manejar(e, "getTareas");
         }
 
-        listViewTareas.setItems(listaTareas);
         listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
             @Override
             protected void updateItem(Tarea tarea, boolean empty) {
@@ -53,6 +63,7 @@ public class TareaRemoveController {
             }
         });
 
+        listViewTareas.setItems(listaObsTareas);
     }
 
     private void actualizarTareas() {
@@ -78,11 +89,10 @@ public class TareaRemoveController {
         boolean estado = false;
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 
-        Notificator.informar("Borrar Tarea", "Se ha borrado correctamente");
-
         for (Tarea t: listaDeTareas) {
             try {
                 estado = TareasBDD.borrar(t);
+                listaObsTareas.remove(t);
             } catch (Exception e) {
                 AppErrorHandler.manejar(e, "borrarTareas");
             }
@@ -95,4 +105,5 @@ public class TareaRemoveController {
             Notificator.advertencia("Borrar Tarea", "No se ha podido borrar");
         }
     }
+
 }
