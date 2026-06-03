@@ -1,10 +1,7 @@
 package com.decroly.todotabla.model;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Proyecto {
 
@@ -12,21 +9,21 @@ public class Proyecto {
     private String titulo;
     private LocalDate fechaCreacion;
     private LocalDate fechaCierre;
-    private Set<Integrante> integrantes;
+    private List<Integrante> integrantesTemp;
 
     public Proyecto(int id, String titulo, LocalDate fechaCreacion, LocalDate fechaCierre) {
         this.id = id;
         this.titulo = titulo;
         this.fechaCreacion = fechaCreacion;
         this.fechaCierre = fechaCierre;
-        this.integrantes = new HashSet<>();
+        this.integrantesTemp = new LinkedList<>();
     }
 
     public Proyecto(String titulo, LocalDate fechaCreacion, LocalDate fechaCierre) {
         this.titulo = titulo;
         this.fechaCreacion = fechaCreacion;
         this.fechaCierre = fechaCierre;
-        this.integrantes = new HashSet<>();
+        this.integrantesTemp = new LinkedList<>();
     }
 
     public Integer getId() {
@@ -57,8 +54,8 @@ public class Proyecto {
         this.fechaCierre = fechaCierre;
     }
 
-    public Set<Integrante> getIntegrantes() {
-        return integrantes;
+    public List<Integrante> getIntegrantesTemp() {
+        return integrantesTemp;
     }
 
     @Override
@@ -73,9 +70,10 @@ public class Proyecto {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Proyecto proyecto = (Proyecto) o;
-        return id == proyecto.id;
+        if (this == o) return true;
+        if (!(o instanceof Proyecto proyecto)) return false;
+
+        return Objects.equals(id, proyecto.id);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.decroly.todotabla.utils;
 import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Proyecto;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class EstadoPrograma {
@@ -22,7 +23,9 @@ public class EstadoPrograma {
         this.tituloProyecto = tituloProyecto;
     }
 
-    private EstadoPrograma() {}
+    private EstadoPrograma() {
+        integrantesTemp = new LinkedList<>();
+    }
 
     public static EstadoPrograma getInstance() {
         return INSTANCE;

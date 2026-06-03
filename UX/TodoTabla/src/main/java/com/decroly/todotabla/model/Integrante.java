@@ -61,6 +61,10 @@ public class Integrante {
         return idProyecto;
     }
 
+    public void setIdProyecto(Proyecto idProyecto) {
+        this.idProyecto = idProyecto;
+    }
+
     @Override
     public String toString() {
         return "Integrante{" +
@@ -68,20 +72,35 @@ public class Integrante {
                 ", rol='" + rol + '\'' +
                 ", fechaEntrada=" + fechaEntrada +
                 ", fechaSalida=" + fechaSalida +
-                ", idMiembro=" + idUsuario.getId() +
-                ", idProyecto=" + idProyecto.getId() +
+                ", idMiembro=" + (idUsuario != null ? idUsuario.getId() : null) +
+                ", idProyecto=" + (idProyecto != null ? idProyecto.getId() : null) +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Integrante that = (Integrante) o;
-        return id == that.id;
+        if (this == o) return true;
+        if (!(o instanceof Integrante that)) return false;
+
+        if (this.id != 0 && that.id != 0) {
+            return this.id == that.id;
+        }
+
+        return this.idUsuario.getId() == that.idUsuario.getId()
+                && this.idProyecto != null
+                && that.idProyecto != null
+                && this.idProyecto.getId().equals(that.idProyecto.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        if (id != 0) {
+            return Objects.hash(id);
+        }
+
+        return Objects.hash(
+                this.idUsuario != null ? idUsuario.getId() : 0,
+                this.idProyecto != null ? idProyecto.getId() : 0
+        );
     }
 }

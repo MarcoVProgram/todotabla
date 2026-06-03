@@ -78,10 +78,25 @@ public class ProyectoController implements Initializable{
 
         EstadoPrograma.getInstance().setProyectoActivo(proyecto);
 
-        if(!EstadoPrograma.getInstance().getIntegrantesTemp().isEmpty()){
-            for(Integrante i : EstadoPrograma.getInstance().getIntegrantesTemp()){
-                proyecto.getIntegrantes().add(i);
+        for (Integrante i : EstadoPrograma.getInstance().getIntegrantesTemp()) {
+            i.setIdProyecto(proyecto);
+
+            try {
+                IntegrantesBDD.insertar(i);
+                proyecto.getIntegrantesTemp().add(i);
+                
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, "insertar integrante en commit proyecto");
             }
+        }
+        
+        EstadoPrograma.getInstance().getIntegrantesTemp().clear();
+
+        try {
+            volverVentanaPrincipal();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -138,5 +153,12 @@ public class ProyectoController implements Initializable{
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formUsuarios.fxml");
     }
+
+    @FXML
+    private void volverVentanaPrincipal() throws IOException { //abrir panel kanban
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.close();
+    }
+
 
 }

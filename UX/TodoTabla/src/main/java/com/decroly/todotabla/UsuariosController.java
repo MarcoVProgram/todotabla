@@ -184,14 +184,13 @@ public class UsuariosController implements Initializable {
 
 
                     try {
-                        Proyecto proyecto = EstadoPrograma.getInstance().getProyectoActivo();
 
                         Integrante i = new Integrante(
                                 rol,
                                 LocalDate.now(),
                                 null,
                                 seleccionado,
-                                proyecto
+                                null
                         );
 
                         EstadoPrograma.getInstance().getIntegrantesTemp().add(i);
