@@ -1,11 +1,8 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.*;
-import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 
-import com.decroly.todotabla.model.sql.TareasBDD;
-import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
@@ -22,8 +19,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.chrono.IsoChronology;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ProyectoController implements Initializable{
@@ -78,7 +73,9 @@ public class ProyectoController implements Initializable{
 
         EstadoPrograma.getInstance().setProyectoActivo(proyecto);
 
-        if(!EstadoPrograma.getInstance().getIntegrantesTemp().isEmpty()){
+        if(null == EstadoPrograma.getInstance().getIntegrantesTemp()){
+            AppErrorHandler.manejar(new Exception("Oh no. No hay nada"), "Integrantes de la instancia de estado programa");
+        } else if (!EstadoPrograma.getInstance().getIntegrantesTemp().isEmpty()){
             for(Integrante i : EstadoPrograma.getInstance().getIntegrantesTemp()){
                 proyecto.getIntegrantes().add(i);
             }
