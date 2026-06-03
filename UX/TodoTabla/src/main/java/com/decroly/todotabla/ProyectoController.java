@@ -45,11 +45,8 @@ public class ProyectoController implements Initializable{
     private Button crearProyecto;
 
 
-    private static Stage ventanaSecundaria;
+    private Stage ventanaSecundaria;
 
-    public static Stage getVentanaSecundaria() {
-        return ventanaSecundaria;
-    }
 
 //    @FXML
 //    private Button addButtom;
@@ -60,31 +57,43 @@ public class ProyectoController implements Initializable{
 
     @FXML
     private void guardar() throws Exception {
-        Proyecto p = new Proyecto(
-                tituloProyecto.getText(),
-                fechaProyecto.getValue(),
-                null
-        );
-        EstadoPrograma.getInstance().setProyectoActivo(p);
-
         Proyecto proyecto = EstadoPrograma.getInstance().getProyectoActivo();
+
+        if(proyecto == null){
+            proyecto = new Proyecto(
+                    tituloProyecto.getText(),
+                    fechaProyecto.getValue(),
+                    null
+            );
+            EstadoPrograma.getInstance().setProyectoActivo(proyecto);
+        }
+
+        int idGen = -1;
 
 
         try {
-            if (ProyetosBDD.insertar(p)) {
-                Notificator.exito("Inserción", "Se ha insertado correctamente");
+            if (proyecto.getId() == -1) {
+                idGen = ProyetosBDD.insertar(proyecto);
+            } else {
+                ProyetosBDD.actualizar(proyecto);
+                idGen = proyecto.getId();
+            }
+
+            if(idGen != -1){
+            Notificator.exito("Inserción", "Se ha insertado correctamente");
 
             } else {
                 Notificator.error("Error", "Error al insertar");
+
             }
         } catch (Exception ex) {
             AppErrorHandler.manejar(ex, "insertar");
         }
 
-        int id = ProyetosBDD.
-
         for (Integrante i : proyecto.getIntegrantes()) {
-            IntegrantesBDD.insertar(i);
+            if(i.getId() > 0){
+                IntegrantesBDD.insertar(i);
+            }
         }
     }
 
