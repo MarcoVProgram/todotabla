@@ -52,7 +52,7 @@ public class IntegrantesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //=================LISTA INTEGRANTES===================
-        Map<Integer, Integrante> map = null;
+        Map<Integer, Integrante> map = new HashMap<>();
 
         try {
             map = IntegrantesBDD.getIntegrantes(
@@ -150,12 +150,18 @@ public class IntegrantesController implements Initializable {
     @FXML
     private void irAUsuariosview() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
-        Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formUsuarios.fxml");
+        Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formUsuariosGestionKanban.fxml");
     }
 
     @FXML
     private void Salir() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void irAIntegrantesview() throws IOException { //abrir panel kanban
+        Stage stage = (Stage) root.getScene().getWindow();
+        Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formIntegrantes.fxml");
     }
 }
