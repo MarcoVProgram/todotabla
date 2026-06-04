@@ -20,23 +20,22 @@ public class AppTest {
      */
     @Test
     public void shouldAnswerWithTrue() {
-        boolean patata = false;
-        System.out.println(patata);
-        assertTrue(patata);
+        boolean patata = true;
+        assertTrue(patata, "¿La logica esta bien?");
     }
 
-    /* @Test
-    public void getConnectioIsCorrect() {
+    @BeforeAll
+    public static void getConnectioIsCorrect() {
         boolean estado = false;
         try {
             Connection conexion = BDD.getConnection();
-            assertNotNull(conexion, "Error");
+            assertNotNull(conexion, "Error con la conexion");
             estado = conexion.isValid(120);
         } catch (Exception e) {
             estado = false;
         }
 
-        Assertions.assertEquals(true, estado, "Error");
+        Assertions.assertEquals(true, estado, "Error de la base de datos");
 
         
     }
@@ -45,15 +44,19 @@ public class AppTest {
     @Test
     public void macarrones() {
         boolean estado = false;
-        // TODO MARIO tiene que comprobar algo aqui. Repito MARIO
-        assertTrue(estado);
+
+        estado = TestMP.main();
+
+        assertTrue(estado, "El tests de Mario salio mal");
     }
 
     // ko test
     @Test
     public void wow() {
         boolean estado = false;
-        // TODO MARCO tiene que comprobar algo aqui si quiere hacerlo aqui. Repito MARCO
-        assertTrue(estado);
-    } */
+
+        estado = TestMV.main();
+
+        assertTrue(estado, "El tests de Marco salio mal");
+    }
 }
