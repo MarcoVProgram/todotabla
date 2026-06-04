@@ -13,4 +13,5 @@ module com.decroly.todotabla {
     exports com.decroly.todotabla.model;
     exports com.decroly.todotabla.utils;
     exports com.decroly.todotabla.utils.constants;
+    exports com.decroly.todotabla.utils.cells;
 }

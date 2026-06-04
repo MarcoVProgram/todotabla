@@ -5,6 +5,7 @@ import com.decroly.todotabla.model.sql.*;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Notificator;
+import com.decroly.todotabla.utils.cells.UsuariosCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -62,32 +63,7 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
         }
 
         listViewIntegrantes.setItems(listaUsuarios);
-        listViewIntegrantes.setCellFactory(listaTareas -> new ListCell<>(){
-            @Override
-            protected void updateItem(Usuario u, boolean empty) {
-                super.updateItem(u, empty);
-
-                if (empty || u == null) {
-                    this.setGraphic(null);
-                    this.setText(null);
-                    this.setStyle("-fx-background-color: transparent;");
-                    return;
-                }
-
-                Label titulo = new Label(u.getNombre());
-                titulo.getStyleClass().add("titulo-tarea");
-
-                VBox card = new VBox(8, titulo);
-                card.getStyleClass().add("kanban-list");
-
-                this.getStyleClass().add("task-card");
-                this.setStyle("-fx-border-color: white");
-
-                setGraphic(card);
-
-            }
-        });
-
+        listViewIntegrantes.setCellFactory(listaUsuarios -> new UsuariosCell());
     }
 
     //--------AGREGAR TAREA-------------

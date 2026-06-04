@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ public class TareaRemoveController implements Initializable {
                 super.updateItem(tarea, empty);
 
                 if (empty || tarea == null) {
+                    this.setStyle("-fx-background-color: transparent");
                     setGraphic(null);
                 } else {
 
@@ -58,6 +61,9 @@ public class TareaRemoveController implements Initializable {
                     VBox card = new VBox(8, titulo);
                     card.getStyleClass().add("kanban-list");
 
+                    this.getStyleClass().add("task-card");
+
+                    this.setStyle("-fx-background-color: #161b22");
                     setGraphic(card);
                 }
             }

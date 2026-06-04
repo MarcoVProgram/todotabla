@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HistorialController">
+
+    <!-- ================= HEADER ================= -->
+    <top>
+        <VBox>
+
+            <!-- TOPBAR -->
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="topbar">
+                <padding><Insets left="16" right="16" /></padding>
+            <ImageView fx:id="returnBtn" fitHeight="33.0" fitWidth="67.0" onMouseClicked="#returnToKanban" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/return.png" />
+               </image>
+            </ImageView>
+            
+<!--            <ImageView fitHeight="64.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">-->
+<!--               <image>-->
+<!--                  <Image url=""/>-->
+<!--               </image>-->
+<!--               <HBox.margin>-->
+<!--                  <Insets left="15.0" />-->
+<!--               </HBox.margin>-->
+<!--            </ImageView>-->
+                <Label styleClass="logo" text="TodoTabla">
+               <font>
+                  <Font size="27.0" />
+               </font></Label>
+            <ImageView fitHeight="32.0" fitWidth="65.0" onMouseClicked="#returnToMain" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/logo.png" />
+               </image>
+            </ImageView>
+
+                <Region HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- TITLE BAR -->
+            <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="title-bar">
+                <padding><Insets bottom="12" left="16" top="12" /></padding>
+
+                <Label fx:id="proyectoTitulo" prefHeight="26.0" prefWidth="331.0" styleClass="icon" text="🔒 Proyecto Ejemplo">
+               <font>
+                  <Font size="36.0" />
+               </font></Label>
+                <Label fx:id="nombreProyecto" prefHeight="28.0" prefWidth="292.0" styleClass="title">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></Label>
+            </HBox>
+
+            <!-- FILTER BAR -->
+            <HBox alignment="CENTER" spacing="30.0" styleClass="filter-bar">
+                <padding><Insets bottom="12.0" left="16.0" right="16.0" /></padding>
+            <Circle fx:id="circleEstado" fill="DODGERBLUE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="tareaHistorialNombre" prefHeight="19.0" prefWidth="784.0" styleClass="icon" text="Hello World" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="-1.0" />
+               </HBox.margin>
+            </Label>
+            </HBox>
+
+        </VBox>
+    </top>
+
+    <!-- ================= BOARD ================= -->
+    <center>
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" styleClass="scroll" vbarPolicy="NEVER">
+            <!--Lista de Tareas a crear-->
+            <HBox fx:id="contenedorColumnas" spacing="24" styleClass="board">
+            <children>
+               <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" HBox.hgrow="ALWAYS">
+                  <children>
+                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                        <children>
+                           <TextField fx:id="nuevoNombreTarea" prefHeight="23.0" prefWidth="416.0" styleClass="search-large" text="Hola Mundo" HBox.hgrow="ALWAYS" />
+                        </children>
+                        <padding>
+                           <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                        </padding>
+                     </HBox>
+                     <ComboBox fx:id="estadoChoice" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="178.0" promptText="Seleccione un Estado" styleClass="choice-box-choice" />
+                     <VBox spacing="15.0">
+                        <children>
+                           <HBox alignment="CENTER" prefHeight="74.0" prefWidth="1342.0" spacing="30.0">
+                              <children>
+                                 <Label text="Usuarios Asignados" />
+                                 <Button fx:id="addAsignacionTarea" styleClass="btnAdd" text="Añadir" />
+                                 <Button fx:id="removeAsignacionTarea" mnemonicParsing="false" styleClass="btnRemove" text="Desasignar" />
+                              </children>
+                              <padding>
+                                 <Insets left="16.0" right="16.0" />
+                              </padding>
+                           </HBox>
+                           <ListView fx:id="listViewUsuarios" prefHeight="557.0" prefWidth="1382.0" style="-fx-background-color: #2c2c2c;" styleClass="user-list" />
+                        </children>
+                        <padding>
+                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                        </padding>
+                     </VBox>
+                     <Button fx:id="actualizarTarea" mnemonicParsing="false" onAction="#actualizarTareaEdicion" styleClass="btnEdit" text="Actualizar Cambios" />
+                  </children>
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding>
+               </VBox>
+               <HBox spacing="30.0" HBox.hgrow="ALWAYS">
+                  <children>
+                     <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Label text="Historial de Estados" />
+                           <ListView prefHeight="597.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" />
+                        </children>
+                        <padding>
+                           <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                        </padding>
+                     </VBox>
+                     <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" HBox.hgrow="ALWAYS">
+                        <children>
+                           <Label text="Historial de Asignaciones" />
+                           <ListView prefHeight="579.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" />
+                        </children>
+                        <padding>
+                           <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding>
+                  <HBox.margin>
+                     <Insets />
+                  </HBox.margin>
+               </HBox>
+            </children></HBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

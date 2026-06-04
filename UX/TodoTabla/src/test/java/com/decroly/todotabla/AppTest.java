@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.beans.Transient;
 import java.sql.Connection;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.decroly.todotabla.model.sql.BDD;
@@ -26,7 +27,7 @@ public class AppTest {
 
     
     @BeforeAll
-    public void getConnectioIsCorrect() {
+    public static void getConnectioIsCorrect() {
         boolean estado = false;
         try {
             Connection conexion = BDD.getConnection();

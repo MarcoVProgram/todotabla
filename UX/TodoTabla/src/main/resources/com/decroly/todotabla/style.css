@@ -100,20 +100,45 @@
     -fx-background-radius: 6;
     -fx-padding: 6 12;
     -fx-border-color: #09dd55;
+    -fx-translate-y: 1px;
 }
 
 .btnRemove {
-    -fx-background-color: #451003;
+    -fx-background-color: #790000;
     -fx-text-fill: white;
+    -fx-border-color: #dd0909;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 1px;
     -fx-padding: 6 12;
 }
 
 .btnEdit{
-    -fx-background-color: #eae35e;
+    -fx-background-color: #a87807;
+    -fx-text-fill: white;
+    -fx-border-color: #d2b435;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 1px;
+    -fx-padding: 6 12;
+}
+
+.btnEdit:hover {
+    -fx-background-color: #bd890f;
     -fx-text-fill: white;
     -fx-background-radius: 6;
     -fx-padding: 6 12;
+    -fx-border-color: #ffe27c;
+    -fx-translate-y: 1px;
+}
+
+.btnRemove:hover {
+    -fx-background-color: #9d2a0c;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-border-color: #ff3333;
+    -fx-translate-y: 1px;
 }
 
 .btn:hover {
@@ -572,4 +597,87 @@
 .inform-alert .button:hover {
     -fx-background-color: inform-header;
     -fx-text-fill: white;
+}
+
+/* user list*/
+.user-list {
+    -fx-background-color: transparent;
+    -fx-padding: 10 4;
+}
+
+.user-list .viewport {
+    -fx-background-color: transparent;
+}
+
+.user-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 6;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.user-list .list-cell:hover {
+    -fx-background-color: transparent;
+}
+
+.user-list .list-cell:selected {
+    -fx-background-color: transparent;
+}
+
+.user-card {
+    -fx-background-color: #161b22;
+    -fx-padding: 10 14;
+    -fx-background-radius: 8;
+
+    -fx-border-color: #30363d;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 10, 0, 0, 3);
+
+    -fx-cursor: hand;
+}
+
+.user-card:hover {
+    -fx-border-color: #6e7681;
+    -fx-background-color: #1c2128;
+    -fx-translate-y: -1;
+}
+
+.user-card-selected {
+    -fx-background-color: #161b22;
+    -fx-padding: 10 14;
+    -fx-background-radius: 8;
+
+    -fx-border-color: #6685a9;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+
+    -fx-effect: dropshadow(gaussian, rgba(59, 83, 89, 0.45), 10, 0, 0, 3);
+
+    -fx-cursor: hand;
+}
+
+.user-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6edf3;
+}
+
+.user-role {
+    -fx-font-size: 11px;
+    -fx-text-fill: #8b949e;
+}
+
+/*historial*/
+.choice-box-choice > * {
+    -fx-text-fill: white;
+}
+.choice-box-choice {
+    -fx-border-radius: 16px;
+    -fx-background-radius: 16px;
+    -fx-pref-width: 200px;
+    -fx-min-height: 40px;
+    -fx-background-color: #0d354b;
+    -fx-effect: dropshadow(gaussian, rgba(59, 83, 89, 0.45), 10, 0, 0, 1);
 }

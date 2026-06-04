@@ -162,6 +162,40 @@ public class AsignacionesBDD {
 
         return asignaciones;
     }
+
+    public static Map<Integer, Asignacion> getAsignacionesActivas(Tarea tarea_ID) throws Exception {
+        Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
+
+        String sql = "SELECT * FROM asignacion WHERE tarea_ID = ? AND (fecha_fin = null OR fecha_fin > CURRENT_DATE());";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            stmnt.setInt(1, tarea_ID.getId());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                Date rawDate = table.getDate("fecha_fin");
+                LocalDate dateFin = null;
+                if (rawDate != null) {
+                    dateFin = rawDate.toLocalDate();
+                }
+
+                Asignacion asignacion = new Asignacion(
+                        table.getInt("id"),
+                        UsuariosBDD.getUsuario(table.getInt("usuario_ID")),
+                        tarea_ID,
+                        table.getDate("fecha_asignacion").toLocalDate(),
+                        dateFin
+                );
+
+                asignaciones.put(asignacion.getId(), asignacion);
+            }
+
+        }
+
+        return asignaciones;
+    }
     
     public static Map<Integer, Asignacion> getAsignacions(Usuario usuario_ID) throws Exception {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
@@ -189,6 +223,40 @@ public class AsignacionesBDD {
                         dateFin
                 );
                 
+                asignaciones.put(asignacion.getId(), asignacion);
+            }
+
+        }
+
+        return asignaciones;
+    }
+
+    public static Map<Integer, Asignacion> getAsignacionsActivas(Usuario usuario_ID) throws Exception {
+        Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
+
+        String sql = "SELECT * FROM asignacion WHERE usuario_ID = ? AND fecha_fin = null;";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            stmnt.setInt(1, usuario_ID.getId());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                Date rawDate = table.getDate("fecha_fin");
+                LocalDate dateFin = null;
+                if (rawDate != null) {
+                    dateFin = rawDate.toLocalDate();
+                }
+
+                Asignacion asignacion = new Asignacion(
+                        table.getInt("id"),
+                        usuario_ID,
+                        TareasBDD.getTarea(table.getInt("tarea_ID")),
+                        table.getDate("fecha_asignacion").toLocalDate(),
+                        dateFin
+                );
+
                 asignaciones.put(asignacion.getId(), asignacion);
             }
 
