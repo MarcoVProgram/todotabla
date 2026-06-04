@@ -119,10 +119,20 @@ public class IntegrantesBDD {
     }
 
     public static Map<Integer, Integrante> getIntegrantes(Proyecto proyecto_ID) throws Exception {
+        String sql = "SELECT * FROM integrante WHERE proyecto_ID = ?;";
+        return getIntegerIntegranteMap(proyecto_ID, sql);
+    }
+
+    public static Map<Integer, Integrante> getIntegrantesActivos(Proyecto proyecto_ID) throws Exception {
+        String sql = "SELECT * FROM integrante WHERE proyecto_ID = ? AND (fecha_salida = null OR fecha_salida > CURRENT_DATE());";
+        return getIntegerIntegranteMap(proyecto_ID, sql);
+    }
+
+    private static Map<Integer, Integrante> getIntegerIntegranteMap(Proyecto proyecto_ID, String sql) throws Exception {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
         try (Connection conexion = BDD.getConnection();
-                PreparedStatement stmnt = conexion.prepareStatement("SELECT * FROM integrante WHERE proyecto_ID = ?;")) {
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
             stmnt.setInt(1, proyecto_ID.getId());
             ResultSet table = stmnt.executeQuery();
 

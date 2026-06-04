@@ -90,13 +90,13 @@
                   <children>
                      <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                         <children>
-                           <TextField fx:id="nuevoNombreTarea" prefHeight="23.0" prefWidth="416.0" styleClass="search-large" HBox.hgrow="ALWAYS" />
+                           <TextField fx:id="nuevoNombreTarea" prefHeight="23.0" prefWidth="416.0" styleClass="search-large" text="Hola Mundo" HBox.hgrow="ALWAYS" />
                         </children>
                         <padding>
                            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
                         </padding>
                      </HBox>
-                     <ComboBox fx:id="estadoChoice" nodeOrientation="LEFT_TO_RIGHT" prefHeight="36.0" prefWidth="178.0" promptText="Seleccione un Estado" styleClass="choice-box" />
+                     <ComboBox fx:id="estadoChoice" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="178.0" promptText="Seleccione un Estado" styleClass="choice-box-choice" />
                      <VBox spacing="15.0">
                         <children>
                            <HBox alignment="CENTER" prefHeight="74.0" prefWidth="1342.0" spacing="30.0">

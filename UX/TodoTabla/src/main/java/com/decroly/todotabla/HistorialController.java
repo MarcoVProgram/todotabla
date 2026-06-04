@@ -2,19 +2,20 @@ package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.AsignacionesBDD;
+import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
+import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
+import com.decroly.todotabla.utils.Notificator;
 import com.decroly.todotabla.utils.cells.UsuariosCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,10 +23,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class HistorialController implements Initializable {
 
@@ -50,6 +48,16 @@ public class HistorialController implements Initializable {
     private Circle circleEstado;
 
     private ObservableList<Usuario> listaUsuarios;
+    private ObservableList<Asignacion> listaAsignacionesATarea;
+    private ObservableList<Integrante> listaIntegrantesAProyecto;
+
+    @FXML
+    private TextField getNuevoNombreTarea;
+
+    @FXML
+    private ComboBox<String> estadoChoice;
+    private ObservableList<String> listaEstados;
+    private List<Estado> estados;
 
 
     @Override
@@ -60,6 +68,20 @@ public class HistorialController implements Initializable {
         tareaHistorialNombre.setText(tareaActiva.getNombre());
         nuevoNombreTarea.setText(tareaActiva.getNombre());
         circleEstado.setStyle("-fx-fill: " + tareaActiva.getEstado().getColor() + ";");
+
+        try {
+            estados = EstadosBDD.getEstados();
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getEstados");
+        }
+
+        listaEstados = FXCollections.observableArrayList(new LinkedList<>());
+
+        for (Estado estado : estados) {
+            listaEstados.add(estado.getNombre());
+        }
+        estadoChoice.setItems(listaEstados);
+        estadoChoice.setValue(tareaActiva.getEstado().getNombre());
 
         listarAsignados();
     }
@@ -84,76 +106,76 @@ public class HistorialController implements Initializable {
         }
     }
 
-    /*private void listarIntegrantes() {
-        listaUsuarios = FXCollections.observableList(new ArrayList<>());
-
-        Map<Integer, Integrante> integrantes = null;
-        try {
-            integrantes = IntegrantesBDD.getIntegrantes(
-                    EstadoPrograma.getInstance().getProyectoActivo()
-            );
-        } catch (Exception e) {
-            AppErrorHandler.manejar(e, e.getCause().toString());
-        }
-
-        if (integrantes != null) {
-            Iterator<Integrante> integranteIterator =
-                    integrantes.values().iterator();
-
-            while (integranteIterator.hasNext()){
-                Usuario user = integranteIterator.next().getIdUsuario();
-                listaUsuarios.add(user);
-            }
-        }
-
-        listViewUsuarios.setItems(listaUsuarios);
-
-        listViewUsuarios.setCellFactory(listaTareas -> new ListCell<Usuario>(){
-            @Override
-            protected void updateItem(Usuario u, boolean empty) {
-                super.updateItem(u, empty);
-
-                if (empty || u == null) {
-                    setGraphic(null);
-                    setText(null);
-                    setStyle("-fx-background-color: transparent;");
-                    return;
-                }
-
-                Label titulo = new Label(u.getNombre());
-                titulo.getStyleClass().add("titulo-tarea");
-                this.setStyle("-fx-background-color: #161b22");
-
-                VBox card = new VBox(8, titulo);
-                card.getStyleClass().add("kanban-list");
-
-                setGraphic(card);
-
-            }
-        });
-    }*/
-
-    private void listarAsignados() {
-        listaUsuarios = FXCollections.observableList(new ArrayList<>());
-
+    private void refrescarDatos() {
         Map<Integer, Asignacion> asignados = null;
+        Map<Integer, Integrante> integrantes = null;
+        listaAsignacionesATarea = FXCollections.observableArrayList(new ArrayList<>());
+        listaIntegrantesAProyecto = FXCollections.observableArrayList(new ArrayList<>());
+
         try {
             asignados = AsignacionesBDD.getAsignaciones(tareaActiva);
+            integrantes = IntegrantesBDD.getIntegrantes(proyectoActivo);
         } catch (Exception e) {
             AppErrorHandler.manejar(e, e.getCause().toString());
         }
 
         if (asignados != null) {
-            Iterator<Asignacion> integranteIterator =
-                    asignados.values().iterator();
+            listaAsignacionesATarea.addAll(asignados.values());
+        }
+        if (integrantes != null) {
+            listaIntegrantesAProyecto.addAll(integrantes.values());
+        }
+    }
 
-            while (integranteIterator.hasNext()){
-                Usuario user = integranteIterator.next().getIdUsuario();
+    private void listarAsignados() {
+        listaUsuarios = FXCollections.observableList(new ArrayList<>());
+        Map<Integer, Label> rols = new LinkedHashMap<>();
+
+        refrescarDatos();
+
+        System.out.println(listaAsignacionesATarea);
+        if (listaAsignacionesATarea != null) {
+            for (Asignacion asignacion : listaAsignacionesATarea) {
+                Usuario user = asignacion.getIdUsuario();
                 listaUsuarios.add(user);
+                for (Integrante integrante : listaIntegrantesAProyecto) {
+                    if (integrante.getIdUsuario().equals(user)) {
+                        rols.put(user.getId(), new Label("Rol: " + integrante.getRol()));
+                        break;
+                    }
+                }
             }
         }
 
         listViewUsuarios.setItems(listaUsuarios);
-        listViewUsuarios.setCellFactory(listaAsignados -> new UsuariosCell());
+        listViewUsuarios.setCellFactory(listaAsignados -> new UsuariosCell(rols));
+    }
+
+    @FXML
+    private void actualizarTareaEdicion() {
+        String newName  = nuevoNombreTarea.getText();
+        String newEstado = estadoChoice.getValue();
+
+        try {
+            boolean tareaExiste = TareasBDD.tareaExiste(newName, proyectoActivo) != 0;
+            boolean estadoEsIgual = newEstado.equalsIgnoreCase(tareaActiva.getEstado().getNombre());
+            if (tareaExiste && estadoEsIgual) {
+                Notificator.advertencia("No se pudo cambiar datos",
+                        "Ambos datos existen en el proyecto, no tiene sentido cambiarlos");
+                return;
+            }
+            if (!newName.isEmpty() && !tareaExiste) {
+                tareaActiva.setNombre(newName);
+                tareaHistorialNombre.setText(tareaActiva.getNombre());
+            }
+            if (!newEstado.isEmpty() && !estadoEsIgual) {
+                tareaActiva.setEstado(EstadosBDD.getEstado(newEstado));
+                circleEstado.setStyle("-fx-fill: " + tareaActiva.getEstado().getColor() + ";");
+            }
+            TareasBDD.actualizar(tareaActiva);
+            Notificator.exito("Cambios Guardados", "Se han realizado con éxito las modificaciones de la tarea");
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "actualizarTareaEdicion");
+        }
     }
 }
