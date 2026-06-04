@@ -19,7 +19,7 @@ public class TestMP {
         try {
             for (Object i : IntegrantesBDD.getIntegrantes().values()) {
                 assertNotNull(i, "Los datos van mal");
-                // assertEquals(i.getClass(), Integrante.class);
+                assertEquals(i.getClass(), Integrante.class);
             }
             estado = true;
         } catch (Exception e) {
