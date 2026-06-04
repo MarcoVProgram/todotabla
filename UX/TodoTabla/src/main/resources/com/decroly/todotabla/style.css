@@ -678,6 +678,6 @@
     -fx-background-radius: 16px;
     -fx-pref-width: 200px;
     -fx-min-height: 40px;
-    -fx-background-color: #0d354b;
+    -fx-background-color: #101d21;
     -fx-effect: dropshadow(gaussian, rgba(59, 83, 89, 0.45), 10, 0, 0, 1);
 }

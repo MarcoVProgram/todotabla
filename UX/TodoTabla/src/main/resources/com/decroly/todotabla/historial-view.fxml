@@ -126,7 +126,7 @@
                      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" HBox.hgrow="ALWAYS">
                         <children>
                            <Label text="Historial de Estados" />
-                           <ListView prefHeight="597.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" />
+                           <ListView fx:id="listViewPasado" prefHeight="597.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" styleClass="user-list"/>
                         </children>
                         <padding>
                            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
@@ -135,7 +135,7 @@
                      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" HBox.hgrow="ALWAYS">
                         <children>
                            <Label text="Historial de Asignaciones" />
-                           <ListView prefHeight="579.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" />
+                           <ListView fx:id="listViewAsignaciones" prefHeight="579.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" styleClass="user-list"/>
                         </children>
                         <padding>
                            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
