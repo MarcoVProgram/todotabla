@@ -1,6 +1,7 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Integrante;
+import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
@@ -172,8 +173,8 @@ public class UsuariosKanbanController implements Initializable {
                 Optional<String> result = dialog.showAndWait();
 
                 result.ifPresent(rol -> {
-
-
+                    Proyecto actual = EstadoPrograma.getInstance().getProyectoActivo();
+                    
                     try {
 
                         Integrante i = new Integrante(
@@ -181,14 +182,12 @@ public class UsuariosKanbanController implements Initializable {
                                 LocalDate.now(),
                                 null,
                                 seleccionado,
-                                null
+                                actual
                         );
-
-                        EstadoPrograma.getInstance().getIntegrantesTemp().add(i);
 
                         Notificator.exito(
                                 "Éxito",
-                                "Integrante añadido temporalmente"
+                                "Integrante añadido"
                         );
 
                     } catch (Exception e) {
@@ -202,6 +201,7 @@ public class UsuariosKanbanController implements Initializable {
                 });
             }
         });
+        
 
 
 
