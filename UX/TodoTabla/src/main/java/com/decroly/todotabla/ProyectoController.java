@@ -1,6 +1,7 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.*;
+import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 
 import com.decroly.todotabla.utils.AppErrorHandler;
