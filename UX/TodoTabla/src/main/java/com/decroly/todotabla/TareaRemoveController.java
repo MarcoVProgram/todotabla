@@ -1,7 +1,6 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Tarea;
-import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
@@ -13,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,29 +45,27 @@ public class TareaRemoveController implements Initializable {
             AppErrorHandler.manejar(e, "getTareas");
         }
 
-        listViewTareas.setCellFactory(listaTareas -> new ListCell<Tarea>(){
+        listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
             @Override
-            protected void updateItem(Tarea u, boolean empty) {
-                super.updateItem(u, empty);
+            protected void updateItem(Tarea tarea, boolean empty) {
+                super.updateItem(tarea, empty);
 
-                if (empty || u == null) {
-                    this.setGraphic(null);
-                    this.setText(null);
-                    this.setStyle("-fx-background-color: transparent;");
-                    return;
+                if (empty || tarea == null) {
+                    this.setStyle("-fx-background-color: transparent");
+                    setGraphic(null);
+                } else {
+
+                    Label titulo = new Label(tarea.getNombre());
+                    titulo.getStyleClass().add("titulo-tarea");
+
+                    VBox card = new VBox(8, titulo);
+                    card.getStyleClass().add("kanban-list");
+
+                    this.getStyleClass().add("task-card");
+
+                    this.setStyle("-fx-background-color: #161b22");
+                    setGraphic(card);
                 }
-
-                Label titulo = new Label(u.getNombre());
-                titulo.getStyleClass().add("titulo-tarea");
-
-                VBox card = new VBox(8, titulo);
-                card.getStyleClass().add("kanban-list");
-
-                this.getStyleClass().add("task-card");
-                this.setStyle("-fx-border-color: white");
-
-                setGraphic(card);
-
             }
         });
 

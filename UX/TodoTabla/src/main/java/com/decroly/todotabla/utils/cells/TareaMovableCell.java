@@ -1,10 +1,12 @@
-package com.decroly.todotabla.utils;
+package com.decroly.todotabla.utils.cells;
 
 import com.decroly.todotabla.model.Asignacion;
 import com.decroly.todotabla.model.Estado;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.AsignacionesBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.utils.AppErrorHandler;
+import com.decroly.todotabla.utils.ColumnaKanban;
 import com.decroly.todotabla.utils.constants.ColoresPrioridad;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -20,6 +22,7 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorInput;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -29,7 +32,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TareaCell extends ListCell<Tarea> {
+public class TareaMovableCell extends ListCell<Tarea> {
 
     //Variables a dibujar
     private final Label titulo;
@@ -49,7 +52,7 @@ public class TareaCell extends ListCell<Tarea> {
     private Node lastHoveredCell;
 
     //Constructor
-    public TareaCell(BorderPane root, Map<Estado, ColumnaKanban> columnMap) {
+    public TareaMovableCell(BorderPane root, Map<Estado, ColumnaKanban> columnMap) {
         this.root = root;
         this.columnMap = columnMap;
 
@@ -179,6 +182,7 @@ public class TareaCell extends ListCell<Tarea> {
     private void onDragStart(MouseEvent e) {
         //Salir si no es valido
         if (getItem() == null) return;
+        if (e.getButton() == MouseButton.SECONDARY) return;
 
         // Guardado de posicion inicial
         Bounds cardBounds = card.localToScene(card.getBoundsInLocal());
@@ -215,6 +219,7 @@ public class TareaCell extends ListCell<Tarea> {
     private void onDragMove(MouseEvent e) {
         // Si el Fantasma no es Null
         if (ghost == null) return;
+        if (e.getButton() == MouseButton.SECONDARY) return;
 
         //Limpiar estilos
         if (lastHoveredCell != null) {
@@ -250,6 +255,8 @@ public class TareaCell extends ListCell<Tarea> {
         // realizar los updates en base al resultado
         if (ghost == null) return;
         if (getItem() == null) return;
+        if (e.getButton() == MouseButton.SECONDARY) return;
+
         ColumnaKanban colChosen = getColumna(e.getScreenX(), e.getScreenY());
         if  (colChosen != null) {
             ListCell<Tarea> cellChosen = getHoveredListCell(colChosen, e.getScreenX(), e.getScreenY());
@@ -298,7 +305,7 @@ public class TareaCell extends ListCell<Tarea> {
                 t.setPrioridad(tareaChosen.getPrioridad());
             } else {
                 try {
-                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto()));
+                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto())+1);
                 } catch (Exception ex) {
                     AppErrorHandler.manejar(ex, "getMayorPrioridad");
                 }
