@@ -1,6 +1,5 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.BDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
@@ -102,6 +101,10 @@ public class MainController implements Initializable {
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
 
+        updateLists();
+    }
+
+    public void updateLists() {
         List<Proyecto> allProyectos = new LinkedList<>();
         try {
             allProyectos.addAll(ProyetosBDD.getProyectos().values());
@@ -117,13 +120,15 @@ public class MainController implements Initializable {
 
             if (p.getFechaCierre() != null) {
                 try {
-                    LocalDate fechaCierre = LocalDate.parse(String.valueOf(p.getFechaCierre()));
+                    LocalDate fechaCierre = p.getFechaCierre();
                     estaAbierto = !fechaCierre.isBefore(LocalDate.now()); // Incluye igualdad
 
                 } catch (DateTimeParseException e) {
                     // Manejar formato incorrecto
                     estaAbierto = false;
                 }
+            } else {
+                estaAbierto = true;
             }
 
             if (estaAbierto) {
@@ -133,8 +138,7 @@ public class MainController implements Initializable {
             }
 
             listViewProyectos.setItems(obsProyectoListArchivados);
-        }
-
+    }
 
 
 
@@ -212,7 +216,7 @@ public class MainController implements Initializable {
             }
         });
 
-        proyectosAbiertos.setOnMouseClicked(event -> {
+        proyectosAbiertos.setOnMouseClicked(event -> { // TODO revisar el cambio de lista
 
             String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
 
@@ -225,15 +229,16 @@ public class MainController implements Initializable {
                     proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
                     proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
                 } else {
-                    isEstado.setText(estado[1]);
+                    cont++;
+                    /*isEstado.setText(estado[1]);
                     listViewProyectos.setItems(obsProyectoListArchivados);
                     proyectosAbiertos.getStyleClass().add("proyectosArchivados");
-                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");
+                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");*/
                 }
             }
         });
 
-        proyectosArchivados.setOnMouseClicked(event -> {
+        proyectosArchivados.setOnMouseClicked(event -> { // TODO revisar el cambio de lista
 
             String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
 
@@ -241,8 +246,9 @@ public class MainController implements Initializable {
                 cont++;
 
                 if ((cont % 2) == 0) {
-                    isEstado.setText(estado[0]);
-                    listViewProyectos.setItems(obsProyectoListActivos);
+                    cont++;
+                    /* isEstado.setText(estado[0]);
+                    listViewProyectos.setItems(obsProyectoListActivos); */
                 } else {
                     isEstado.setText(estado[1]);
                     listViewProyectos.setItems(obsProyectoListArchivados);
@@ -285,7 +291,9 @@ public class MainController implements Initializable {
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
-            // TODO Hay que refrescar las listas del Kanban controller
+            // TODO Hay que refrescar la lista
+            updateLists();
+            listViewProyectos.refresh();
 
         } catch (IOException e) {
             AppErrorHandler.manejar(e, "abrirVentanaProyecto (fxml)");
