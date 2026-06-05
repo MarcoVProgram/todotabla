@@ -1,7 +1,6 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Tarea;
-import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
@@ -46,23 +45,21 @@ public class TareaRemoveController implements Initializable {
             AppErrorHandler.manejar(e, "getTareas");
         }
 
-        listViewTareas.setCellFactory(listaTareas -> new ListCell<Tarea>(){
+        listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
             @Override
-            protected void updateItem(Tarea u, boolean empty) {
-                super.updateItem(u, empty);
+            protected void updateItem(Tarea tarea, boolean empty) {
+                super.updateItem(tarea, empty);
 
-                if (empty || u == null) {
-                    this.setGraphic(null);
-                    this.setText(null);
-                    this.setStyle("-fx-background-color: transparent;");
-                    return;
-                }
+                if (empty || tarea == null) {
+                    this.setStyle("-fx-background-color: transparent");
+                    setGraphic(null);
+                } else {
 
-                Label titulo = new Label(u.getNombre());
-                titulo.getStyleClass().add("titulo-tarea");
+                    Label titulo = new Label(tarea.getNombre());
+                    titulo.getStyleClass().add("titulo-tarea");
 
-                VBox card = new VBox(8, titulo);
-                card.getStyleClass().add("kanban-list");
+                    VBox card = new VBox(8, titulo);
+                    card.getStyleClass().add("kanban-list");
 
                     this.getStyleClass().add("task-card");
 

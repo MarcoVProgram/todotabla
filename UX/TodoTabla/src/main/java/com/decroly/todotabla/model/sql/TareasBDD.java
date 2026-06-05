@@ -273,4 +273,24 @@ public class TareasBDD {
         }
         return prioridad;
     }
+
+    public static int tareaExiste(String nombreTarea, Proyecto idProyecto) throws Exception{
+        int counter = 0;
+
+        String sql = "SELECT DISTINCT id FROM tarea WHERE nombre = ? AND proyecto_ID = ?;";
+
+        try (Connection conexion = BDD.getConnection();
+             PreparedStatement stmnt = conexion.prepareStatement(sql)) {
+
+            stmnt.setString(1, nombreTarea);
+            stmnt.setInt(2, idProyecto.getId());
+            ResultSet table = stmnt.executeQuery();
+
+            while (table.next()) {
+                counter++;
+            }
+
+        }
+        return counter;
+    }
 }
