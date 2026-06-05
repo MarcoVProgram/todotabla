@@ -68,9 +68,9 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
                 super.updateItem(u, empty);
 
                 if (empty || u == null) {
+                    this.setStyle("-fx-background-color: transparent;");
                     this.setGraphic(null);
                     this.setText(null);
-                    this.setStyle("-fx-background-color: transparent;");
                     return;
                 }
 
@@ -81,7 +81,8 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
                 card.getStyleClass().add("kanban-list");
 
                 this.getStyleClass().add("task-card");
-                this.setStyle("-fx-border-color: white");
+
+                this.setStyle("-fx-background-color: #161b22");
 
                 setGraphic(card);
 
