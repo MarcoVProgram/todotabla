@@ -9,6 +9,7 @@ import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -65,6 +66,10 @@ public class IntegrantesController implements Initializable {
         ObservableList<Integrante> obsIntegrantesList =
                 FXCollections.observableArrayList(map.values());
 
+        obsIntegrantesList.addListener((ListChangeListener<Integrante>) change -> {
+            listViewIntegrantes.refresh();
+        });
+        
         listViewIntegrantes.setItems(obsIntegrantesList);
 
         listViewIntegrantes.setCellFactory(integrantesList -> new ListCell<Integrante>() {

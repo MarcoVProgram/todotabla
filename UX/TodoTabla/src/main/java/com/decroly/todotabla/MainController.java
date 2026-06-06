@@ -1,14 +1,13 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Usuario;
-import com.decroly.todotabla.model.sql.BDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
@@ -24,12 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,12 +75,16 @@ public class MainController implements Initializable {
     @FXML
     private ListView<Proyecto> listViewProyectos;
 
+    public ListView<Proyecto> getListViewProyectos() {
+        return listViewProyectos;
+    }
+
     private List<Proyecto> proyectoListActivos = new ArrayList<>();
     private ObservableList<Proyecto> obsProyectoListActivos = FXCollections.observableList(proyectoListActivos);
 
     private List<Proyecto> proyectoListArchivados = new ArrayList<>();
     private ObservableList<Proyecto> obsProyectoListArchivados = FXCollections.observableList(proyectoListArchivados);
-
+    
     private boolean mostrandoArchivados = false;
 
 
@@ -102,7 +100,6 @@ public class MainController implements Initializable {
     
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        
         int valorOriginalProyectosActivos = contadorProyectosActivos();
         int valorOriginalProyectosArchivados = contadorProyectosArchivados();
 
@@ -265,6 +262,14 @@ public class MainController implements Initializable {
                     proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");
                 }
             }
+        });
+
+        obsProyectoListActivos.addListener((ListChangeListener<Proyecto>) change -> {
+            listViewProyectos.refresh();
+        });
+
+        obsProyectoListArchivados.addListener((ListChangeListener<Proyecto>) change -> {
+            listViewProyectos.refresh();
         });
     }
     /*if (mostrandoArchivados) {
