@@ -73,11 +73,23 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
                     this.setStyle("-fx-background-color: transparent;");
                     return;
                 }
+                Integrante i = null;
+                
+                try {
+                    i = IntegrantesBDD.getIntegrante(u.getId());
+                    
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
 
-                Label titulo = new Label(u.getNombre());
+
+                Label titulo = new Label(i.getIdUsuario().getNombre());
                 titulo.getStyleClass().add("titulo-tarea");
+                
+                Label rol = new Label(i.getRol());
+                rol.getStyleClass().add("subTitulo-tarea");
 
-                VBox card = new VBox(8, titulo);
+                VBox card = new VBox(8, titulo, rol);
                 card.getStyleClass().add("kanban-list");
 
                 this.getStyleClass().add("task-card");
@@ -153,4 +165,5 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
         }
     }
 
+    
 }
