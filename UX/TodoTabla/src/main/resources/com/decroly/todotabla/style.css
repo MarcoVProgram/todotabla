@@ -681,3 +681,12 @@
     -fx-background-color: #101d21;
     -fx-effect: dropshadow(gaussian, rgba(59, 83, 89, 0.45), 10, 0, 0, 1);
 }
+
+.circle-estado {
+    -fx-background-color: dodgerblue;
+    -fx-background-radius: 10px;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
