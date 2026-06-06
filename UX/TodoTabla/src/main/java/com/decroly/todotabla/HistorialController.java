@@ -1,5 +1,6 @@
 package com.decroly.todotabla;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +32,7 @@ import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
 import com.decroly.todotabla.utils.cells.HistorialTareaCell;
 import com.decroly.todotabla.utils.cells.UsuariosCell;
+import com.decroly.todotabla.utils.Navigator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -259,19 +261,19 @@ public class HistorialController implements Initializable {
     }
 
     // Para signar seria preferible abrir otro panel que este oculto o una ventana nueva
-    /* @FXML
-    private void nadie() {
-        listViewUsuarios.getSelectionModel().select(null);
-        personaPanelTareaForm.setVisible(false);
-    }
 
     @FXML
-    private void abrirPersonaPanel() {
-        listarUsuarios();
-        personaPanelTareaForm.setVisible(true);
+    private void abrirVentanaPersonas() {
+        MainController.getVentanaSecundaria();
+        Stage stage = new Stage();
+        try {
+            Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formAsignarTarea.fxml"); // TODO Poner ruta al view correspondiente
+        } catch (IOException e) {
+            AppErrorHandler.manejar(e, e.getCause().toString());
+        } 
     }
 
-    private void listarUsuarios() {
+    /* private void listarUsuarios() {
         listaUsuarios = FXCollections.observableList(new ArrayList<>());
 
         Map<Integer, Integrante> integrantes = null;
