@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,18 +31,19 @@ import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
 import com.decroly.todotabla.utils.cells.HistorialTareaCell;
 import com.decroly.todotabla.utils.cells.UsuariosCell;
-import com.decroly.todotabla.utils.Navigator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class HistorialController implements Initializable {
@@ -264,13 +264,41 @@ public class HistorialController implements Initializable {
 
     @FXML
     private void abrirVentanaPersonas() {
-        MainController.getVentanaSecundaria();
-        Stage stage = new Stage();
-        try {
-            Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formAsignarTarea.fxml"); // TODO Poner ruta al view correspondiente
-        } catch (IOException e) {
-            AppErrorHandler.manejar(e, e.getCause().toString());
-        } 
+
+        Stage ventanaSecundaria = MainController.getVentanaSecundaria();
+
+        if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                return;
+        }
+
+        // Cargar el archivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formAsignarTarea.fxml"));
+            Parent root;
+            try {
+                root = loader.load();
+            // Crear una nueva ventana (Stage)
+            ventanaSecundaria = new Stage();
+            ventanaSecundaria.setTitle("Añadir tarea");
+            ventanaSecundaria.setScene(new Scene(root));
+
+            ventanaSecundaria.setResizable(false);
+
+            if (ventanaSecundaria.isFocused()){
+                ventanaSecundaria.setAlwaysOnTop(true);
+            }else{
+                ventanaSecundaria.setAlwaysOnTop(false);
+            }
+
+//            listViewTareas.setItems(obsTareas);
+
+            // Mostrar la ventana
+            ventanaSecundaria.showAndWait();
+            } catch (IOException e) {
+                AppErrorHandler.manejar(e, "load the loader");
+            }
+
+            listarAsignados();
     }
 
     /* private void listarUsuarios() {

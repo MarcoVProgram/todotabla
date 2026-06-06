@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaAsignarController">
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaAsignarController">
    <children>
       <GridPane prefHeight="400.0" prefWidth="600.0">
         <columnConstraints>
@@ -34,14 +34,14 @@
                               <Image url="@images/return.png" />
                            </image>
                         </ImageView>
-                        <ListView fx:id="listViewIntegrantes" prefHeight="359.0" prefWidth="379.0" styleClass="project-list">
+                        <ListView fx:id="listViewUsuarios" prefHeight="359.0" prefWidth="379.0" styleClass="project-list">
                            <HBox.margin>
                               <Insets left="50.0" />
                            </HBox.margin>
                         </ListView>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button mnemonicParsing="false" onMouseClicked="#irAUsuariosview" styleClass="btnAdd" text="Añadir Usuarios" />
+                              <Button mnemonicParsing="false" onAction="#asignarUsuarios" styleClass="btnAdd" text="Añadir Usuarios" />
                            </children>
                         </HBox>
                      </children>

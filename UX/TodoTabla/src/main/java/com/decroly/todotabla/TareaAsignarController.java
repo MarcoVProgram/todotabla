@@ -10,11 +10,13 @@ import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.cells.UsuariosCell;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -58,6 +60,7 @@ public class TareaAsignarController implements Initializable {
                 FXCollections.observableArrayList(al);
 
         listViewUsuarios.setItems(obsIntegrantesList);
+        listViewUsuarios.setCellFactory(cell -> new UsuariosCell());
     }
 
     @FXML
@@ -67,7 +70,7 @@ public class TareaAsignarController implements Initializable {
     }
 
     @FXML
-    public void asignarUsuario(MouseEvent event) {
+    public void asignarUsuarios(MouseEvent event) {
         
     }
 
