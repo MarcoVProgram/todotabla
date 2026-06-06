@@ -201,17 +201,23 @@ public class MainController implements Initializable {
         contArchivados.setText(String.valueOf(contadorProyectosArchivados()));
 
 
+        // Esto es unpoco inutil
         changeImage.setOnMouseClicked(event -> {
 
             String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
 
-            if (event.getButton() == MouseButton.PRIMARY) {
+            if (event.getButton() == MouseButton.PRIMARY) { // TODO Revisar si esto esta bien
                 cont++;
 
-                if ((cont % 2) == 0) {
+                if ((cont % 2) == 0) { // Creo que asi funcionar
                     isEstado.setText(estado[0]);
+                    listViewProyectos.setItems(obsProyectoListActivos);
+                    proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
+                    proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
                 } else {
                     isEstado.setText(estado[1]);
+                    isEstado.setText(estado[1]);
+                    listViewProyectos.setItems(obsProyectoListArchivados);
                 }
             }
         });
@@ -291,7 +297,6 @@ public class MainController implements Initializable {
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
-            // TODO Hay que refrescar la lista
             updateLists();
             listViewProyectos.refresh();
 
