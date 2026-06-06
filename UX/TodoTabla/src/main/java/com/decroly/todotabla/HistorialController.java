@@ -46,7 +46,7 @@ public class HistorialController implements Initializable {
     @FXML
     private ListView listViewUsuarios;
     @FXML
-    private Circle circleEstado;
+    private Label circleEstado;
 
     private ObservableList<Usuario> listaUsuarios;
     private ObservableList<Asignacion> listaAsignacionesATarea;
@@ -75,7 +75,7 @@ public class HistorialController implements Initializable {
         proyectoTitulo.setText("🔒 " + proyectoActivo.getTitulo());
         tareaHistorialNombre.setText(tareaActiva.getNombre());
         nuevoNombreTarea.setText(tareaActiva.getNombre());
-        circleEstado.setStyle("-fx-fill: " + tareaActiva.getEstado().getColor() + ";");
+        circleEstado.setStyle("-fx-background-color: " + tareaActiva.getEstado().getColor() + ";");
 
         try {
             estados = EstadosBDD.getEstados();
@@ -231,7 +231,7 @@ public class HistorialController implements Initializable {
             }
             if (!newEstado.isEmpty() && !estadoEsIgual) {
                 tareaActiva.setEstado(EstadosBDD.getEstado(newEstado));
-                circleEstado.setStyle("-fx-fill: " + tareaActiva.getEstado().getColor() + ";");
+                circleEstado.setStyle("-fx-background-color: " + tareaActiva.getEstado().getColor() + ";");
             }
             TareasBDD.actualizar(tareaActiva);
             Notificator.exito("Cambios Guardados", "Se han realizado con éxito las modificaciones de la tarea");
