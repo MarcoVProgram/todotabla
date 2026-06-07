@@ -5,6 +5,7 @@ import com.decroly.todotabla.model.sql.*;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Notificator;
+import com.decroly.todotabla.utils.cells.UsuariosCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
