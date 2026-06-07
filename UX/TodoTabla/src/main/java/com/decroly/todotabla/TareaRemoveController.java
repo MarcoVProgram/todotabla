@@ -16,21 +16,28 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class TareaRemoveController implements Initializable {
 
     @FXML
     public ListView<Tarea> listViewTareas;
+
+    @FXML
+    public Button borrarBtn;
+
     private ObservableList<Tarea> listaObsTareas;
     private List<Tarea> listaTareas;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listarTareas();
+
+        borrarBtn.setDisable(true);
+        
+        listViewTareas.getSelectionModel().selectedItemProperty().addListener((obs, oldTask, newTask) -> {
+                borrarBtn.setDisable(newTask == null);
+        });
     }
 
     private void listarTareas() {

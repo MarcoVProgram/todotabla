@@ -1,14 +1,13 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Usuario;
-import com.decroly.todotabla.model.sql.BDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
@@ -24,12 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,12 +75,17 @@ public class MainController implements Initializable {
     @FXML
     private ListView<Proyecto> listViewProyectos;
 
+    public ListView<Proyecto> getListViewProyectos() {
+        return listViewProyectos;
+    }
+
     private List<Proyecto> proyectoListActivos = new ArrayList<>();
     private ObservableList<Proyecto> obsProyectoListActivos = FXCollections.observableList(proyectoListActivos);
 
     private List<Proyecto> proyectoListArchivados = new ArrayList<>();
     private ObservableList<Proyecto> obsProyectoListArchivados = FXCollections.observableList(proyectoListArchivados);
-
+    
+    private boolean mostrandoArchivados = false;
 
 
 
@@ -101,6 +100,8 @@ public class MainController implements Initializable {
     
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+        int valorOriginalProyectosActivos = contadorProyectosActivos();
+        int valorOriginalProyectosArchivados = contadorProyectosArchivados();
 
         List<Proyecto> allProyectos = new LinkedList<>();
         try {
@@ -113,26 +114,24 @@ public class MainController implements Initializable {
         listViewProyectos.getItems().addAll();
 
         for (Proyecto p : allProyectos) {
-            boolean estaAbierto = false;
 
             if (p.getFechaCierre() != null) {
-                try {
-                    LocalDate fechaCierre = LocalDate.parse(String.valueOf(p.getFechaCierre()));
-                    estaAbierto = !fechaCierre.isBefore(LocalDate.now()); // Incluye igualdad
-
-                } catch (DateTimeParseException e) {
-                    // Manejar formato incorrecto
-                    estaAbierto = false;
-                }
-            }
-
-            if (estaAbierto) {
                 obsProyectoListActivos.add(p);
-            } else {
+            }else{
                 obsProyectoListArchivados.add(p);
             }
 
             listViewProyectos.setItems(obsProyectoListArchivados);
+
+
+            
+            if(obsProyectoListActivos.size() > valorOriginalProyectosActivos){
+                listViewProyectos.refresh();
+//                proyectosAbiertos.setText(String.valueOf(contadorProyectosActivos()));
+            }else if(obsProyectoListArchivados.size() > valorOriginalProyectosArchivados){
+                listViewProyectos.refresh();
+//                proyectosArchivados.setText(String.valueOf(contadorProyectosArchivados()));
+            }
         }
 
 
@@ -196,18 +195,26 @@ public class MainController implements Initializable {
         contAbiertos.setText(String.valueOf(contadorProyectosActivos()));
         contArchivados.setText(String.valueOf(contadorProyectosArchivados()));
 
+        
 
         changeImage.setOnMouseClicked(event -> {
 
-            String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
-
             if (event.getButton() == MouseButton.PRIMARY) {
-                cont++;
 
-                if ((cont % 2) == 0) {
-                    isEstado.setText(estado[0]);
+                mostrandoArchivados = !mostrandoArchivados;
+
+                if (mostrandoArchivados) {
+                    isEstado.setText("Proyectos Archivados");
+                    listViewProyectos.setItems(obsProyectoListArchivados);
+
+                    proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
+                    proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
                 } else {
-                    isEstado.setText(estado[1]);
+                    isEstado.setText("Proyectos Activos");
+                    listViewProyectos.setItems(obsProyectoListActivos);
+
+                    proyectosAbiertos.getStyleClass().add("proyectosArchivados");
+                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");
                 }
             }
         });
@@ -243,13 +250,35 @@ public class MainController implements Initializable {
                 if ((cont % 2) == 0) {
                     isEstado.setText(estado[0]);
                     listViewProyectos.setItems(obsProyectoListActivos);
+
+                    proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
+                    proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
+                    
                 } else {
                     isEstado.setText(estado[1]);
                     listViewProyectos.setItems(obsProyectoListArchivados);
+
+                    proyectosAbiertos.getStyleClass().add("proyectosArchivados");
+                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");
                 }
             }
         });
+
+        obsProyectoListActivos.addListener((ListChangeListener<Proyecto>) change -> {
+            listViewProyectos.refresh();
+        });
+
+        obsProyectoListArchivados.addListener((ListChangeListener<Proyecto>) change -> {
+            listViewProyectos.refresh();
+        });
     }
+    /*if (mostrandoArchivados) {
+    proyectosArchivados.getStyleClass().add("bold");
+    proyectosAbiertos.getStyleClass().remove("bold");
+} else {
+    proyectosAbiertos.getStyleClass().add("bold");
+    proyectosArchivados.getStyleClass().remove("bold");
+}*/
 
 
 //----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
@@ -296,10 +325,10 @@ public class MainController implements Initializable {
         int contActivos = 0;
 
         for(Proyecto p : obsProyectoListActivos){
-                if(p.getFechaCierre() == null){
-                    contActivos++;
-                }
+            if(p != null){
+                contActivos++;
             }
+        }
 
         return contActivos;
         }
@@ -308,7 +337,7 @@ public class MainController implements Initializable {
         int contArchivados = 0;
 
         for(Proyecto p : obsProyectoListArchivados) {
-            if (p.getFechaCierre() != null) {
+            if(p != null){
                 contArchivados++;
             }
         }
