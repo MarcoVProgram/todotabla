@@ -27,11 +27,17 @@ public class TareaModController implements Initializable {
     @FXML
     public TextField nombreTareaFormEditar;
 
-
+    @FXML
+    public Button editarBtn;
+    @FXML
+    public Button asignarBtn;
+    
     public BorderPane personaPanelTareaForm;
 
     @FXML
     public ListView<Tarea> listViewTareas;
+
+
     private ObservableList<Tarea> listaTareas;
 
     @FXML
@@ -47,6 +53,29 @@ public class TareaModController implements Initializable {
             if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
                 personaPanelTareaForm.setVisible(false);
             }
+        });
+        
+        editarBtn.setDisable(true);
+        asignarBtn.setDisable(true);
+
+        final String[] t = {""};
+        listViewTareas.getSelectionModel().selectedItemProperty().addListener((obs, oldTask, newTask) -> {
+                    if (newTask != null) {
+                        nombreTareaFormEditar.setText(newTask.getNombre());
+                        t[0] = newTask.getNombre();
+                    } else {
+                        nombreTareaFormEditar.clear();
+                    }
+                });
+        
+//        nombreTareaFormEditar.textProperty().addListener((obs, oldVal, newVal) ->{
+//            editarBtn.setDisable(newVal == null && newVal.trim().isEmpty() && newVal.equalsIgnoreCase(oldVal));
+//            asignarBtn.setDisable(newVal == null || newVal.trim().isEmpty() || newVal.equalsIgnoreCase(oldVal));
+//        });
+
+        nombreTareaFormEditar.textProperty().addListener((obs, oldVal, newVal) -> {
+            editarBtn.setDisable(newVal == null || newVal.trim().isEmpty() || newVal.equals(t[0]));
+            asignarBtn.setDisable(newVal == null || newVal.trim().isEmpty());
         });
 
     }
@@ -116,7 +145,6 @@ public class TareaModController implements Initializable {
 
         //obtener valores campos
         String nombre = nombreTareaFormEditar.getText();
-
 
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 
