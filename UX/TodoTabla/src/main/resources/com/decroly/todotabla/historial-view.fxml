@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HistorialController">
+<BorderPane fx:id="root" prefHeight="800.0" prefWidth="1424.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.HistorialController">
 
     <!-- ================= HEADER ================= -->
     <top>
@@ -100,7 +100,7 @@
                            <HBox alignment="CENTER" prefHeight="74.0" prefWidth="1342.0" spacing="30.0">
                               <children>
                                  <Label text="Usuarios Asignados" />
-                                 <Button fx:id="addAsignacionTarea" styleClass="btnAdd" text="Añadir" />
+                                 <Button fx:id="addAsignacionTarea" onMouseClicked="#abrirVentanaIntegrantes" styleClass="btnAdd" text="Añadir" />
                                  <Button fx:id="removeAsignacionTarea" mnemonicParsing="false" styleClass="btnRemove" text="Desasignar" />
                               </children>
                               <padding>
@@ -124,7 +124,7 @@
                      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" HBox.hgrow="ALWAYS">
                         <children>
                            <Label text="Historial de Estados" />
-                           <ListView fx:id="listViewPasado" prefHeight="597.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" styleClass="user-list"/>
+                           <ListView fx:id="listViewPasado" prefHeight="597.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" styleClass="user-list" />
                         </children>
                         <padding>
                            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
@@ -133,7 +133,7 @@
                      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" HBox.hgrow="ALWAYS">
                         <children>
                            <Label text="Historial de Asignaciones" />
-                           <ListView fx:id="listViewAsignaciones" prefHeight="579.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" styleClass="user-list"/>
+                           <ListView fx:id="listViewAsignaciones" prefHeight="579.0" prefWidth="282.0" style="-fx-background-color: #2c2c2c;" styleClass="user-list" />
                         </children>
                         <padding>
                            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />

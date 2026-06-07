@@ -185,7 +185,7 @@ public class KanBanController implements Initializable {
     //----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
     @FXML
     private void returnToMain() { //abrir pantalla principal (menú)
-        Stage stage = (Stage) returnBtn.getScene().getWindow();
+        Stage stage = (Stage) root.getScene().getWindow();
         try {
             Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
         } catch (Exception ex) {
@@ -195,7 +195,7 @@ public class KanBanController implements Initializable {
 
     @FXML
     private void abrirVentanaHistorialTareas() {
-        Stage stage = (Stage) returnBtn.getScene().getWindow();
+        Stage stage = (Stage) root.getScene().getWindow();
         try {
             Navigator.changeScene(stage, "/com/decroly/todotabla/historial-view.fxml");
         } catch (Exception ex) {

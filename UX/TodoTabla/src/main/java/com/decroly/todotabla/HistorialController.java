@@ -12,21 +12,30 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class HistorialController implements Initializable {
+
+    public Node root;
+
+    private Stage ventanaSecundaria;
 
     @FXML
     private ImageView returnBtn;
@@ -44,7 +53,7 @@ public class HistorialController implements Initializable {
     private TextField nuevoNombreTarea;
 
     @FXML
-    private ListView listViewUsuarios;
+    private ListView<Usuario> listViewUsuarios;
     @FXML
     private Label circleEstado;
 
@@ -98,11 +107,49 @@ public class HistorialController implements Initializable {
         listarAsignados();
         listarAsignadosPasados();
         listarEstadosPasados();
+
+        listViewUsuarios.setCellFactory(usuarioListView -> new ListCell<>(){
+            @Override
+            protected void updateItem(Usuario u, boolean empty) {
+                super.updateItem(u, empty);
+
+                if (empty || u == null) {
+                    this.setGraphic(null);
+                    this.setText(null);
+                    this.setStyle("-fx-background-color: transparent;");
+                    return;
+                }
+                Integrante i = null;
+
+                try {
+                    i = IntegrantesBDD.getIntegrante(u.getId());
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+
+                Label titulo = new Label(i.getIdUsuario().getNombre());
+                titulo.getStyleClass().add("titulo-tarea");
+
+                Label rol = new Label(i.getRol());
+                rol.getStyleClass().add("subTitulo-tarea");
+
+                VBox card = new VBox(8, titulo, rol);
+                card.getStyleClass().add("kanban-list");
+
+                this.getStyleClass().add("task-card");
+                this.setStyle("-fx-border-color: white");
+
+                setGraphic(card);
+
+            }
+        });
     }
 
     @FXML
     private void returnToMain() { //abrir pantalla principal (menú)
-        Stage stage = (Stage) returnBtn.getScene().getWindow();
+        Stage stage = (Stage) root.getScene().getWindow();
         try {
             Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
         } catch (Exception ex) {
@@ -112,11 +159,47 @@ public class HistorialController implements Initializable {
 
     @FXML
     private void returnToKanban() {
-        Stage stage = (Stage) returnBtn.getScene().getWindow();
+        Stage stage = (Stage) root.getScene().getWindow();
         try {
             Navigator.changeScene(stage, "/com/decroly/todotabla/kanban-view.fxml");
         } catch (Exception ex) {
             AppErrorHandler.manejar(ex, "returnToMain");
+        }
+    }
+
+    @FXML
+    private void abrirVentanaIntegrantes() { //panel tarea
+        try {
+
+            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                return;
+            }
+
+            // Cargar el archivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantesGestionKanban.fxml"));
+            Parent root = loader.load();
+
+            // Crear una nueva ventana (Stage)
+            ventanaSecundaria = new Stage();
+            ventanaSecundaria.setTitle("Añadir integrante");
+            ventanaSecundaria.setScene(new Scene(root));
+
+            ventanaSecundaria.setResizable(false);
+
+            if(ventanaSecundaria.isFocused()){
+                ventanaSecundaria.setAlwaysOnTop(true);
+            }else{
+                ventanaSecundaria.setAlwaysOnTop(false);
+            }
+
+//            listViewTareas.setItems(obsTareas);
+
+            // Mostrar la ventana
+            ventanaSecundaria.showAndWait();
+
+        } catch (IOException e) {
+            AppErrorHandler.manejar(e, "abrirVentanaCrearTarea");
         }
     }
 
