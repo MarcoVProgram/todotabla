@@ -5,20 +5,24 @@ import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.*;
+import com.decroly.todotabla.utils.cells.TareaMovableCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -74,7 +78,7 @@ public class KanBanController implements Initializable {
         proyectoSeleccionado = EstadoPrograma.getInstance().getProyectoActivo();
         proyectoTitulo.setText("🔒 " + proyectoSeleccionado.getTitulo());
 
-        this.buscarTareaSearchBar.textProperty().addListener((observable) -> actualizarTareas());
+        this.buscarTareaSearchBar.textProperty().addListener((observable) -> filtrarTareas());
 
         actualizarTareas();
     }
@@ -83,51 +87,60 @@ public class KanBanController implements Initializable {
         contenedorColumnas.getChildren().clear();
         columnMap.clear();
 
-        if (this.buscarTareaSearchBar.getText().isEmpty()) {
-            for (Estado estado : estados) {
-                columnMap.put(estado, addColumna(estado));
-            }
-        } else {
-            String regex = this.buscarTareaSearchBar.getText();
-            for (Estado estado : estados) {
-                columnMap.put(estado, addColumna(estado, regex));
-            }
+        for (Estado estado : estados) {
+            columnMap.put(estado, addColumna(estado));
+        }
+    }
+
+    private void filtrarTareas() {
+        for (Map.Entry<Estado, ColumnaKanban> entry : columnMap.entrySet()) {
+            entry.getValue().flTareas().setPredicate(tarea ->
+                    this.buscarTareaSearchBar.getText().isBlank() ||
+                            tarea.getNombre().toLowerCase().contains(this.buscarTareaSearchBar.getText().toLowerCase()) );
         }
     }
 
     private ColumnaKanban addColumna(Estado estado) {
 
         ObservableList<Tarea> items;
+        FilteredList<Tarea> filteredTareas;
 
         try {
             items = FXCollections.observableArrayList(
                     TareasBDD.getTareas(estado, proyectoSeleccionado).values()
             );
+
         } catch (Exception ex) {
             AppErrorHandler.manejar(ex, "getTareas");
             items = FXCollections.observableArrayList();
         }
+        filteredTareas = new FilteredList<>(items, tarea -> true);
 
-        ListView<Tarea> listView = constructorColumnas(estado, items);
-        return new ColumnaKanban(estado, listView, items);
+        ListView<Tarea> listView = constructorColumnas(estado, items, filteredTareas);
+
+        listView.setOnMouseClicked(event -> {
+            if (event.getButton() != MouseButton.SECONDARY && event.getClickCount() != 2) return;
+
+            //Comprobar que se hace click correctamente en la celda
+            Node clickedNode = event.getPickResult().getIntersectedNode();
+            while (clickedNode != null && !(clickedNode instanceof ListCell)) {
+                clickedNode = clickedNode.getParent();
+            }
+
+            //Nos quedamos con la celda que sea igual / Aviso, se necesita esta selección o selecciona la superior
+            if (clickedNode instanceof ListCell<?> cell && !cell.isEmpty()) {
+                Tarea selected = (Tarea) cell.getItem();
+                if (selected == null) return;
+                EstadoPrograma.getInstance().setTareaActiva(selected);
+                abrirVentanaHistorialTareas();
+            }
+        });
+
+        return new ColumnaKanban(estado, listView, items, filteredTareas);
     }
 
-    private ColumnaKanban addColumna(Estado estado, String regex) {
-        ObservableList<Tarea> items;
-
-        try {
-            items = FXCollections.observableArrayList(
-                    TareasBDD.getTareas(regex, proyectoSeleccionado, estado)
-            );
-        } catch (Exception ex) {
-            AppErrorHandler.manejar(ex, "getTareas");
-            items = FXCollections.observableArrayList();
-        }
-        ListView<Tarea> listView = constructorColumnas(estado, items);
-        return new ColumnaKanban(estado, listView, items);
-    }
-
-    private ListView<Tarea> constructorColumnas(Estado  estado, ObservableList<Tarea> items) {
+    private ListView<Tarea> constructorColumnas(Estado  estado, ObservableList<Tarea> items,
+                                                FilteredList<Tarea> filtered) {
         // Circulo de Estado
         Circle dot = new Circle(4);
         dot.setStyle("-fx-fill: " + estado.getColor() + ";");
@@ -146,8 +159,8 @@ public class KanBanController implements Initializable {
         titleRow.setAlignment(Pos.CENTER_LEFT);
 
         // ListView de Tarea
-        ListView<Tarea> listView = new ListView<>(TareaCell.sorted(items));
-        listView.setCellFactory(lv -> new TareaCell(root, columnMap));
+        ListView<Tarea> listView = new ListView<>(TareaMovableCell.sorted(filtered));
+        listView.setCellFactory(lv -> new TareaMovableCell(root, columnMap));
         listView.getStyleClass().add("kanban-list");
         listView.setPrefHeight(579);
         listView.setMaxWidth(Double.MAX_VALUE);
@@ -171,9 +184,23 @@ public class KanBanController implements Initializable {
 
     //----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
     @FXML
-    private void returnToMain() throws IOException { //abrir pantalla principal (menú)
+    private void returnToMain() { //abrir pantalla principal (menú)
         Stage stage = (Stage) returnBtn.getScene().getWindow();
-        Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
+        try {
+            Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
+        } catch (Exception ex) {
+            AppErrorHandler.manejar(ex, "returnToMain");
+        }
+    }
+
+    @FXML
+    private void abrirVentanaHistorialTareas() {
+        Stage stage = (Stage) returnBtn.getScene().getWindow();
+        try {
+            Navigator.changeScene(stage, "/com/decroly/todotabla/historial-view.fxml");
+        } catch (Exception ex) {
+            AppErrorHandler.manejar(ex, "abrirVentanaHistorialTareas");
+        }
     }
 
     @FXML

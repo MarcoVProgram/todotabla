@@ -62,44 +62,7 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
         }
 
         listViewIntegrantes.setItems(listaUsuarios);
-        listViewIntegrantes.setCellFactory(listaTareas -> new ListCell<>(){
-            @Override
-            protected void updateItem(Usuario u, boolean empty) {
-                super.updateItem(u, empty);
-
-                if (empty || u == null) {
-                    this.setGraphic(null);
-                    this.setText(null);
-                    this.setStyle("-fx-background-color: transparent;");
-                    return;
-                }
-                Integrante i = null;
-                
-                try {
-                    i = IntegrantesBDD.getIntegrante(u.getId());
-                    
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-
-
-                Label titulo = new Label(i.getIdUsuario().getNombre());
-                titulo.getStyleClass().add("titulo-tarea");
-                
-                Label rol = new Label(i.getRol());
-                rol.getStyleClass().add("subTitulo-tarea");
-
-                VBox card = new VBox(8, titulo, rol);
-                card.getStyleClass().add("kanban-list");
-
-                this.getStyleClass().add("task-card");
-                this.setStyle("-fx-border-color: white");
-
-                setGraphic(card);
-
-            }
-        });
-
+        listViewIntegrantes.setCellFactory(listaUsuarios -> new UsuariosCell());
     }
 
     //--------AGREGAR TAREA-------------
@@ -165,5 +128,4 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
         }
     }
 
-    
 }

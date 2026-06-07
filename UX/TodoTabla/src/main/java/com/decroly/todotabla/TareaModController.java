@@ -8,6 +8,7 @@ import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Notificator;
+import com.decroly.todotabla.utils.cells.UsuariosCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -98,6 +99,8 @@ public class TareaModController implements Initializable {
                 super.updateItem(tarea, empty);
 
                 if (empty || tarea == null) {
+
+                    this.setStyle("-fx-background-color: transparent");
                     setGraphic(null);
                 } else {
 
@@ -108,7 +111,8 @@ public class TareaModController implements Initializable {
                     card.getStyleClass().add("kanban-list");
 
                     this.getStyleClass().add("task-card");
-                    this.setStyle("-fx-border-color: white");
+
+                    this.setStyle("-fx-background-color: #161b22");
 
                     setGraphic(card);
                 }
@@ -201,29 +205,7 @@ public class TareaModController implements Initializable {
         }
 
         listViewUsuarios.setItems(listaUsuarios);
-
-        listViewUsuarios.setCellFactory(listaTareas -> new ListCell<>(){
-            @Override
-            protected void updateItem(Usuario u, boolean empty) {
-                super.updateItem(u, empty);
-
-                if (empty || u == null) {
-                    setGraphic(null);
-                    setText(null);
-                    setStyle("-fx-background-color: transparent;");
-                    return;
-                }
-
-                Label titulo = new Label(u.getNombre());
-                titulo.getStyleClass().add("titulo-tarea");
-
-                VBox card = new VBox(8, titulo);
-                card.getStyleClass().add("kanban-list");
-
-                setGraphic(card);
-
-            }
-        });
+        listViewUsuarios.setCellFactory(listaTareas -> new UsuariosCell());
 
     }
 
