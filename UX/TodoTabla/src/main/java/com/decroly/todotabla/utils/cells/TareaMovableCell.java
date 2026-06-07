@@ -22,6 +22,7 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorInput;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -181,6 +182,7 @@ public class TareaMovableCell extends ListCell<Tarea> {
     private void onDragStart(MouseEvent e) {
         //Salir si no es valido
         if (getItem() == null) return;
+        if (e.getButton() == MouseButton.SECONDARY) return;
 
         // Guardado de posicion inicial
         Bounds cardBounds = card.localToScene(card.getBoundsInLocal());
@@ -217,6 +219,7 @@ public class TareaMovableCell extends ListCell<Tarea> {
     private void onDragMove(MouseEvent e) {
         // Si el Fantasma no es Null
         if (ghost == null) return;
+        if (e.getButton() == MouseButton.SECONDARY) return;
 
         //Limpiar estilos
         if (lastHoveredCell != null) {
@@ -252,6 +255,8 @@ public class TareaMovableCell extends ListCell<Tarea> {
         // realizar los updates en base al resultado
         if (ghost == null) return;
         if (getItem() == null) return;
+        if (e.getButton() == MouseButton.SECONDARY) return;
+
         ColumnaKanban colChosen = getColumna(e.getScreenX(), e.getScreenY());
         if  (colChosen != null) {
             ListCell<Tarea> cellChosen = getHoveredListCell(colChosen, e.getScreenX(), e.getScreenY());

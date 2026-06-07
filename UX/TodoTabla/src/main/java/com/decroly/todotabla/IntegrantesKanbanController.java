@@ -1,30 +1,24 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Integrante;
-import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
-import com.decroly.todotabla.model.sql.UsuariosBDD;
-import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
-import com.decroly.todotabla.utils.Notificator;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.beans.InvalidationListener;
+import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.*;
 
-public class IntegrantesController implements Initializable {
+public class IntegrantesKanbanController implements Initializable {
 //    @FXML
 //    public ListView<Usuario> listViewUsuarios;
 
@@ -62,7 +56,7 @@ public class IntegrantesController implements Initializable {
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
-
+        
         ObservableList<Integrante> obsIntegrantesList =
                 FXCollections.observableArrayList(map.values());
 
@@ -167,6 +161,6 @@ public class IntegrantesController implements Initializable {
     @FXML
     private void irAIntegrantesview() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
-        Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formIntegrantes.fxml");
+        Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formIntegrantesGestionKanban.fxml");
     }
 }

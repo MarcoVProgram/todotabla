@@ -1,17 +1,16 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.*;
-import com.decroly.todotabla.model.sql.AsignacionesBDD;
-import com.decroly.todotabla.model.sql.EstadosBDD;
-import com.decroly.todotabla.model.sql.IntegrantesBDD;
-import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.model.sql.*;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
+import com.decroly.todotabla.utils.cells.HistorialTareaCell;
 import com.decroly.todotabla.utils.cells.UsuariosCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -23,6 +22,8 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class HistorialController implements Initializable {
@@ -45,19 +46,26 @@ public class HistorialController implements Initializable {
     @FXML
     private ListView listViewUsuarios;
     @FXML
-    private Circle circleEstado;
+    private Label circleEstado;
 
     private ObservableList<Usuario> listaUsuarios;
     private ObservableList<Asignacion> listaAsignacionesATarea;
     private ObservableList<Integrante> listaIntegrantesAProyecto;
 
     @FXML
-    private TextField getNuevoNombreTarea;
-
-    @FXML
     private ComboBox<String> estadoChoice;
     private ObservableList<String> listaEstados;
     private List<Estado> estados;
+
+    @FXML
+    private ListView<HistorialTareas> listViewPasado;
+    @FXML
+    private ListView<Usuario> listViewAsignaciones;
+
+    private ObservableList<HistorialTareas> listaHistorialTareas;
+    private ObservableList<Asignacion> listaHistorialAsignaciones;
+
+    private ObservableList<Usuario> listaUsuariosAsignados;
 
 
     @Override
@@ -67,23 +75,29 @@ public class HistorialController implements Initializable {
         proyectoTitulo.setText("🔒 " + proyectoActivo.getTitulo());
         tareaHistorialNombre.setText(tareaActiva.getNombre());
         nuevoNombreTarea.setText(tareaActiva.getNombre());
-        circleEstado.setStyle("-fx-fill: " + tareaActiva.getEstado().getColor() + ";");
+        circleEstado.setStyle("-fx-background-color: " + tareaActiva.getEstado().getColor() + ";");
 
         try {
             estados = EstadosBDD.getEstados();
         } catch (Exception e) {
             AppErrorHandler.manejar(e, "getEstados");
+            estados = new ArrayList<>();
         }
 
         listaEstados = FXCollections.observableArrayList(new LinkedList<>());
 
+        Collections.sort(estados, Comparator.comparingInt(estado -> estado.getOrden()));
+
         for (Estado estado : estados) {
             listaEstados.add(estado.getNombre());
         }
+
         estadoChoice.setItems(listaEstados);
         estadoChoice.setValue(tareaActiva.getEstado().getNombre());
 
         listarAsignados();
+        listarAsignadosPasados();
+        listarEstadosPasados();
     }
 
     @FXML
@@ -109,12 +123,18 @@ public class HistorialController implements Initializable {
     private void refrescarDatos() {
         Map<Integer, Asignacion> asignados = null;
         Map<Integer, Integrante> integrantes = null;
+        Map<Integer, HistorialTareas> historialTareas = null;
+        Map<Integer, Asignacion> historialAsignaciones = null;
         listaAsignacionesATarea = FXCollections.observableArrayList(new ArrayList<>());
         listaIntegrantesAProyecto = FXCollections.observableArrayList(new ArrayList<>());
+        listaHistorialTareas = FXCollections.observableArrayList(new ArrayList<>());
+        listaHistorialAsignaciones = FXCollections.observableArrayList(new ArrayList<>());
 
         try {
-            asignados = AsignacionesBDD.getAsignaciones(tareaActiva);
-            integrantes = IntegrantesBDD.getIntegrantes(proyectoActivo);
+            asignados = AsignacionesBDD.getAsignacionesActivas(tareaActiva);
+            integrantes = IntegrantesBDD.getIntegrantesActivos(proyectoActivo);
+            historialTareas = HistorialTareasBDD.getHistorialTareas(tareaActiva);
+            historialAsignaciones = AsignacionesBDD.getAsignaciones(tareaActiva);
         } catch (Exception e) {
             AppErrorHandler.manejar(e, e.getCause().toString());
         }
@@ -125,6 +145,12 @@ public class HistorialController implements Initializable {
         if (integrantes != null) {
             listaIntegrantesAProyecto.addAll(integrantes.values());
         }
+        if (historialTareas != null) {
+            listaHistorialTareas.addAll(historialTareas.values());
+        }
+        if (historialAsignaciones != null) {
+            listaHistorialAsignaciones.addAll(historialAsignaciones.values());
+        }
     }
 
     private void listarAsignados() {
@@ -133,7 +159,6 @@ public class HistorialController implements Initializable {
 
         refrescarDatos();
 
-        System.out.println(listaAsignacionesATarea);
         if (listaAsignacionesATarea != null) {
             for (Asignacion asignacion : listaAsignacionesATarea) {
                 Usuario user = asignacion.getIdUsuario();
@@ -149,6 +174,42 @@ public class HistorialController implements Initializable {
 
         listViewUsuarios.setItems(listaUsuarios);
         listViewUsuarios.setCellFactory(listaAsignados -> new UsuariosCell(rols));
+    }
+
+    private void listarAsignadosPasados() {
+        Map<Integer, Label> fechas = new LinkedHashMap<>();
+        listaUsuariosAsignados = FXCollections.observableList(new ArrayList<>());
+
+        refrescarDatos();
+
+        if (listaHistorialAsignaciones != null) {
+
+            Collections.sort(listaHistorialAsignaciones, Comparator.comparingLong(h -> (h.getFechaAsignacion().toEpochDay())));
+            for (Asignacion asignacion : listaHistorialAsignaciones) {
+                Usuario user = asignacion.getIdUsuario();
+                listaUsuariosAsignados.add(user);
+                String duracion = "Desde " + asignacion.getFechaAsignacion().format(DateTimeFormatter.ISO_LOCAL_DATE) + " hasta ";
+                if (asignacion.getFechaFin() != null) {
+                    duracion += asignacion.getFechaFin().format(DateTimeFormatter.ISO_LOCAL_DATE);
+                } else {
+                    duracion += "hoy";
+                }
+                fechas.put(user.getId(), new Label(duracion));
+            }
+        }
+
+        listViewAsignaciones.setItems(listaUsuariosAsignados);
+        listViewAsignaciones.setCellFactory(l -> new UsuariosCell(fechas));
+    }
+
+    private void listarEstadosPasados() {
+        refrescarDatos();
+
+        if (listaHistorialTareas != null) {
+            Collections.sort(listaHistorialTareas, Comparator.comparingLong(h -> (h.getFechaCambio().toEpochSecond(ZoneOffset.UTC))));
+        }
+        listViewPasado.setItems(listaHistorialTareas);
+        listViewPasado.setCellFactory(l -> new HistorialTareaCell());
     }
 
     @FXML
@@ -170,7 +231,7 @@ public class HistorialController implements Initializable {
             }
             if (!newEstado.isEmpty() && !estadoEsIgual) {
                 tareaActiva.setEstado(EstadosBDD.getEstado(newEstado));
-                circleEstado.setStyle("-fx-fill: " + tareaActiva.getEstado().getColor() + ";");
+                circleEstado.setStyle("-fx-background-color: " + tareaActiva.getEstado().getColor() + ";");
             }
             TareasBDD.actualizar(tareaActiva);
             Notificator.exito("Cambios Guardados", "Se han realizado con éxito las modificaciones de la tarea");

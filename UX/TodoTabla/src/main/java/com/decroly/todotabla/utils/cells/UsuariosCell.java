@@ -14,6 +14,7 @@ public class UsuariosCell extends ListCell<Usuario> {
     private VBox card;
     private Label titulo;
     private Map<Integer, Label> additionalData;
+    private Label extraInfo;
 
     public UsuariosCell() {
         this.card = new VBox(8);
@@ -36,9 +37,6 @@ public class UsuariosCell extends ListCell<Usuario> {
         this.additionalData = additionalData;
 
         this.card.getChildren().add(this.titulo);
-        if (getItem() != null) {
-            this.card.getChildren().add(this.additionalData.get(getItem().getId()));
-        }
 
         selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
             if (isNowSelected) {
@@ -63,8 +61,16 @@ public class UsuariosCell extends ListCell<Usuario> {
         setGraphic(this.card);
 
         if (this.additionalData != null) {
-            additionalData.get(getItem().getId()).setText(u.getApellidos() + ", " + u.getNombre());
+            this.extraInfo = this.additionalData.get(getItem().getId());
+            if (!this.card.getChildren().contains(this.extraInfo)) {
+                this.card.getChildren().add(this.extraInfo);
+            }
+
+            this.extraInfo.setStyle("-fx-text-fill: lightgray; -fx-font-size: 12px");
         }
+
+/*        extraInfo.setText();*/
+
 
         this.titulo.getStyleClass().add("user-name");
         this.card.getStyleClass().add("user-card");

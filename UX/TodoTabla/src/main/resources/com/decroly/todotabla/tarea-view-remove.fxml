@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="720.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaRemoveController">
+<BorderPane prefHeight="720.0" prefWidth="720.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaRemoveController">
     <top>
         <VBox>
             <children>
@@ -55,7 +55,7 @@
                                 </ListView>
                                 <HBox alignment="TOP_RIGHT" prefHeight="74.0" prefWidth="1342.0">
                                     <children>
-                                        <Button onAction="#removeTarea" styleClass="btnAdd" text="Borrar tarea" />
+                                        <Button fx:id="borrarBtn" onAction="#removeTarea" styleClass="btnAdd" text="Borrar tarea" />
                                     </children>
                                 </HBox>
                             </children>
