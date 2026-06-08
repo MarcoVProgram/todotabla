@@ -1,30 +1,50 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.*;
-import com.decroly.todotabla.model.sql.*;
+import java.io.IOException;
+import java.net.URL;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import com.decroly.todotabla.model.Asignacion;
+import com.decroly.todotabla.model.Estado;
+import com.decroly.todotabla.model.HistorialTareas;
+import com.decroly.todotabla.model.Integrante;
+import com.decroly.todotabla.model.Proyecto;
+import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.sql.AsignacionesBDD;
+import com.decroly.todotabla.model.sql.EstadosBDD;
+import com.decroly.todotabla.model.sql.HistorialTareasBDD;
+import com.decroly.todotabla.model.sql.IntegrantesBDD;
+import com.decroly.todotabla.model.sql.TareasBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
 import com.decroly.todotabla.utils.cells.HistorialTareaCell;
 import com.decroly.todotabla.utils.cells.UsuariosCell;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
-import java.net.URL;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 
 public class HistorialController implements Initializable {
 
@@ -44,7 +64,7 @@ public class HistorialController implements Initializable {
     private TextField nuevoNombreTarea;
 
     @FXML
-    private ListView listViewUsuarios;
+    private ListView listViewUsuarios; // ¿Que clase de objeto usa?
     @FXML
     private Label circleEstado;
 
@@ -239,4 +259,72 @@ public class HistorialController implements Initializable {
             AppErrorHandler.manejar(e, "actualizarTareaEdicion");
         }
     }
+
+    // Para signar seria preferible abrir otro panel que este oculto o una ventana nueva
+
+    @FXML
+    private void abrirVentanaPersonas() {
+
+        Stage ventanaSecundaria = MainController.getVentanaSecundaria();
+
+        if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                return;
+        }
+
+        // Cargar el archivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formAsignarTarea.fxml"));
+            Parent root;
+            try {
+                root = loader.load();
+            // Crear una nueva ventana (Stage)
+            ventanaSecundaria = new Stage();
+            ventanaSecundaria.setTitle("Añadir tarea");
+            ventanaSecundaria.setScene(new Scene(root));
+
+            ventanaSecundaria.setResizable(false);
+
+            if (ventanaSecundaria.isFocused()){
+                ventanaSecundaria.setAlwaysOnTop(true);
+            }else{
+                ventanaSecundaria.setAlwaysOnTop(false);
+            }
+
+//            listViewTareas.setItems(obsTareas);
+
+            // Mostrar la ventana
+            ventanaSecundaria.showAndWait();
+            } catch (IOException e) {
+                AppErrorHandler.manejar(e, "load the loader");
+            }
+
+            listarAsignados();
+    }
+
+    /* private void listarUsuarios() {
+        listaUsuarios = FXCollections.observableList(new ArrayList<>());
+
+        Map<Integer, Integrante> integrantes = null;
+        try {
+            integrantes = IntegrantesBDD.getIntegrantes(
+                    EstadoPrograma.getInstance().getProyectoActivo()
+            );
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, e.getCause().toString());
+        }
+
+        if (integrantes != null) {
+            Iterator<Integrante> integranteIterator =
+                    integrantes.values().iterator();
+
+            while (integranteIterator.hasNext()){
+                Usuario user = integranteIterator.next().getIdUsuario();
+                listaUsuarios.add(user);
+            }
+        }
+
+        listViewUsuarios.setItems(listaUsuarios);
+        listViewUsuarios.setCellFactory(listaTareas -> new UsuariosCell());
+
+    } */
 }

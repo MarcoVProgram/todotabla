@@ -1,10 +1,10 @@
 package com.decroly.todotabla;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.beans.Transient;
 import java.sql.Connection;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,32 +21,42 @@ public class AppTest {
     @Test
     public void shouldAnswerWithTrue() {
         boolean patata = true;
-        System.out.println(patata);
-        assertTrue(patata);
+        assertTrue(patata, "¿La logica esta bien?");
     }
 
-    
     @BeforeAll
     public static void getConnectioIsCorrect() {
         boolean estado = false;
         try {
             Connection conexion = BDD.getConnection();
+            assertNotNull(conexion, "Error con la conexion");
             estado = conexion.isValid(120);
         } catch (Exception e) {
-            assertTrue(false);
+            estado = false;
         }
-        assertTrue(estado);
+
+        Assertions.assertEquals(true, estado, "Error de la base de datos");
+
+        
     }
 
     // mayo test
     @Test
     public void macarrones() {
-        // TODO MARIO tiene que comprobar algo aqui. Repito MARIO
+        boolean estado = false;
+
+        estado = TestMP.main();
+
+        assertTrue(estado, "El tests de Mario salio mal");
     }
 
     // ko test
     @Test
     public void wow() {
-        // TODO MARCO tiene que comprobar algo aqui si quiere hacerlo aqui. Repito MARCO
+        boolean estado = false;
+
+        estado = TestMV.main();
+
+        assertTrue(estado, "El tests de Marco salio mal");
     }
 }

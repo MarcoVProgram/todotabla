@@ -41,6 +41,10 @@ public class EstadoPrograma {
         return integrantesTemp;
     }
 
+    public void setIntegrantesTemp(List<Integrante> integrantesTemp) {
+        this.integrantesTemp = integrantesTemp;
+    }
+
     public void setProyectoActivo(Proyecto proyectoActivo) {
         this.proyectoActivo = proyectoActivo;
     }
