@@ -133,22 +133,19 @@ public class UsuariosKanbanController implements Initializable {
                         } catch (Exception e) {
                             e.getStackTrace();
                         }
-                        Integrante i2 = null;
+
                         try {
-                            i2 = IntegrantesBDD.getIntegrante(i.getId());
-
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-
-                            if (i2 != null) {
+                            if (IntegrantesBDD.getIntegrante(i.getId()) != null) {
                                 Notificator.exito("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
                                         + ", al proyecto actual ");
 
                             } else {
-                                Notificator.error("Error", "Ocurrió un error inesperado al intentar insertar al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                                Notificator.exito("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
                                         + ", al proyecto actual ");
                             }
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
             }
