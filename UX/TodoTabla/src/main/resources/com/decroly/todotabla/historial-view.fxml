@@ -100,8 +100,8 @@
                            <HBox alignment="CENTER" prefHeight="74.0" prefWidth="1342.0" spacing="30.0">
                               <children>
                                  <Label text="Usuarios Asignados" />
-                                 <Button fx:id="addAsignacionTarea" onMouseClicked="#abrirVentanaIntegrantes" styleClass="btnAdd" text="Añadir" />
-                                 <Button fx:id="removeAsignacionTarea" mnemonicParsing="false" styleClass="btnRemove" text="Desasignar" />
+                                 <Button fx:id="addAsignacionTarea" onAction="#abrirVentanaPersonas" styleClass="btnAdd" text="Añadir" />
+                                 <Button fx:id="removeAsignacionTarea" mnemonicParsing="false" onMouseClicked="#desasignar" styleClass="btnRemove" text="Desasignar" />
                               </children>
                               <padding>
                                  <Insets left="16.0" right="16.0" />

@@ -1,6 +1,5 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
@@ -100,10 +99,15 @@ public class MainController implements Initializable {
     
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+
+        updateLists();
+    }
+
+    public void updateLists() {
+        List<Proyecto> allProyectos = new LinkedList<>();
         int valorOriginalProyectosActivos = contadorProyectosActivos();
         int valorOriginalProyectosArchivados = contadorProyectosArchivados();
 
-        List<Proyecto> allProyectos = new LinkedList<>();
         try {
             allProyectos.addAll(ProyetosBDD.getProyectos().values());
         } catch (Exception e) {
@@ -133,7 +137,6 @@ public class MainController implements Initializable {
 //                proyectosArchivados.setText(String.valueOf(contadorProyectosArchivados()));
             }
         }
-
 
 
 
@@ -219,7 +222,7 @@ public class MainController implements Initializable {
             }
         });
 
-        proyectosAbiertos.setOnMouseClicked(event -> {
+        proyectosAbiertos.setOnMouseClicked(event -> { // TODO revisar el cambio de lista
 
             String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
 
@@ -232,15 +235,16 @@ public class MainController implements Initializable {
                     proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
                     proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
                 } else {
-                    isEstado.setText(estado[1]);
+                    cont++;
+                    /*isEstado.setText(estado[1]);
                     listViewProyectos.setItems(obsProyectoListArchivados);
                     proyectosAbiertos.getStyleClass().add("proyectosArchivados");
-                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");
+                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");*/
                 }
             }
         });
 
-        proyectosArchivados.setOnMouseClicked(event -> {
+        proyectosArchivados.setOnMouseClicked(event -> { // TODO revisar el cambio de lista
 
             String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
 
@@ -314,7 +318,8 @@ public class MainController implements Initializable {
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
-            // TODO Hay que refrescar las listas del Kanban controller
+            updateLists();
+            listViewProyectos.refresh();
 
         } catch (IOException e) {
             AppErrorHandler.manejar(e, "abrirVentanaProyecto (fxml)");
@@ -331,7 +336,7 @@ public class MainController implements Initializable {
         }
 
         return contActivos;
-        }
+    }
 
     public int contadorProyectosArchivados(){
         int contArchivados = 0;
