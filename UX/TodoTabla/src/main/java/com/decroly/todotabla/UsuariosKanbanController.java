@@ -99,63 +99,9 @@ public class UsuariosKanbanController implements Initializable {
         //si click derecho o doble click izq, mostrar popup para seleccionar rol
 
         //==============CREAR POPUP AL CLICKEAR USUARIO PARA AÑADIR===================
-//        listViewUsuarios.setOnMouseClicked(event -> {
-//            if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
-//                //Popup combobox
-//                List<String> roles = List.of(
-//                        "Product Owner",
-//                        "Scrum Master",
-//                        "Developer",
-//                        "Tester",
-//                        "Designer",
-//                        "DevOps",
-//                        "Stakeholder"
-//                );
-//
-//                ChoiceDialog<String> dialog =
-//                        new ChoiceDialog<>("Developer", roles);
-//
-//                dialog.setTitle("Seleccionar Rol");
-//                dialog.setHeaderText("Asignar rol al usuario");
-//
-//                Optional<String> result = dialog.showAndWait();
-//
-//                result.ifPresent(rol -> {
-//                    System.out.println("Rol seleccionado: " + rol);
-//
-//
-//                    if (rol != null) {
-//                        Integrante i = new Integrante(rol, LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
-//                        Integrante exist = null;
-//                        try {
-//                            IntegrantesBDD.insertar(i);
-//                            exist = IntegrantesBDD.getIntegrante(i.getId());
-//
-//                        } catch (Exception e) {
-//                            e.getStackTrace();
-//                        }
-//
-//                        if (exist != null) {
-//                            Notificator.exito("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-//                                    + ", al proyecto actual ");
-//
-//                        } else {
-//                            Notificator.error("Error", "Ocurrió un error inesperado al intentar insertar al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-//                                    + ", al proyecto actual ");
-//                        }
-//                    }
-//                });
-//            }
-//        });
-
         listViewUsuarios.setOnMouseClicked(event -> {
-
-            Usuario seleccionado = listViewUsuarios.getSelectionModel().getSelectedItem();
-
-            if (seleccionado == null) return;
-
             if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
-
+                //Popup combobox
                 List<String> roles = List.of(
                         "Product Owner",
                         "Scrum Master",
@@ -166,41 +112,101 @@ public class UsuariosKanbanController implements Initializable {
                         "Stakeholder"
                 );
 
-                ChoiceDialog<String> dialog = new ChoiceDialog<>("Developer", roles);
+                ChoiceDialog<String> dialog =
+                        new ChoiceDialog<>("Developer", roles);
+
                 dialog.setTitle("Seleccionar Rol");
                 dialog.setHeaderText("Asignar rol al usuario");
 
                 Optional<String> result = dialog.showAndWait();
 
                 result.ifPresent(rol -> {
-                    Proyecto actual = EstadoPrograma.getInstance().getProyectoActivo();
-                    
-                    try {
+                    System.out.println("Rol seleccionado: " + rol);
 
-                        Integrante i = new Integrante(
-                                rol,
-                                LocalDate.now(),
-                                null,
-                                seleccionado,
-                                actual
-                        );
 
-                        Notificator.exito(
-                                "Éxito",
-                                "Integrante añadido"
-                        );
+                    if (rol != null) {
+                        Integrante i = new Integrante(rol, LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
 
-                    } catch (Exception e) {
-                        AppErrorHandler.manejar(e, "insertar integrante");
+                        try {
+                            IntegrantesBDD.insertar(i);
 
-                        Notificator.error(
-                                "Error",
-                                "No se pudo añadir el usuario"
-                        );
+                        } catch (Exception e) {
+                            e.getStackTrace();
+                        }
+                        Integrante i2 = null;
+                        try {
+                            i2 = IntegrantesBDD.getIntegrante(i.getId());
+
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+
+                            if (i2 != null) {
+                                Notificator.exito("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                                        + ", al proyecto actual ");
+
+                            } else {
+                                Notificator.error("Error", "Ocurrió un error inesperado al intentar insertar al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
+                                        + ", al proyecto actual ");
+                            }
                     }
                 });
             }
         });
+
+//        listViewUsuarios.setOnMouseClicked(event -> {
+//
+//            Usuario seleccionado = listViewUsuarios.getSelectionModel().getSelectedItem();
+//
+//            if (seleccionado == null) return;
+//
+//            if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
+//
+//                List<String> roles = List.of(
+//                        "Product Owner",
+//                        "Scrum Master",
+//                        "Developer",
+//                        "Tester",
+//                        "Designer",
+//                        "DevOps",
+//                        "Stakeholder"
+//                );
+//
+//                ChoiceDialog<String> dialog = new ChoiceDialog<>("Developer", roles);
+//                dialog.setTitle("Seleccionar Rol");
+//                dialog.setHeaderText("Asignar rol al usuario");
+//
+//                Optional<String> result = dialog.showAndWait();
+//
+//                result.ifPresent(rol -> {
+//                    Proyecto actual = EstadoPrograma.getInstance().getProyectoActivo();
+//
+//                    try {
+//
+//                        Integrante i = new Integrante(
+//                                rol,
+//                                LocalDate.now(),
+//                                null,
+//                                seleccionado,
+//                                actual
+//                        );
+//
+//                        Notificator.exito(
+//                                "Éxito",
+//                                "Integrante añadido"
+//                        );
+//
+//                    } catch (Exception e) {
+//                        AppErrorHandler.manejar(e, "insertar integrante");
+//
+//                        Notificator.error(
+//                                "Error",
+//                                "No se pudo añadir el usuario"
+//                        );
+//                    }
+//                });
+//            }
+//        });
         
 
 
