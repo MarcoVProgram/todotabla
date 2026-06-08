@@ -1,14 +1,12 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Integrante;
+import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import javafx.beans.InvalidationListener;
-import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
+import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -58,10 +56,14 @@ public class IntegrantesKanbanController implements Initializable {
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
-
+        
         ObservableList<Integrante> obsIntegrantesList =
                 FXCollections.observableArrayList(map.values());
 
+        obsIntegrantesList.addListener((ListChangeListener<Integrante>) change -> {
+            listViewIntegrantes.refresh();
+        });
+        
         listViewIntegrantes.setItems(obsIntegrantesList);
 
         listViewIntegrantes.setCellFactory(integrantesList -> new ListCell<Integrante>() {
