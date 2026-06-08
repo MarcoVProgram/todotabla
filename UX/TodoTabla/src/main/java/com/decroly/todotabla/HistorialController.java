@@ -309,8 +309,14 @@ public class HistorialController implements Initializable {
             } catch (IOException e) {
                 AppErrorHandler.manejar(e, "load the loader");
             }
+    }
 
-            listarAsignados();
+    @FXML
+    private void desasignar() {
+        for (Usuario u : listViewUsuarios.getSelectionModel().getSelectedItems()) {
+            listaUsuarios.remove(u);
+        }
+
     }
 
 }
