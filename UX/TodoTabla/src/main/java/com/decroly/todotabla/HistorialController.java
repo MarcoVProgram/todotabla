@@ -64,7 +64,7 @@ public class HistorialController implements Initializable {
     private TextField nuevoNombreTarea;
 
     @FXML
-    private ListView listViewUsuarios; // ¿Que clase de objeto usa?
+    private ListView<Usuario> listViewUsuarios; // ¿Que clase de objeto usa?
     @FXML
     private Label circleEstado;
 
@@ -295,15 +295,16 @@ public class HistorialController implements Initializable {
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
-            for (Usuario u : TareaAsignarController.getlistaAAsignar()) {
+                for (Usuario u : TareaAsignarController.getlistaAAsignar()) {
 
-                listaUsuarios.add(u);
+                    listaUsuarios.add(u);
 
-            }
+                    System.out.println(u);
+                }
 
-                listViewUsuarios.getItems().clear();
+                
 
-                listViewUsuarios.setItems(listaUsuarios);
+                // listViewUsuarios.refresh();
 
             } catch (IOException e) {
                 AppErrorHandler.manejar(e, "load the loader");
