@@ -62,11 +62,13 @@ public class UsuariosCell extends ListCell<Usuario> {
 
         if (this.additionalData != null) {
             this.extraInfo = this.additionalData.get(getItem().getId());
-            if (!this.card.getChildren().contains(this.extraInfo)) {
-                this.card.getChildren().add(this.extraInfo);
-            }
+            if (this.extraInfo != null){
+                if(!this.card.getChildren().contains(this.extraInfo)) {
+                    this.card.getChildren().add(this.extraInfo);
+                }
 
-            this.extraInfo.setStyle("-fx-text-fill: lightgray; -fx-font-size: 12px");
+                this.extraInfo.setStyle("-fx-text-fill: lightgray; -fx-font-size: 12px");
+            }
         }
 
 /*        extraInfo.setText();*/

@@ -80,7 +80,7 @@ public class HistorialController implements Initializable {
     @FXML
     private ListView<HistorialTareas> listViewPasado;
     @FXML
-    private ListView<Usuario> listViewAsignaciones;
+    private ListView<Usuario> listViewAsignaciones; // Historial de asignaciones
 
     private ObservableList<HistorialTareas> listaHistorialTareas;
     private ObservableList<Asignacion> listaHistorialAsignaciones;
@@ -294,6 +294,17 @@ public class HistorialController implements Initializable {
 
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
+
+            for (Usuario u : TareaAsignarController.getlistaAAsignar()) {
+
+                listaUsuarios.add(u);
+
+            }
+
+                listViewUsuarios.getItems().clear();
+
+                listViewUsuarios.setItems(listaUsuarios);
+
             } catch (IOException e) {
                 AppErrorHandler.manejar(e, "load the loader");
             }
@@ -301,30 +312,4 @@ public class HistorialController implements Initializable {
             listarAsignados();
     }
 
-    /* private void listarUsuarios() {
-        listaUsuarios = FXCollections.observableList(new ArrayList<>());
-
-        Map<Integer, Integrante> integrantes = null;
-        try {
-            integrantes = IntegrantesBDD.getIntegrantes(
-                    EstadoPrograma.getInstance().getProyectoActivo()
-            );
-        } catch (Exception e) {
-            AppErrorHandler.manejar(e, e.getCause().toString());
-        }
-
-        if (integrantes != null) {
-            Iterator<Integrante> integranteIterator =
-                    integrantes.values().iterator();
-
-            while (integranteIterator.hasNext()){
-                Usuario user = integranteIterator.next().getIdUsuario();
-                listaUsuarios.add(user);
-            }
-        }
-
-        listViewUsuarios.setItems(listaUsuarios);
-        listViewUsuarios.setCellFactory(listaTareas -> new UsuariosCell());
-
-    } */
 }
