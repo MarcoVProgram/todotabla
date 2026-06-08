@@ -216,40 +216,96 @@ public class TareaMovableCell extends ListCell<Tarea> {
         card.setOpacity(0.3);
     }
 
-    private void onDragMove(MouseEvent e) {
-        // Si el Fantasma no es Null
-        if (ghost == null) return;
-        if (e.getButton() == MouseButton.SECONDARY) return;
+//    private void onDragMove(MouseEvent e) {
+//        // Si el Fantasma no es Null
+//        if (ghost == null) return;
+//        if (e.getButton() == MouseButton.SECONDARY) return;
+//
+//        //Limpiar estilos
+//        if (lastHoveredCell != null) {
+//            lastHoveredCell.getStyleClass().remove("ghostChosen");
+//        }
+//
+//        // Mover el fantasma
+//        Point2D rootPos = root.sceneToLocal(
+//            e.getSceneX() - dragOffsetX,
+//            e.getSceneY() - dragOffsetY
+//        );
+//
+//        ghost.setLayoutX(rootPos.getX());
+//        ghost.setLayoutY(rootPos.getY());
+//
+//        ColumnaKanban colHover = getColumna(e.getScreenX(), e.getScreenY());
+//        if  (colHover != null) {
+//            tintInput.setPaint(Color.web(colHover.estado().getColor(), 0.4));
+//            ListCell<Tarea> tareaFocused = getHoveredListCell(colHover, e.getScreenX(), e.getScreenY());
+//            if (tareaFocused != null && tareaFocused.getItem() != null) {
+//                tareaFocused.getStyleClass().add("ghostChosen");
+//                lastHoveredCell = tareaFocused;
+//            } else {
+//                lastHoveredCell = null;
+//            }
+//        }
+//        else {
+//            tintInput.setPaint(Color.TRANSPARENT);
+//        }
+//    }
+private void onDragMove(MouseEvent e) {
+    // Si el Fantasma no es Null
+    if (ghost == null) return;
+    if (e.getButton() == MouseButton.SECONDARY) return;
 
-        //Limpiar estilos
-        if (lastHoveredCell != null) {
-            lastHoveredCell.getStyleClass().remove("ghostChosen");
-        }
+    // Limpiar estilos previos con seguridad
+    if (lastHoveredCell != null) {
+        lastHoveredCell.getStyleClass().remove("ghostChosen");
+        lastHoveredCell = null; // Lo reiniciamos
+    }
 
-        // Mover el fantasma
-        Point2D rootPos = root.sceneToLocal(
+    // Mover el fantasma
+    Point2D rootPos = root.sceneToLocal(
             e.getSceneX() - dragOffsetX,
             e.getSceneY() - dragOffsetY
-        );
+    );
 
-        ghost.setLayoutX(rootPos.getX());
-        ghost.setLayoutY(rootPos.getY());
+    ghost.setLayoutX(rootPos.getX());
+    ghost.setLayoutY(rootPos.getY());
 
-        ColumnaKanban colHover = getColumna(e.getScreenX(), e.getScreenY());
-        if  (colHover != null) {
-            tintInput.setPaint(Color.web(colHover.estado().getColor(), 0.4));
-            ListCell<Tarea> tareaFocused = getHoveredListCell(colHover, e.getScreenX(), e.getScreenY());
-            if (tareaFocused != null && tareaFocused.getItem() != null) {
-                tareaFocused.getStyleClass().add("ghostChosen");
-                lastHoveredCell = tareaFocused;
-            } else {
-                lastHoveredCell = null;
-            }
-        }
-        else {
-            tintInput.setPaint(Color.TRANSPARENT);
+    ColumnaKanban colHover = getColumna(e.getScreenX(), e.getScreenY());
+    if (colHover != null) {
+        tintInput.setPaint(Color.web(colHover.estado().getColor(), 0.4));
+        ListCell<Tarea> tareaFocused = getHoveredListCell(colHover, e.getScreenX(), e.getScreenY());
+
+        // Cambiado aquí: Solo añadimos el estilo visual si la celda existe
+        if (tareaFocused != null && tareaFocused.getItem() != null) {
+            tareaFocused.getStyleClass().add("ghostChosen");
+            lastHoveredCell = tareaFocused;
         }
     }
+    else {
+        tintInput.setPaint(Color.TRANSPARENT);
+    }
+}
+
+//    private void onDragEnd(MouseEvent e) {
+//        // realizar los updates en base al resultado
+//        if (ghost == null) return;
+//        if (getItem() == null) return;
+//        if (e.getButton() == MouseButton.SECONDARY) return;
+//
+//        ColumnaKanban colChosen = getColumna(e.getScreenX(), e.getScreenY());
+//        if  (colChosen != null) {
+//            ListCell<Tarea> cellChosen = getHoveredListCell(colChosen, e.getScreenX(), e.getScreenY());
+//            cellChosen.getStyleClass().remove("ghostChosen");
+//            Tarea tareaFocused = getHoveredTarea(colChosen, e.getScreenX(), e.getScreenY());
+//            moverTarea(colChosen, tareaFocused);
+//        }
+//
+//        // Adios fantasma
+//        root.getChildren().remove(ghost);
+//
+//        // Carta vuelta a ser full
+//        card.setOpacity(1);
+//    }
 
     private void onDragEnd(MouseEvent e) {
         // realizar los updates en base al resultado
@@ -258,9 +314,15 @@ public class TareaMovableCell extends ListCell<Tarea> {
         if (e.getButton() == MouseButton.SECONDARY) return;
 
         ColumnaKanban colChosen = getColumna(e.getScreenX(), e.getScreenY());
-        if  (colChosen != null) {
+        if (colChosen != null) {
             ListCell<Tarea> cellChosen = getHoveredListCell(colChosen, e.getScreenX(), e.getScreenY());
-            cellChosen.getStyleClass().remove("ghostChosen");
+
+            // --- AQUÍ ESTÁ EL CAMBIO DEFENSIVO ---
+            // Solo intentamos quitar la clase si realmente se encontró una celda bajo el cursor
+            if (cellChosen != null) {
+                cellChosen.getStyleClass().remove("ghostChosen");
+            }
+
             Tarea tareaFocused = getHoveredTarea(colChosen, e.getScreenX(), e.getScreenY());
             moverTarea(colChosen, tareaFocused);
         }
@@ -304,16 +366,20 @@ public class TareaMovableCell extends ListCell<Tarea> {
             if (tareaChosen != null) {
                 t.setPrioridad(tareaChosen.getPrioridad());
             } else {
-                try {
-                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto())+1);
-                } catch (Exception ex) {
-                    AppErrorHandler.manejar(ex, "getMayorPrioridad");
-                }
+//                try {
+//                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto())+1);
+//                } catch (Exception ex) {
+//                    AppErrorHandler.manejar(ex, "getMayorPrioridad");
+//                }
+                t.setPrioridad(0);
             }
 
             t.setEstado(destino.estado());
             partida.olTareas().remove(t);
-            destino.olTareas().add(Math.max(Math.min(t.getPrioridad(), destino.olTareas().size()), 0), t);
+            
+//            destino.olTareas().add(Math.max(Math.min(t.getPrioridad(), destino.olTareas().size()), 0), t);
+            int indiceInsercion = Math.max(Math.min(t.getPrioridad(), destino.olTareas().size()), 0);
+            destino.olTareas().add(indiceInsercion, t);
 
             actualizarLista(partida);
             actualizarLista(destino);
