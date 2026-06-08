@@ -25,12 +25,26 @@ public class TareaRemoveController implements Initializable {
 
     @FXML
     public ListView<Tarea> listViewTareas;
+    @FXML
+    public Button borrarBtn;
+    
     private ObservableList<Tarea> listaObsTareas;
     private List<Tarea> listaTareas;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listarTareas();
+        
+        borrarBtn.setDisable(true);
+
+        final String[] t = {""};
+        listViewTareas.getSelectionModel().selectedItemProperty().addListener((obs, oldTask, newTask) -> {
+            if (newTask != null) {
+                borrarBtn.setDisable(false);
+            } else {
+                borrarBtn.setDisable(true);
+            }
+        });
     }
 
     private void listarTareas() {

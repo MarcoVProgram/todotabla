@@ -296,4 +296,17 @@ public class AsignacionesBDD {
 
         return asignacion;
     }
+
+    public static void darDeBajaAsignacion(int idUsuario, int idTarea) throws Exception {
+        String sql = "UPDATE asignacion SET fecha_fin = ? WHERE usuario_ID = ? AND tarea_ID = ? AND fecha_fin IS NULL";
+
+        try (Connection con = BDD.getConnection(); 
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+            ps.setInt(2, idUsuario);
+            ps.setInt(3, idTarea);
+            
+            ps.executeUpdate();
+        }
+    }
 }
