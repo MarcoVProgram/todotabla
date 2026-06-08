@@ -100,11 +100,14 @@ public class MainController implements Initializable {
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
 
-        updateLists(contadorProyectosActivos(), contadorProyectosArchivados());
+        updateLists();
     }
 
-    public void updateLists(int valorOriginalProyectosActivos, int valorOriginalProyectosArchivados) {
+    public void updateLists() {
         List<Proyecto> allProyectos = new LinkedList<>();
+        int valorOriginalProyectosActivos = contadorProyectosActivos();
+        int valorOriginalProyectosArchivados = contadorProyectosArchivados();
+
         try {
             allProyectos.addAll(ProyetosBDD.getProyectos().values());
         } catch (Exception e) {
@@ -315,7 +318,7 @@ public class MainController implements Initializable {
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
-            updateLists(contadorProyectosActivos(), contadorProyectosArchivados());
+            updateLists();
             listViewProyectos.refresh();
 
         } catch (IOException e) {
