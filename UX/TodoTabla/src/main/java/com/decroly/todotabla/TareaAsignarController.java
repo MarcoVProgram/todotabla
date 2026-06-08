@@ -1,10 +1,7 @@
 package com.decroly.todotabla;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Usuario;
@@ -14,6 +11,7 @@ import com.decroly.todotabla.utils.cells.UsuariosCell;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListCell;
@@ -33,6 +31,8 @@ public class TareaAsignarController implements Initializable {
 
     @FXML
     private AnchorPane root;
+
+    public static List<Usuario> listaAAsignar;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -70,10 +70,14 @@ public class TareaAsignarController implements Initializable {
     }
 
     @FXML
-    public void asignarUsuarios(MouseEvent event) {
-        
+    public void asignarUsuarios(ActionEvent event) {
+        listaAAsignar = listViewUsuarios.getSelectionModel().getSelectedItems();
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.close();
     }
 
-    
+    public static List<Usuario> getlistaAAsignar() {
+        return listaAAsignar;
+    }
 
 }
