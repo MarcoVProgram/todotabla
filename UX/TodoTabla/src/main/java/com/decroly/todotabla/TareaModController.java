@@ -134,6 +134,7 @@ public class TareaModController implements Initializable {
         }
 
         if (todasTareasDelProyecto != null) {
+            listaTareas.clear();
             listaTareas.addAll(todasTareasDelProyecto.values());
             listViewTareas.refresh();
         }
@@ -147,6 +148,7 @@ public class TareaModController implements Initializable {
         String nombre = nombreTareaFormEditar.getText();
 
         ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
+        
 
         actualizarExito = !listaDeTareas.isEmpty();
         for (Tarea tarea : listaDeTareas) {
