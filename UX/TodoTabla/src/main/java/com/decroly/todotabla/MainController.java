@@ -1,32 +1,38 @@
 package com.decroly.todotabla;
 
-import com.decroly.todotabla.model.sql.ProyetosBDD;
-import com.decroly.todotabla.utils.AppErrorHandler;
-import com.decroly.todotabla.utils.EstadoPrograma;
-import com.decroly.todotabla.utils.Navigator;
-import com.decroly.todotabla.model.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import com.decroly.todotabla.model.Proyecto;
+import com.decroly.todotabla.model.Tarea;
+import com.decroly.todotabla.model.Usuario;
+import com.decroly.todotabla.model.sql.ProyetosBDD;
+import com.decroly.todotabla.utils.AppErrorHandler;
+import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Navigator;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class MainController implements Initializable {
     //lista miembros
@@ -207,12 +213,14 @@ public class MainController implements Initializable {
                 mostrandoArchivados = !mostrandoArchivados;
 
                 if (mostrandoArchivados) {
+                    cont++;
                     isEstado.setText("Proyectos Archivados");
                     listViewProyectos.setItems(obsProyectoListArchivados);
 
                     proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
                     proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
                 } else {
+                    cont++;
                     isEstado.setText("Proyectos Activos");
                     listViewProyectos.setItems(obsProyectoListActivos);
 
@@ -230,6 +238,7 @@ public class MainController implements Initializable {
                 cont++;
 
                 if ((cont % 2) == 0) {
+                    cont++;
                     isEstado.setText(estado[0]);
                     listViewProyectos.setItems(obsProyectoListActivos);
                     proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
@@ -252,13 +261,15 @@ public class MainController implements Initializable {
                 cont++;
 
                 if ((cont % 2) == 0) {
-                    isEstado.setText(estado[0]);
+                    cont++;
+                    /* isEstado.setText(estado[0]);
                     listViewProyectos.setItems(obsProyectoListActivos);
 
                     proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
-                    proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
+                    proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado"); */
                     
                 } else {
+                    cont++;
                     isEstado.setText(estado[1]);
                     listViewProyectos.setItems(obsProyectoListArchivados);
 
@@ -275,6 +286,10 @@ public class MainController implements Initializable {
         obsProyectoListArchivados.addListener((ListChangeListener<Proyecto>) change -> {
             listViewProyectos.refresh();
         });
+
+        cont++;
+        isEstado.setText("Proyectos Activos");
+        listViewProyectos.setItems(obsProyectoListArchivados);
     }
     /*if (mostrandoArchivados) {
     proyectosArchivados.getStyleClass().add("bold");
