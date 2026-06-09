@@ -1,19 +1,19 @@
 package com.decroly.todotabla;
 
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.Notificator;
+
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class UsuariosAddController implements Initializable {
     @FXML
@@ -30,6 +30,10 @@ public class UsuariosAddController implements Initializable {
 
     @FXML
     public void addUsuario() {
+
+        Usuario u;
+
+        boolean insertado = false;
 
         if (
             nombreUsuarioCrear.getText() != null && 
@@ -52,15 +56,24 @@ public class UsuariosAddController implements Initializable {
             )
         )
         {
-            Usuario u = new Usuario(
+            u = new Usuario(
                     nombreUsuarioCrear.getText(),
                     apellidosUsuarioCrear.getText(),
                     emailUsuarioCrear.getText()
             );
-        boolean insertado = false;
+        
+            boolean yaExiste = true;
+
+            try {
+                yaExiste = UsuariosBDD.correoExiste(u.getEmail());
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, 
+                    "UsuariosBDD.correoExiste(u.getEmail())");
+            }
+
         if (!yaExiste){ 
                 try {
-                    isertado = UsuariosBDD.insertar(u);
+                    insertado = UsuariosBDD.insertar(u);
                 } catch (Exception e) {
                     AppErrorHandler.manejar(e, "UsuariosBDD.insertar(u);");
                 }
@@ -79,16 +92,16 @@ public class UsuariosAddController implements Initializable {
             Notificator.error("Formulario vacio o mal", 
             "Por favor rellene correctamente el formulario." + "\n" + 
             ayuda);
-        }
-
-            if(insertado){
-                Notificator.exito("Exito", "Se ha insertado correctamente al usuario " + u.getNombre());
-                nombreUsuarioCrear.clear();
-                apellidosUsuarioCrear.clear();
-                emailUsuarioCrear.clear();
-            }else{
-                Notificator.error("Error", "No se pudo insertar al usuario.");
             }
+
+        if(insertado){
+            Notificator.exito("Exito", "Se ha insertado correctamente el usuario");
+            nombreUsuarioCrear.clear();
+            apellidosUsuarioCrear.clear();
+            emailUsuarioCrear.clear();
+        }else{
+            Notificator.error("Error", "No se pudo insertar al usuario.");
+        }
 
     }
 
