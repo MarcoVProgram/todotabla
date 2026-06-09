@@ -42,12 +42,13 @@ public class UsuariosAddController {
                     apellidosUsuarioCrear.getText(),
                     emailUsuarioCrear.getText()
             );
-            if (!u.equals(ultimoIntroducido) &&
-                !u.getEmail().equals(ultimoIntroducido.getEmail())){ 
+
+            if (!(u.getEmail().equals(ultimoIntroducido.getEmail()))){ 
                 try {
                     UsuariosBDD.insertar(u);
                     Notificator.exito("Usuario introducido", 
                     "El usuario se ha agregado correctamente");
+                    ultimoIntroducido = u;
                 } catch (Exception e) {
                     AppErrorHandler.manejar(e, "UsuariosBDD.insertar(u);");
                 }
