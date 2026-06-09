@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
-public class UsuariosAdd {
+public class UsuariosAddController {
 
     @FXML
     private TextField apellidosUsuarioCrear;
@@ -23,7 +23,8 @@ public class UsuariosAdd {
         Usuario u = new Usuario(
                 nombreUsuarioCrear.getText(),
                 apellidosUsuarioCrear.getText(),
-                emailUsuarioCrear.getText());
+                emailUsuarioCrear.getText()
+        );
         try {
             UsuariosBDD.insertar(u);
         } catch (Exception e) {

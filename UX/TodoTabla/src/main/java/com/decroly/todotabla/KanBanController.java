@@ -39,10 +39,6 @@ public class KanBanController implements Initializable {
     private List<Integrante> integrantes = new ArrayList<>();
     private ObservableList<Integrante> obsIntegrantes = FXCollections.observableList(integrantes);
 
-
-    private Stage ventanaSecundaria = getVentanaSecundaria();
-
-
     private static Stage ventanaTerciaria;
 
     private Proyecto proyectoSeleccionado;
@@ -51,9 +47,7 @@ public class KanBanController implements Initializable {
     @FXML
     private BorderPane root;
 
-    private static Stage getVentanaSecundaria() {
-        return MainController.getVentanaSecundaria();
-    }
+
 
     @FXML
     private Label proyectoTitulo;
@@ -214,32 +208,8 @@ public class KanBanController implements Initializable {
     private void abrirVentanaCrearTarea() { //panel tarea
         try {
 
-            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
-                return;
-            }
+            Navigator.arbrirVentanaSecundaria("tarea-view-create.fxml", "Añadir tarea", getClass());
 
-            // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view-create.fxml"));
-            Parent root = loader.load();
-
-            // Crear una nueva ventana (Stage)
-            ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Añadir tarea");
-            ventanaSecundaria.setScene(new Scene(root));
-
-            ventanaSecundaria.setResizable(false);
-
-            if(ventanaSecundaria.isFocused()){
-                ventanaSecundaria.setAlwaysOnTop(true);
-            }else{
-                ventanaSecundaria.setAlwaysOnTop(false);
-            }
-
-//            listViewTareas.setItems(obsTareas);
-
-            // Mostrar la ventana
-            ventanaSecundaria.showAndWait();
             actualizarTareas();
 
         } catch (IOException e) {
@@ -280,6 +250,8 @@ public class KanBanController implements Initializable {
     private void abrirVentanaBorrarTarea() { //panel tarea
         try {
 
+            String titulo = "Borrar tarea";
+
             if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
                 System.out.println("No se puede volver a abrir, hay una sesión existente");
                 return;
@@ -291,7 +263,7 @@ public class KanBanController implements Initializable {
 
             // Crear una nueva ventana (Stage)
             ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Borrar tarea");
+            ventanaSecundaria.setTitle();
             ventanaSecundaria.setScene(new Scene(root));
 
             ventanaSecundaria.setResizable(false);
@@ -336,7 +308,6 @@ public class KanBanController implements Initializable {
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
-            // TODO Hay que refrescar las listas del Kanban controller
 
         } catch (IOException e) {
             e.printStackTrace();
