@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -93,7 +94,7 @@ public class MainController implements Initializable {
     
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-
+        configurarContextMenu();
         updateLists();
     }
 
@@ -119,18 +120,6 @@ public class MainController implements Initializable {
 
         setTabActivos();
         listViewProyectos.setCellFactory(proyectoListView -> new ProyectosCell());
-
-        listViewProyectos.setOnMouseClicked(event -> {
-            if(event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2){
-                try {
-                    EstadoPrograma.getInstance().setProyectoActivo(listViewProyectos.getSelectionModel().getSelectedItem());
-                    abrirVentanaPrincipal();
-
-                } catch (IOException e) {
-                    AppErrorHandler.manejar(e, "abrirVentanaPrincipal");
-                }
-            }
-        });
 
         contAbiertos.setText(String.valueOf(obsProyectoListActivos.size()));
         contArchivados.setText(String.valueOf(obsProyectoListArchivados.size()));
@@ -168,6 +157,76 @@ public class MainController implements Initializable {
         proyectosAbiertos.getStyleClass().setAll("tab-proyectos", "tab-deselected");
         mostrandoArchivados = true;
         listViewProyectos.setPlaceholder(null);
+    }
+
+    private void configurarContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem cerrarItem  = new MenuItem();
+        MenuItem eliminarItem = new MenuItem("❌ Borrar proyecto");
+
+        eliminarItem.setStyle("-fx-text-fill: #f85149;");
+
+        contextMenu.getItems().addAll(cerrarItem, eliminarItem);
+
+        cerrarItem.setOnAction(e -> {
+            Proyecto selected = listViewProyectos.getSelectionModel().getSelectedItem();
+            if (selected == null) return;
+            try {
+                selected.setFechaCierre(mostrandoArchivados ? null : LocalDate.now());
+                ProyetosBDD.actualizar(selected);
+            } catch (Exception ex) {
+                AppErrorHandler.manejar(ex, "cerrarItem");
+            }
+            updateLists();
+        });
+
+        eliminarItem.setOnAction(e -> {
+            Proyecto selected = listViewProyectos.getSelectionModel().getSelectedItem();
+            if (selected == null) return;
+            try {
+                ProyetosBDD.borrar(selected);
+            } catch (Exception ex) {
+                AppErrorHandler.manejar(ex, "eliminarItem");
+            }
+            updateLists();
+        });
+
+        listViewProyectos.setOnMouseClicked(event -> {
+            Node clickedNode = event.getPickResult().getIntersectedNode();
+            while (clickedNode != null && !(clickedNode instanceof ProyectosCell)) {
+                clickedNode = clickedNode.getParent();
+            }
+
+            if (!(clickedNode instanceof ListCell<?> cell) || cell.isEmpty()) {
+                contextMenu.hide();
+                return;
+            }
+
+            if (event.getButton() == MouseButton.SECONDARY) {
+
+                if (mostrandoArchivados) {
+                    cerrarItem.setText("🔓 Abrir proyecto");
+                    cerrarItem.setStyle("-fx-text-fill: #3fb950;");
+                } else {
+                    cerrarItem.setText("🔒 Cerrar proyecto");
+                    cerrarItem.setStyle("-fx-text-fill: #e3b341;");
+                }
+
+                listViewProyectos.getSelectionModel().select((Proyecto) cell.getItem());
+                contextMenu.show(listViewProyectos, event.getScreenX(), event.getScreenY());
+
+            } else if (event.getClickCount() == 2) {
+                contextMenu.hide();
+                try {
+                    if (cell.getItem() == null) return;
+                    EstadoPrograma.getInstance().setProyectoActivo((Proyecto) cell.getItem());
+                    abrirVentanaPrincipal();
+                } catch (IOException e) {
+                    AppErrorHandler.manejar(e, "abrirVentanaPrincipal");
+                }
+            }
+        });
     }
 
 
