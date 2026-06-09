@@ -5,14 +5,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import com.decroly.todotabla.model.Asignacion;
 import com.decroly.todotabla.model.Estado;
@@ -26,20 +19,19 @@ import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
+import com.decroly.todotabla.utils.cells.AsignacionesCell;
 import com.decroly.todotabla.utils.cells.HistorialTareaCell;
 import com.decroly.todotabla.utils.cells.UsuariosCell;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
@@ -77,13 +69,10 @@ public class HistorialController implements Initializable {
     @FXML
     private ListView<HistorialTareas> listViewPasado;
     @FXML
-    private ListView<Usuario> listViewAsignaciones; // Historial de asignaciones
+    private ListView<Asignacion> listViewAsignaciones; // Historial de asignaciones
 
     private ObservableList<HistorialTareas> listaHistorialTareas;
     private ObservableList<Asignacion> listaHistorialAsignaciones;
-
-    private ObservableList<Usuario> listaUsuariosAsignados;
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -115,6 +104,10 @@ public class HistorialController implements Initializable {
         listarAsignados();
         listarAsignadosPasados();
         listarEstadosPasados();
+
+        listViewPasado.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listViewAsignaciones.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     @FXML
@@ -194,29 +187,14 @@ public class HistorialController implements Initializable {
     }
 
     private void listarAsignadosPasados() {
-        Map<Integer, Label> fechas = new LinkedHashMap<>();
-        listaUsuariosAsignados = FXCollections.observableList(new ArrayList<>());
-
         refrescarDatos();
 
         if (listaHistorialAsignaciones != null) {
-
             Collections.sort(listaHistorialAsignaciones, Comparator.comparingLong(h -> (h.getFechaAsignacion().toEpochDay())));
-            for (Asignacion asignacion : listaHistorialAsignaciones) {
-                Usuario user = asignacion.getIdUsuario();
-                listaUsuariosAsignados.add(user);
-                String duracion = "Desde " + asignacion.getFechaAsignacion().format(DateTimeFormatter.ISO_LOCAL_DATE) + " hasta ";
-                if (asignacion.getFechaFin() != null) {
-                    duracion += asignacion.getFechaFin().format(DateTimeFormatter.ISO_LOCAL_DATE);
-                } else {
-                    duracion += "hoy";
-                }
-                fechas.put(user.getId(), new Label(duracion));
-            }
         }
 
-        listViewAsignaciones.setItems(listaUsuariosAsignados);
-        listViewAsignaciones.setCellFactory(l -> new UsuariosCell(fechas));
+        listViewAsignaciones.setItems(listaHistorialAsignaciones);
+        listViewAsignaciones.setCellFactory(l -> new AsignacionesCell());
     }
 
     private void listarEstadosPasados() {
@@ -258,24 +236,25 @@ public class HistorialController implements Initializable {
     }
 
     // Para signar seria preferible abrir otro panel que este oculto o una ventana nueva
+
     @FXML
     private void abrirVentanaPersonas() {
 
         Stage ventanaSecundaria = MainController.getVentanaSecundaria();
 
         if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                Notificator.advertencia("Error al lanzar ventana", "No se puede lanzar la ventana secundaria");
                 return;
         }
 
         // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formAsignarTarea.fxml"));
-            Parent root;
-            try {
-                root = loader.load();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formAsignarTarea.fxml"));
+        Parent root;
+        try {
+            root = loader.load();
             // Crear una nueva ventana (Stage)
             ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Añadir tarea");
+            ventanaSecundaria.setTitle("Añadir Personas");
             ventanaSecundaria.setScene(new Scene(root));
 
             ventanaSecundaria.setResizable(false);
@@ -286,275 +265,110 @@ public class HistorialController implements Initializable {
                 ventanaSecundaria.setAlwaysOnTop(false);
             }
 
-//            listViewTareas.setItems(obsTareas);
-
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
-                for (Usuario u : TareaAsignarController.getlistaAAsignar()) {
+            List<Usuario> lAAsignar = EstadoPrograma.getInstance().getUsuariosTemp();
 
-                    listaUsuarios.add(u);
-
-                    System.out.println(u);
+            if (lAAsignar != null) {
+                Map<Integer, Asignacion> aa = AsignacionesBDD.getAsignacionesActivas(tareaActiva);
+                Map<Integer, Usuario> ua = new LinkedHashMap<>();
+                for (Asignacion asignacion  : aa.values()) {
+                    ua.put(asignacion.getIdUsuario().getId(), asignacion.getIdUsuario());
                 }
-
-                
-
-                // listViewUsuarios.refresh();
-
-            } catch (IOException e) {
-                AppErrorHandler.manejar(e, "load the loader");
-            }
-    }
-
-//    @FXML
-//    private void desasignar() {
-//        ObservableList<Usuario> usuariosRemove = listViewUsuarios.getSelectionModel().getSelectedItems();
-//
-//        for(Usuario u : usuariosRemove){
-//         listaUsuarios.remove(u);
-//        }
-//
-//            listViewUsuarios.refresh();
-//            refrescarDatos();
-//            listarAsignadosPasados();
-//
-//    }
-
-//    @FXML
-//    private void desasignar() {
-//        List<Usuario> usuariosRemove = new ArrayList<>(listViewUsuarios.getSelectionModel().getSelectedItems());
-//
-//        if (usuariosRemove.isEmpty()) {
-//            return;
-//        }
-//
-//        for (Usuario u : usuariosRemove) {
-//            listaUsuarios.remove(u);
-//            // Nota: Aquí deberías incluir también la lógica para borrar de la Base de Datos
-//            // si es que no la tienes ya delegada dentro de refrescarDatos() o en otro punto.
-//        }
-//
-//        try {
-//            
-//            Asignacion a;
-//            for(Asignacion asign : AsignacionesBDD.getAsignacionesActivas(EstadoPrograma.getInstance().getTareaActiva()).values()){
-//                a = AsignacionesBDD.getAsignacion(asign.getId());
-//                
-//                if(usuariosRemove.contains(a.getIdUsuario()) && listViewUsuarios.getSelectionModel().getSelectedItems().contains(a.getId())){
-//                    AsignacionesBDD.actualizar()
-//                }
-//            }
-//
-//            listViewUsuarios.refresh();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        refrescarDatos();
-//        listarAsignados();
-//
-//        usuariosRemove.clear();
-//    }
-
-//    @FXML
-//    private void desasignar() {
-//        List<Usuario> usuariosALaborar = new ArrayList<>(listViewUsuarios.getSelectionModel().getSelectedItems());
-//
-//        if (usuariosALaborar.isEmpty()) {
-//            return;
-//        }
-//
-//        try {
-//
-//            Map<Integer, Asignacion> asignacionesActivas = AsignacionesBDD.getAsignacionesActivas(
-//                    EstadoPrograma.getInstance().getTareaActiva()
-//            );
-//
-//            if (asignacionesActivas != null) {
-//                for (Asignacion asign : asignacionesActivas.values()) {
-//
-//                    if (usuariosALaborar.contains(asign.getIdUsuario())) {
-//                        asign.setFechaFin(LocalDate.now());
-//
-//                        AsignacionesBDD.actualizar(asign);
-//                    }
-//                }
-//            }
-//
-//        } catch (Exception e) {
-//            AppErrorHandler.manejar(e, "Error al actualizar la base de datos al desasignar.");
-//        }
-//
-//        refrescarDatos();
-//        listarAsignados();
-//        listarAsignadosPasados();
-//    }
-
-//    @FXML
-//    private void desasignar() {
-//        // 1. Clonamos los usuarios seleccionados (Tu idea original para evitar el error de índices)
-//        List<Usuario> usuariosRemove = new ArrayList<>(listViewUsuarios.getSelectionModel().getSelectedItems());
-//
-//        if (usuariosRemove.isEmpty()) {
-//            return;
-//        }
-//
-//        // 2. RESPUESTA VISUAL INSTANTÁNEA: Borramos de la lista local primero
-//        // Esto hace que los usuarios desaparezcan de la pantalla DE INMEDIATO sin congelarse
-//        for (Usuario u : usuariosRemove) {
-//            listaUsuarios.remove(u);
-//        }
-//        listViewUsuarios.refresh();
-//
-//        // 3. PROCESAR EN BASE DE DATOS (Optimizado para evitar consultas repetitivas)
-//        try {
-//            // Traemos las asignaciones activas UNA SOLA VEZ (Evita el bucle lento)
-//            Map<Integer, Asignacion> asignacionesActivas = AsignacionesBDD.getAsignacionesActivas(
-//                    EstadoPrograma.getInstance().getTareaActiva()
-//            );
-//
-//            if (asignacionesActivas != null) {
-//                for (Asignacion asign : asignacionesActivas.values()) {
-//                    // Si el usuario de la asignación está entre los que eliminamos
-//                    if (usuariosRemove.contains(asign.getIdUsuario())) {
-//
-//                        // Marcamos el fin de la asignación
-//                        asign.setFechaFin(LocalDate.now());
-//
-//                        // Actualizamos en la BDD.
-//                        // NOTA: Si tu método AsignacionesBDD permite actualizar en lote (batch), sería ideal.
-//                        AsignacionesBDD.actualizar(asign);
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            AppErrorHandler.manejar(e, "Error al actualizar la base de datos.");
-//        }
-//
-//        // 4. Refrescamos el resto de las listas secundarias al final
-//        refrescarDatos();
-//        listarAsignadosPasados();
-//    }
-
-//    @FXML
-//    private void desasignar() {
-//        // 1. Tu lógica original (con el fix de la copia para evitar el error de índices)
-//        List<Usuario> usuariosRemove = new ArrayList<>(listViewUsuarios.getSelectionModel().getSelectedItems());
-//
-//        if (usuariosRemove.isEmpty()) {
-//            return;
-//        }
-//
-//        try {
-//            // 2. Insertamos la Base de Datos aquí mismo de forma directa
-//            int idTarea = EstadoPrograma.getInstance().getTareaActiva().getId();
-//
-//            for (Usuario u : usuariosRemove) {
-//                // Quitamos de la lista local (tu código original)
-//                listaUsuarios.remove(u);
-//
-//                // LLAMADA DIRECTA: Le pasamos el ID del usuario y de la tarea
-//                AsignacionesBDD.darDeBajaAsignacion(u.getId(), idTarea);
-//            }
-//
-//            // 3. Tu refresco original de la interfaz
-//            listViewUsuarios.refresh();
-//            refrescarDatos();
-//            listarAsignadosPasados();
-//            listarAsignados();
-//
-//        } catch (Exception e) {
-//            AppErrorHandler.manejar(e, "Error al desasignar el usuario en la Base de Datos.");
-//        }
-//    }
-
-//    @FXML
-//    private void desasignar() {
-//        // 1. Clonamos la selección para evitar el error de índices
-//        List<Usuario> usuariosRemove = new ArrayList<>(listViewUsuarios.getSelectionModel().getSelectedItems());
-//
-//        if (usuariosRemove.isEmpty()) {
-//            return;
-//        }
-//
-//        // 2. RESPUESTA VISUAL INSTANTÁNEA: Modificamos la interfaz primero
-//        // Al hacer esto antes de la BDD, el usuario ve que se borran EN MILISEGUNDOS. Cero retraso.
-//        for (Usuario u : usuariosRemove) {
-//            listaUsuarios.remove(u);
-//        }
-//        listViewUsuarios.refresh();
-//
-//        // 3. LA BASE DE DATOS SE EJECUTA DESPUÉS (En segundo plano)
-//        int idTarea = EstadoPrograma.getInstance().getTareaActiva().getId();
-//
-//        // Creamos un hilo secundario para que la consulta no bloquee la pantalla
-//        new Thread(() -> {
-//            try {
-//                // El bucle de la BDD se ejecuta aquí sin molestar al usuario
-//                for (Usuario u : usuariosRemove) {
-//                    AsignacionesBDD.darDeBajaAsignacion(u.getId(), idTarea);
-//                }
-//
-//                // 4. ACTUALIZACIÓN FINAL DE SEGUNDAS LISTAS
-//                // Como ya terminó la BDD, le pedimos a JavaFX que actualice el historial
-//                javafx.application.Platform.runLater(() -> {
-//                    refrescarDatos();
-//                    listarAsignadosPasados();
-//                    listarAsignados();
-//                });
-//
-//            } catch (Exception e) {
-//                // Si la base de datos falla en segundo plano, avisamos sin romper la app
-//                javafx.application.Platform.runLater(() -> {
-//                    AppErrorHandler.manejar(e, "La operación falló en el servidor, pero la vista se actualizó localmente.");
-//                });
-//            }
-//        }).start(); // ¡Arranca el proceso en segundo plano!
-//    }
-
-    @FXML
-    private void desasignar() {
-        // 1. Clonamos la selección para evitar errores de índices
-        List<Usuario> usuariosRemove = new ArrayList<>(listViewUsuarios.getSelectionModel().getSelectedItems());
-
-        if (usuariosRemove.isEmpty()) {
-            return;
-        }
-
-        try {
-            int idTarea = EstadoPrograma.getInstance().getTareaActiva().getId();
-
-            // 2. ÚNICA CONSULTA A LA BDD: Rápida y directa al grano
-            for (Usuario u : usuariosRemove) {
-                AsignacionesBDD.darDeBajaAsignacion(u.getId(), idTarea);
-            }
-
-            // 3. ACTUALIZACIÓN LOCAL MÍNIMA (Reemplaza a refrescarDatos)
-            for (Usuario u : usuariosRemove) {
-                // Lo quitamos de la lista visual de la izquierda (Actuales)
-                listaUsuarios.remove(u);
-
-                // Buscamos su asignación en la lista local para actualizarle la fecha de fin
-                // de esta forma el historial se enterará del cambio sin ir a la BDD
-                for (Asignacion asign : listaHistorialAsignaciones) {
-                    if (asign.getIdUsuario().equals(u) && asign.getFechaFin() == null) {
-                        asign.setFechaFin(LocalDate.now());
-                        break;
+                for (Usuario u : lAAsignar) {
+                    if (ua.containsValue(u)) {
+                        continue;
+                    }
+                    try {
+                        Asignacion asignacion = new Asignacion(u, tareaActiva, LocalDate.now(), null);
+                        AsignacionesBDD.insertar(asignacion);
+                    } catch (Exception e) {
+                        AppErrorHandler.manejar(e, "insertarAsignacion");
                     }
                 }
             }
 
-            // 4. REDIBUJAR LA INTERFAZ
-            listViewUsuarios.refresh();
-
-            // En vez de recargar todo de la BDD, solo volvemos a pintar el historial
-            // con los datos que ya editamos en el paso anterior
-            listarAsignadosPasados();
-
+        } catch (IOException e) {
+            AppErrorHandler.manejar(e, "load the loader");
         } catch (Exception e) {
-            AppErrorHandler.manejar(e, "Error al desasignar.");
+            AppErrorHandler.manejar(e, "getAsignacionesActivas");
         }
+        listarAsignados();
+        listarAsignadosPasados();
     }
 
+    @FXML
+    private void desasignarIntegrantesSeleccionados() {
+        try {
+            int cambios = 0;
+            refrescarDatos();
+            for (Usuario u : listViewUsuarios.getSelectionModel().getSelectedItems()) {
+                for (Asignacion activo : listaAsignacionesATarea) {
+                    if (activo.getIdUsuario().equals(u)) {
+                        activo.setFechaFin(LocalDate.now());
+                        AsignacionesBDD.actualizar(activo);
+                        cambios++;
+                    }
+                }
+            }
+            if (cambios > 0) {
+                Notificator.exito("Desasignacion Realizada", "Se han archivado " + cambios + " asignaciones de usuarios");
+            } else {
+                Notificator.informar("Sin cambios", "No se han archivado datos");
+            }
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "borrar Integrantes seleccionados");
+        }
+        listarAsignados();
+        listarAsignadosPasados();
+    }
 
+    @FXML
+    private void desasignarHistorialesSeleccionados() {
+        try {
+            int cambios = 0;
+            refrescarDatos();
+
+            for (HistorialTareas historial : listViewPasado.getSelectionModel().getSelectedItems()) {
+                HistorialTareasBDD.borrar(historial);
+                cambios++;
+            }
+
+            if (cambios > 0) {
+                Notificator.exito("Borrado Realizado", "Se han borrado " + cambios + " historiales");
+            } else {
+                Notificator.informar("Sin cambios", "No se han borrado datos");
+            }
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "borrar Historiales seleccionados");
+        }
+        listarEstadosPasados();
+    }
+
+    @FXML
+    private void desasignarAsignacionesSeleccionados() {
+        try {
+            int cambios = 0;
+            refrescarDatos();
+
+            for (Asignacion todaAsignacion : listViewAsignaciones.getSelectionModel().getSelectedItems()) {
+                if (listaAsignacionesATarea.contains(todaAsignacion)) {
+                    Notificator.advertencia("No se puede borrar asignacion", "Solo se pueden borrar asignaciones terminadas");
+                    continue;
+                }
+                AsignacionesBDD.borrar(todaAsignacion);
+                cambios++;
+            }
+
+            if (cambios > 0) {
+                Notificator.exito("Borrado Realizado", "Se han borrado " + cambios + " asignaciones");
+            } else {
+                Notificator.informar("Sin cambios", "No se han borrado datos");
+            }
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "borrar Asignaciones seleccionadas");
+        }
+        listarAsignadosPasados();
+    }
 }

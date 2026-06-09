@@ -166,7 +166,7 @@ public class AsignacionesBDD {
     public static Map<Integer, Asignacion> getAsignacionesActivas(Tarea tarea_ID) throws Exception {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
 
-        String sql = "SELECT * FROM asignacion WHERE tarea_ID = ? AND (fecha_fin = null OR fecha_fin > CURRENT_DATE());";
+        String sql = "SELECT * FROM asignacion WHERE tarea_ID = ? AND (fecha_fin is null OR fecha_fin > CURRENT_DATE());";
 
         try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(sql)) {
@@ -234,7 +234,7 @@ public class AsignacionesBDD {
     public static Map<Integer, Asignacion> getAsignacionsActivas(Usuario usuario_ID) throws Exception {
         Map<Integer, Asignacion> asignaciones = new LinkedHashMap<>();
 
-        String sql = "SELECT * FROM asignacion WHERE usuario_ID = ? AND fecha_fin = null;";
+        String sql = "SELECT * FROM asignacion WHERE usuario_ID = ? AND fecha_fin is null;";
 
         try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(sql)) {

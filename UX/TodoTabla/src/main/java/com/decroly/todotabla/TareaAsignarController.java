@@ -6,6 +6,7 @@ import java.util.*;
 import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
+import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.cells.UsuariosCell;
 
@@ -14,7 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -32,10 +32,11 @@ public class TareaAsignarController implements Initializable {
     @FXML
     private AnchorPane root;
 
-    public static List<Usuario> listaAAsignar;
+    private List<Usuario> listaAAsignar;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        EstadoPrograma.getInstance().setIntegrantesTemp(null);
         getObsIntegrantesList();
     }
 
@@ -43,11 +44,11 @@ public class TareaAsignarController implements Initializable {
         Map<Integer, Integrante> map = new HashMap<>();
 
         try {
-            map = IntegrantesBDD.getIntegrantes(
+            map = IntegrantesBDD.getIntegrantesActivos(
                     EstadoPrograma.getInstance().getProyectoActivo()
             );
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            AppErrorHandler.manejar(e, "getObsIntegrantesList");
         }
 
         ArrayList<Usuario> al = new ArrayList<>();
@@ -64,7 +65,7 @@ public class TareaAsignarController implements Initializable {
     }
 
     @FXML
-    public void Salir(MouseEvent event) {
+    public void salir(MouseEvent event) {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
     }
@@ -72,12 +73,8 @@ public class TareaAsignarController implements Initializable {
     @FXML
     public void asignarUsuarios(ActionEvent event) {
         listaAAsignar = listViewUsuarios.getSelectionModel().getSelectedItems();
+        EstadoPrograma.getInstance().setUsuariosTemp(listaAAsignar);
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
     }
-
-    public static List<Usuario> getlistaAAsignar() {
-        return listaAAsignar;
-    }
-
 }

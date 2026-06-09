@@ -124,7 +124,7 @@ public class IntegrantesBDD {
     }
 
     public static Map<Integer, Integrante> getIntegrantesActivos(Proyecto proyecto_ID) throws Exception {
-        String sql = "SELECT * FROM integrante WHERE proyecto_ID = ? AND (fecha_salida = null OR fecha_salida > CURRENT_DATE());";
+        String sql = "SELECT * FROM integrante WHERE proyecto_ID = ? AND (fecha_salida IS null OR fecha_salida > CURRENT_DATE());";
         return getIntegerIntegranteMap(proyecto_ID, sql);
     }
 

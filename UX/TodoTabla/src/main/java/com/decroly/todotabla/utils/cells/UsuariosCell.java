@@ -58,7 +58,6 @@ public class UsuariosCell extends ListCell<Usuario> {
         }
 
         this.titulo.setText(u.getNombre());
-        setGraphic(this.card);
 
         if (this.additionalData != null) {
             this.extraInfo = this.additionalData.get(getItem().getId());
@@ -71,11 +70,9 @@ public class UsuariosCell extends ListCell<Usuario> {
             }
         }
 
-/*        extraInfo.setText();*/
-
-
         this.titulo.getStyleClass().add("user-name");
         this.card.getStyleClass().add("user-card");
         setStyle("-fx-background-color: transparent;");
+        setGraphic(this.card);
     }
 }
