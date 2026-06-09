@@ -984,3 +984,186 @@
     -fx-border-color: #6e7681;
     -fx-border-style: solid;
 }
+
+/* ==========================================================================
+   CHOICE DIALOG - ESTILO GITHUB DARK COMPLETO y FUSIONADO
+   ========================================================================== */
+
+/* Fondo principal del diálogo y bordes */
+.dialog-pane {
+    -fx-background-color: #0d1117; /* Fondo oscuro de GitHub */
+    -fx-border-color: #30363d;     /* Color de borde sutil */
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+/* Encabezado (Header) */
+.dialog-pane .header-panel {
+    -fx-background-color: #161b22; /* Un gris un poco más claro para separar */
+    -fx-border-color: transparent transparent #30363d transparent; /* Línea divisoria inferior */
+    -fx-border-width: 1px;
+    -fx-padding: 16px;
+}
+
+/* Todos los textos dentro del diálogo */
+.dialog-pane .label {
+    -fx-text-fill: #c9d1d9;        /* Blanco grisáceo del texto de GitHub */
+    -fx-font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* El texto del título/cabecera (un poco más brillante y fuerte) */
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #f0f6fc;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+/* Contenedor del ChoiceBox (Desplegable) */
+.dialog-pane .content {
+    -fx-padding: 20px;
+}
+
+/* El componente ChoiceBox (El desplegable en sí) */
+.dialog-pane .choice-box {
+    -fx-background-color: #21262d;
+    -fx-border-color: #30363d;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 5px 10px;
+    -fx-text-fill: #c9d1d9;
+}
+
+/* Forzar el color del texto de la opción seleccionada dentro del ChoiceBox */
+.dialog-pane .choice-box .label {
+    -fx-text-fill: #c9d1d9 !important;
+}
+
+/* Cuando pasas el ratón por encima del desplegable */
+.dialog-pane .choice-box:hover {
+    -fx-background-color: #30363d;
+    -fx-border-color: #8b949e;
+}
+
+/* La flechita hacia abajo del desplegable */
+.dialog-pane .choice-box .arrow {
+    -fx-background-color: #8b949e;
+}
+.dialog-pane .choice-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+/* Barra de botones (Aceptar / Cancelar) */
+.dialog-pane .button-bar {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d transparent transparent transparent;
+    -fx-border-width: 1px;
+    -fx-padding: 12px 16px;
+}
+
+/* ==========================================================================
+   BOTONES (Estilo base aplica a Cancelar, :default aplica a Aceptar)
+   ========================================================================== */
+
+/* Estilo general para AMBOS botones (Por defecto actúa como el botón Cancelar) */
+.dialog-pane .button {
+    -fx-font-family: "-apple-system", "Segoe UI", Arial;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 12px;
+    -fx-cursor: hand;
+
+    /* Gris oscuro secundario de GitHub */
+    -fx-background-color: #21262d;
+    -fx-text-fill: #c9d1d9;
+    -fx-border-color: #30363d;
+    -fx-border-width: 1px;
+}
+
+/* Hover general (Afecta principalmente al botón Cancelar) */
+.dialog-pane .button:hover {
+    -fx-background-color: #30363d;
+    -fx-border-color: #8b949e;
+    -fx-text-fill: #f0f6fc;
+}
+
+/* Botón ACEPTAR / OK (Estilo verde "Success" de GitHub, pisa el estilo base) */
+.dialog-pane .button:default {
+    -fx-background-color: #238636;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: rgba(240, 246, 252, 0.1);
+    -fx-border-width: 1px;
+}
+
+/* Hover exclusivo del botón de Aceptar */
+.dialog-pane .button:default:hover {
+    -fx-background-color: #2ea043;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: rgba(240, 246, 252, 0.2);
+}
+
+/* ==========================================================================
+   MENÚ DESPLEGABLE (Opciones al hacer click en el ChoiceBox)
+   ========================================================================== */
+.context-menu {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.menu-item .label {
+    -fx-text-fill: #c9d1d9;
+}
+
+.menu-item:focused {
+    -fx-background-color: #21262d;
+}
+.menu-item:focused .label {
+    -fx-text-fill: #f0f6fc;
+}
+/* ==========================================================================
+   DESPLEGABLE DEL CHOICEBOX (EL POPUP QUE SE ABRE)
+   ========================================================================== */
+
+/* Contenedor flotante del menú del ChoiceBox */
+.choice-box-popup .list-view {
+    -fx-background-color: #161b22; /* Fondo gris oscuro de GitHub */
+    -fx-border-color: #30363d;     /* Borde gris sutil */
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px 0px;
+}
+
+/* Cada una de las opciones de la lista dentro del desplegable */
+.choice-box-popup .list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #c9d1d9;        /* Texto blanco grisáceo */
+    -fx-padding: 6px 12px;
+    -fx-font-family: "-apple-system", "Segoe UI", Arial;
+    -fx-font-size: 13px;
+}
+
+/* Cuando pasas el ratón por encima de una opción del desplegable */
+.choice-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #21262d; /* Fondo gris un poco más claro */
+    -fx-text-fill: #f0f6fc;        /* Texto blanco brillante */
+}
+
+/* La opción que está actualmente seleccionada dentro del desplegable */
+.choice-box-popup .list-view .list-cell:selected {
+    -fx-background-color: #21262d;
+    -fx-text-fill: #58a6ff;        /* Azul GitHub para destacar el seleccionado */
+    -fx-font-weight: bold;
+}
+
+/* Quitar el borde azul feo que mete JavaFX por defecto al enfocar la lista */
+.choice-box-popup .list-view:focused {
+    -fx-background-color: #161b22;
+}

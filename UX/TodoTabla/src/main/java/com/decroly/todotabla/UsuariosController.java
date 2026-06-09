@@ -178,7 +178,12 @@ public class UsuariosController implements Initializable {
                 dialog.setTitle("Seleccionar Rol");
                 dialog.setHeaderText("Asignar rol al usuario");
 
+                DialogPane dialogPane = dialog.getDialogPane();
+                dialogPane.getStylesheets().add(getClass().getResource("/com/decroly/todotabla/style.css").toExternalForm());
+                dialogPane.getStyleClass().add("choice-dialog");
+
                 Optional<String> result = dialog.showAndWait();
+
 
                 result.ifPresent(rol -> {
 
