@@ -7,6 +7,7 @@ module com.decroly.todotabla {
     requires org.slf4j;
     requires mysql.connector.j;
     requires javafx.graphics;
+    requires javafx.base;
 
 
     opens com.decroly.todotabla to javafx.fxml;

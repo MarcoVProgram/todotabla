@@ -1,5 +1,7 @@
 package com.decroly.todotabla;
 
+import java.util.regex.Pattern;
+
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
@@ -28,17 +30,55 @@ public class UsuariosAddController implements Initializable {
 
     @FXML
     public void addUsuario() {
-        Usuario u = new Usuario(
-                nombreUsuarioCrear.getText(),
-                apellidosUsuarioCrear.getText(),
-                emailUsuarioCrear.getText()
-        );
-        
+
+        if (
+            nombreUsuarioCrear.getText() != null && 
+            !nombreUsuarioCrear.getText().isBlank() &&
+            apellidosUsuarioCrear.getText() != null && 
+            !apellidosUsuarioCrear.getText().isBlank() &&
+            emailUsuarioCrear.getText() != null &&
+            !emailUsuarioCrear.getText().isBlank() &&
+            Pattern.matches(
+                "[A-Za-z-._0-9Ññ]+@[A-Za-z]+[.][A-Za-z]{2,4}", 
+                emailUsuarioCrear.getText().toUpperCase()
+            ) && 
+            Pattern.matches(
+                "^[A-Za-z 0-9Ññ_-]{2,45}$", 
+                apellidosUsuarioCrear.getText()
+            ) &&
+            Pattern.matches(
+                "^[A-Za-z 0-9Ññ_-]{2,30}$", 
+                nombreUsuarioCrear.getText()
+            )
+        )
+        {
+            Usuario u = new Usuario(
+                    nombreUsuarioCrear.getText(),
+                    apellidosUsuarioCrear.getText(),
+                    emailUsuarioCrear.getText()
+            );
         boolean insertado = false;
-        try {
-            insertado = UsuariosBDD.insertar(u);
-        } catch (Exception e) {
-            AppErrorHandler.manejar(e, "UsuariosBDD.insertar(u);");
+        if (!yaExiste){ 
+                try {
+                    isertado = UsuariosBDD.insertar(u);
+                } catch (Exception e) {
+                    AppErrorHandler.manejar(e, "UsuariosBDD.insertar(u);");
+                }
+            } else {
+                Notificator.advertencia("Intento de duplicado", "Ese usuario ya existe.");
+            }
+
+            } else {
+
+            String ayuda = "";
+
+            ayuda += "\nPara rellenera correctamente  el nombre sin caracteres especiales.";
+            ayuda += "\nPara rellenera correctamente los apellidos sin caracteres especiales.";
+            ayuda += "\nPara la direccion correo ponga el nombre de usuario, el arroba y despues el dominio valido que le corresponada";
+
+            Notificator.error("Formulario vacio o mal", 
+            "Por favor rellene correctamente el formulario." + "\n" + 
+            ayuda);
         }
 
             if(insertado){
