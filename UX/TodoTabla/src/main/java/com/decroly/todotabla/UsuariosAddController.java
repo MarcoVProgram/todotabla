@@ -3,6 +3,8 @@ package com.decroly.todotabla;
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -19,7 +21,7 @@ public class UsuariosAddController {
     private TextField nombreUsuarioCrear;
 
     @FXML
-    public void addTarea(MouseEvent event) {
+    public void addTarea() {
         Usuario u = new Usuario(
                 nombreUsuarioCrear.getText(),
                 apellidosUsuarioCrear.getText(),
