@@ -77,24 +77,9 @@ public class UsuariosAddController {
 
             String ayuda = "";
 
-            if (Pattern.matches(
-                "^[A-Za-z 0-9Ññ_-]{2,30}$", 
-                nombreUsuarioCrear.getText()
-            )) {
-                ayuda += "\nPara rellenera correctamente  el nombre sin caracteres especiales."; 
-            }
-            if (Pattern.matches(
-                "^[A-Za-z 0-9Ññ_-]{2,45}$", 
-                apellidosUsuarioCrear.getText()
-            )) {
-                ayuda += "\nPara rellenera correctamente los apellidos sin caracteres especiales.";
-            }
-            if (Pattern.matches(
-                "[A-Za-z-._0-9Ññ]+@[A-Za-z]+[.][A-Za-z]{2,4}", 
-                emailUsuarioCrear.getText().toUpperCase()
-            )) {
-                ayuda += "\nPara la direccion correo ponga el nombre de usuario, el arroba y despues el dominio valido que le corresponada";
-            }
+            ayuda += "\nPara rellenera correctamente  el nombre sin caracteres especiales.";
+            ayuda += "\nPara rellenera correctamente los apellidos sin caracteres especiales.";
+            ayuda += "\nPara la direccion correo ponga el nombre de usuario, el arroba y despues el dominio valido que le corresponada";
 
             Notificator.error("Formulario vacio o mal", 
             "Por favor rellene correctamente el formulario." + "\n" + 
