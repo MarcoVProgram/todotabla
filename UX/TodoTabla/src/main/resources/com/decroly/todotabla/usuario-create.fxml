@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="398.0" prefWidth="416.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaAddController">
+   <top>
+      <VBox>
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="topbar">
+               <padding>
+                  <Insets left="16" right="16" />
+               </padding>
+               <children>
+                  <Label styleClass="icon" text="☰" />
+                  <Label styleClass="logo" text="TodoTabla" />
+                  <Label styleClass="breadcrumb" textFill="#5a92d7" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <ImageView fitHeight="39.0" fitWidth="126.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/logo.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" spacing="343.0" styleClass="filter-bar">
+               <padding>
+                  <Insets bottom="12" left="16" right="16" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" styleClass="scroll" vbarPolicy="NEVER">
+         <content>
+            <HBox spacing="24" styleClass="board">
+               <children>
+                  <VBox prefHeight="865.0" prefWidth="1000.0" spacing="20.0" styleClass="board">
+                     <children>
+                        <Label text="Nombre usuario" />
+                        <TextField fx:id="nombreUsuarioCrear" prefHeight="23.0" prefWidth="454.0" promptText="Ej: Pepe" style="-fx-background-color: #2c2c2c;" styleClass="descTarea" />
+                        <Label text="Apellidos usuario" />
+                        <TextField fx:id="apellidosUsuarioCrear" prefHeight="23.0" prefWidth="454.0" promptText="Ej: Gutierrez Gómez" style="-fx-background-color: #2c2c2c;" styleClass="descTarea" />
+                        <Label text="Email usuario" />
+                        <TextField fx:id="emailUsuarioCrear" prefHeight="23.0" prefWidth="454.0" promptText="Ej: pp@gmail.com" style="-fx-background-color: #2c2c2c;" styleClass="descTarea" />
+                        <Button onAction="#addTarea" onMouseClicked="#addTarea" styleClass="btnAdd" text="Añadir usuario">
+                           <VBox.margin>
+                              <Insets left="220.0" />
+                           </VBox.margin>
+                        </Button>
+                        <VBox>
+                           <VBox.margin>
+                              <Insets top="100.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <HBox alignment="TOP_RIGHT" prefHeight="74.0" prefWidth="1342.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>
