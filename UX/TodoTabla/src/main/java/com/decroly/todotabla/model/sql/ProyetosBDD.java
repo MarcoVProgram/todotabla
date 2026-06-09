@@ -53,7 +53,11 @@ public class ProyetosBDD {
                 conexion.nativeSQL("START TRANSACTION;");
 
                 stmnt.setString(1, p.getTitulo());
-                stmnt.setDate(2, Date.valueOf(p.getFechaCierre()));
+                if (p.getFechaCierre() != null) {
+                    stmnt.setDate(2, Date.valueOf(p.getFechaCierre()));
+                } else {
+                    stmnt.setNull(2, Types.DATE);
+                }
 
                 stmnt.setInt(3, p.getId());
 
