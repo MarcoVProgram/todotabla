@@ -53,7 +53,7 @@
                         <TextField fx:id="apellidosUsuarioCrear" prefHeight="23.0" prefWidth="454.0" promptText="Ej: Gutierrez Gómez" style="-fx-background-color: #2c2c2c;" styleClass="descTarea" />
                         <Label text="Email usuario" />
                         <TextField fx:id="emailUsuarioCrear" prefHeight="23.0" prefWidth="454.0" promptText="Ej: pp@gmail.com" style="-fx-background-color: #2c2c2c;" styleClass="descTarea" />
-                        <Button onAction="#addTarea" onMouseClicked="#addTarea" styleClass="btnAdd" text="Añadir usuario">
+                        <Button onAction="#addTarea" styleClass="btnAdd" text="Añadir usuario">
                            <VBox.margin>
                               <Insets left="220.0" />
                            </VBox.margin>
