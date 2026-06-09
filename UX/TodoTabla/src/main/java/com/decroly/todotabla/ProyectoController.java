@@ -6,11 +6,8 @@ import com.decroly.todotabla.model.sql.ProyetosBDD;
 
 import com.decroly.todotabla.utils.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -36,9 +33,6 @@ public class ProyectoController implements Initializable{
 
     @FXML
     private Button crearProyecto;
-
-
-    private Stage ventanaSecundaria;
 
 
 //    @FXML
@@ -103,35 +97,10 @@ public class ProyectoController implements Initializable{
     private void abrirVentanaUsuarios() { //panel usuarios
         try {
 
-            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                Notificator.advertencia("Sesión no válida", "No se puede volver a abrir, hay una sesión existente");
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
-                return;
-            }
+            String fxml = "usuarios-formIntegrantes.fxml";
+            String titulo = "Añadir usuarios";
 
-            // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantes.fxml"));
-            Parent root = loader.load();
-
-            // Crear una nueva ventana (Stage)
-            ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Añadir usuarios");
-            ventanaSecundaria.setScene(new Scene(root));
-
-            ventanaSecundaria.setResizable(false);
-
-            if(ventanaSecundaria.isFocused()){
-                ventanaSecundaria.setAlwaysOnTop(true);
-            }else{
-                ventanaSecundaria.setAlwaysOnTop(false);
-            }
-
-//            listViewTareas.setItems(obsTareas);
-
-            // Mostrar la ventana
-            ventanaSecundaria.showAndWait();
-
-            // TODO Hay que refrescar las listas del Kanban controller
+            Navigator.arbrirVentanaSecundaria(fxml, titulo, this.getClass());
 
         } catch (IOException e) {
             AppErrorHandler.manejar(e, "abrirVentanaUsuarios");

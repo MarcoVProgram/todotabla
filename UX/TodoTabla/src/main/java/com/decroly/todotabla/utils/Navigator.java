@@ -33,6 +33,7 @@ public class Navigator {
 
     public static void arbrirVentanaSecundaria(String fxml, String title, Class clase) throws IOException {
         if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+            Notificator.advertencia("Sesión no válida", "No se puede volver a abrir, hay una sesión existente");
             System.out.println("No se puede volver a abrir, hay una sesion existente");
             return;
         }
