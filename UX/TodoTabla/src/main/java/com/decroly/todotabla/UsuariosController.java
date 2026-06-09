@@ -222,7 +222,7 @@ public class UsuariosController implements Initializable {
                     EstadoPrograma.getInstance().getProyectoActivo()
             );
         } catch (Exception e) {
-            Notificator.advertencia("Mapa vacio", "Creando nuevo mapa");
+//            Notificator.advertencia("Mapa vacio", "Creando nuevo mapa");
             map = new HashMap<>();
         }
 
