@@ -10,9 +10,23 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
+/**
+ * Gestiona el registro histórico de los eventos y transiciones de estados ocurridos sobre las tareas.
+ * <p>
+ * Proporciona capacidades de auditoría interna para reconstruir la línea de tiempo de cambios de cada ítem.
+ * </p>
+ *
+ * @author Decroly
+ * @version 1.0
+ */
 public class HistorialTareasBDD {
-
+    /**
+     * Elimina de manera transaccional un registro de auditoría concreto del historial de tareas.
+     *
+     * @param ht El objeto {@link HistorialTareas} que se desea eliminar.
+     * @return {@code true} si la remoción fue consolidada; {@code false} si se descartó el cambio.
+     * @throws Exception Si falla la integridad de la base de datos.
+     */
     public static boolean borrar(HistorialTareas ht) throws Exception {
         boolean estado = false;
 
@@ -35,7 +49,12 @@ public class HistorialTareasBDD {
 
         return estado;
     }
-
+    /**
+     * Extrae el historial global completo de todas las tareas monitorizadas por el software.
+     *
+     * @return Un {@link Map} ordenado con la traza histórica total registrada.
+     * @throws Exception Si falla la hidratación de relaciones complejas anidadas.
+     */
     public static Map<Integer, HistorialTareas> getHistorialTareas() throws Exception {
         Map<Integer, HistorialTareas> historialTareas = new LinkedHashMap<>();
 
@@ -58,7 +77,13 @@ public class HistorialTareasBDD {
         }
         return historialTareas;
     }
-
+    /**
+     * Extrae de forma cronológica la traza completa de cambios de estado sufridos por una tarea en particular.
+     *
+     * @param tarea_id El objeto {@link Tarea} que se desea auditar.
+     * @return Un {@link Map} que representa la línea de tiempo exclusiva de la tarea seleccionada.
+     * @throws Exception Si ocurre un fallo en los subprocesos concurrentes de bases de datos.
+     */
     public static Map<Integer, HistorialTareas> getHistorialTareas(Tarea tarea_id) throws Exception {
         Map<Integer, HistorialTareas> historialTareas = new LinkedHashMap<>();
 
@@ -84,7 +109,13 @@ public class HistorialTareasBDD {
 
         return historialTareas;
     }
-
+    /**
+     * Obtiene una única entrada de auditoría del historial de tareas mediante su ID primario.
+     *
+     * @param id Identificador numérico de la entrada del historial.
+     * @return El objeto {@link HistorialTareas} mapeado, o {@code null} si el ID no corresponde a ningún evento.
+     * @throws Exception Si se genera un error imprevisto en el controlador JDBC.
+     */
     public static HistorialTareas getHistorialTarea(int id) throws Exception {
         HistorialTareas tareas = null;
 

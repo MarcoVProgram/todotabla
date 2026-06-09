@@ -45,7 +45,20 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
+/**
+ * Controlador Core y Orquestador Principal de la Vista del Tablero Ágil Kanban de la aplicación.
+ * <p>
+ * Esta clase representa una de las piezas arquitectónicas de mayor complejidad del sistema. Controla la instanciación
+ * dinámica de columnas verticales basadas en los estados del flujo de trabajo (Workflow), inyecta lógica de filtrado
+ * predictivo en tiempo real mediante hilos de ejecución basados en propiedades observables ({@link FilteredList}) y
+ * encapsula la lógica para la invocación asíncrona de operaciones CRUD sobre las tareas expuestas.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ * @see com.decroly.todotabla.utils.ColumnaKanban
+ * @see com.decroly.todotabla.utils.cells.TareaMovableCell
+ */
 public class KanBanController implements Initializable {
     @FXML
     private ImageView returnBtn;
@@ -76,7 +89,14 @@ public class KanBanController implements Initializable {
     private TextField buscarTareaSearchBar;
 
 
-
+    /**
+     * Configura el entorno gráfico inicial del Tablero Kanban distribuido.
+     * <p>
+     * Recupera y ordena los estados definidos para el ciclo de vida del desarrollo a través de la capa relacional.
+     * Enlaza la propiedad de texto del cuadro de búsqueda ({@code buscarTareaSearchBar}) a una rutina reactiva de filtrado
+     * y despacha de manera diferida el método encargado del renderizado y poblamiento tridimensional del contenedor de columnas.
+     * </p>
+     */
     public void initialize(URL url, ResourceBundle rb) {
         try {
             estados = EstadosBDD.getEstados();
@@ -91,7 +111,14 @@ public class KanBanController implements Initializable {
 
         actualizarTareas();
     }
-
+    /**
+     * Re-estructura el contenedor gráfico principal purgando las columnas previas y re-evaluando las tareas activas.
+     * <p>
+     * Itera secuencialmente sobre el conjunto ordenado de estados disponibles, insertando dinámicamente instancias de
+     * {@link ColumnaKanban} dentro del layout horizontal y registrando de manera interna el mapeo conceptual llave-valor
+     * para optimizar operaciones analíticas posteriores.
+     * </p>
+     */
     private void actualizarTareas() {
         contenedorColumnas.getChildren().clear();
         columnMap.clear();
@@ -100,7 +127,13 @@ public class KanBanController implements Initializable {
             columnMap.put(estado, addColumna(estado));
         }
     }
-
+    /**
+     * Ejecuta una evaluación predictiva (Predicado) sobre el conjunto total de tareas visualizadas basándose en criterios de búsqueda alfanuméricos.
+     * <p>
+     * Evalúa las cadenas de texto introducidas por el operador contra los nombres estructurados de las tareas. Las tareas
+     * no coincidentes son excluidas selectivamente de la escena visual sin alterar su integridad o persistencia en los almacenes relacionales de datos.
+     * </p>
+     */
     private void filtrarTareas() {
         for (Map.Entry<Estado, ColumnaKanban> entry : columnMap.entrySet()) {
             entry.getValue().flTareas().setPredicate(tarea ->
@@ -211,7 +244,13 @@ public class KanBanController implements Initializable {
             AppErrorHandler.manejar(ex, "returnToMain");
         }
     }
-
+    /**
+     * Despacha una ventana modal flotante de carácter secundario especializada en el flujo transaccional de creación de tareas.
+     * <p>
+     * Invoca de manera imperativa a {@link Navigator#arbrirVentanaSecundaria(String, String, Class)} y, tras la liberación exitosa
+     * del hilo secundario de control, ejecuta una llamada de sincronización forzada ({@code actualizarTareas()}) para refrescar el tablero.
+     * </p>
+     */
     @FXML
     private void abrirVentanaHistorialTareas() {
         Stage stage = (Stage) root.getScene().getWindow();

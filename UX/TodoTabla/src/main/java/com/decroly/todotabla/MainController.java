@@ -29,7 +29,17 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
-
+/**
+ * Controlador Maestro de la Aplicación y Punto de Entrada al Dashboard Corporativo.
+ * <p>
+ * Gobierna el flujo global de navegación entre múltiples proyectos del sistema. Gestiona la separación de estados de
+ * proyectos (Abiertos vs. Archivados), encapsula menús contextuales avanzados (ContextMenus) interactivos asociados
+ * a la selección de elementos y coordina las llamadas iniciales de sincronización de datos relacionales generales.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ */
 public class MainController implements Initializable {
     //lista miembros
 
@@ -82,13 +92,26 @@ public class MainController implements Initializable {
     private boolean mostrandoArchivados = false;
 
     private int cont = 0;
-    
+    /**
+     * Método raíz de inicialización para el cuadro de mando principal.
+     * <p>
+     * Configura de forma estructurada los componentes del menú contextual de las listas de proyectos y ejecuta la
+     * carga en lote de las colecciones observables de la aplicación mediante la sub-rutina {@code updateLists()}.
+     * </p>
+     */
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
         configurarContextMenu();
         updateLists();
     }
-
+    /**
+     * Sincroniza, clasifica y distribuye los proyectos de la organización desde la persistencia hacia la interfaz.
+     * <p>
+     * Consulta atómicamente {@code ProyetosBDD.getProyectos()}. Segrega los resultados en colecciones independientes
+     * basándose en la presencia o ausencia de marcas temporales de clausura ({@code fechaCierre}), mitigando bloqueos visuales
+     * mediante mutaciones locales ordenadas sobre {@link ObservableList}.
+     * </p>
+     */
     public void updateLists() {
         List<Proyecto> allProyectos = new LinkedList<>();
         obsProyectoListActivos.clear();
@@ -149,7 +172,13 @@ public class MainController implements Initializable {
         mostrandoArchivados = true;
         listViewProyectos.setPlaceholder(null);
     }
-
+    /**
+     * Inicializa e implementa la fábrica del menú de acciones contextuales para la selección interactiva de ítems.
+     * <p>
+     * Define operaciones en lote como "Abrir Proyecto", "Archivar Proyecto" o "Modificar Parámetros", encapsulando
+     * detectores de clics del ratón (Manejo de eventos de clic primario y secundario) para disparar la mutación de escenas en consecuencia.
+     * </p>
+     */
     private void configurarContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
 

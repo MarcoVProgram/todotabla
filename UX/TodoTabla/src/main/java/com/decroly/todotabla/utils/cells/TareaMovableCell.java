@@ -31,7 +31,20 @@ import javafx.scene.shape.Circle;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Celda interactiva de alta complejidad encargada del motor Drag and Drop (arrastrar y soltar)
+ * de las tarjetas de tareas entre las columnas del tablero Kanban.
+ * <p>
+ * Orquesta la captura de gestos de ratón, la generación de snapshots semi-transparentes flotantes,
+ * el recálculo dinámico de prioridades numéricas enteras (ordenación secuencial dentro de la lista)
+ * y la persistencia transaccional inmediata en base de datos mediante llamadas al modelo SQL.
+ * </p>
+ *
+ * @author Decroly
+ * @version 1.0
+ * @see com.decroly.todotabla.model.Tarea
+ * @see com.decroly.todotabla.utils.ColumnaKanban
+ */
 public class TareaMovableCell extends ListCell<Tarea> {
 
     //Variables a dibujar
@@ -357,7 +370,15 @@ private void onDragMove(MouseEvent e) {
                 .map(ListCell::getItem)
                 .orElse(null);
     }
+/** ... (Propiedades de UI, nodos visuales e inyecciones de mapas de columnas)*/
 
+    /**
+     * Mueve lógicamente una tarea desde su columna Kanban de origen hacia una nueva columna de destino,
+     * reconfigurando su prioridad ordinal de inserción según la tarjeta que se encuentre en la posición de soltado.
+     *
+     * @param destino     La instancia contenedora {@link ColumnaKanban} de destino.
+     * @param tareaChosen La tarea de referencia sobre la cual se hace el drop para calcular la posición exacta.
+     */
     private void moverTarea(ColumnaKanban destino, Tarea tareaChosen) {
         if (destino != null) {
             Tarea t = getItem();
@@ -385,7 +406,13 @@ private void onDragMove(MouseEvent e) {
             actualizarLista(destino);
         }
     }
-
+    /**
+     * Recorre secuencialmente la lista observable de una columna Kanban tras un movimiento,
+     * normalizando los índices enteros de propiedad 'prioridad' de todas sus tareas de forma correlativa (0, 1, 2...)
+     * y sincronizando dicho estado con el servidor mediante sentencias batch asíncronas.
+     *
+     * @param columnaEstadoKanban Columna Kanban cuyo orden secuencial de elementos internos se desea consolidar.
+     */
     private void actualizarLista(ColumnaKanban columnaEstadoKanban) {
         for (int i = 0; i < columnaEstadoKanban.olTareas().size(); i++) {
             columnaEstadoKanban.olTareas().get(i).setPrioridad(i);

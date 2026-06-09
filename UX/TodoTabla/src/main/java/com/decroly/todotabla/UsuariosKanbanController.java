@@ -23,7 +23,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
-
+/**
+ * Controlador de acoplamiento rápido (Fast-Coupling) encargado de sincronizar la disponibilidad de usuarios
+ * generales con el listado de recursos asignados al tablero Kanban del proyecto activo.
+ * <p>
+ * Diseñado bajo un patrón de controlador de vista de soporte, gestiona flujos operacionales duales:
+ * la visualización completa del censo de usuarios de la organización en paralelo con la manipulación
+ * en lote de los integrantes adscritos formalmente al espacio de trabajo ágil vigente.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ */
 public class UsuariosKanbanController implements Initializable {
     @FXML
     public ListView<Usuario> listViewUsuarios;
@@ -50,7 +61,13 @@ public class UsuariosKanbanController implements Initializable {
         return ventanaSecundaria;
     }
 
-
+    /**
+     * Configura el estado operativo inicial de las listas de distribución y los elementos gráficos del tablero Kanban.
+     * <p>
+     * Enlaza las colecciones en memoria compartida a abstracciones de tipo {@link ObservableList} e inyecta factorías de celdas
+     * personalizadas si se requiere representación gráfica avanzada, asegurando el desacoplamiento de la lógica de negocio y el renderizado.
+     * </p>
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         actualizarUsuarios();
@@ -250,11 +267,18 @@ public class UsuariosKanbanController implements Initializable {
 //        Map<Integer, Integrante> integrantesList = IntegrantesBDD.getIntegrantes(EstadoPrograma.getInstance().getProyectoActivo());
 //        ObservableMap<Integer, Integrante> obsIntegrantesList = FXCollections.observableMap(integrantesList);
 //        else{
-////            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
-////            ProyectoController.getCrearProyecto().setDisable(true);
+//            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
+//            ProyectoController.getCrearProyecto().setDisable(true);
 //        }
 
-
+    /**
+     * Intercepta la consulta global de entidades de usuario desde la capa lógica y sincroniza los componentes gráficos del panel.
+     * <p>
+     * Despacha llamadas de lectura sobre {@code UsuariosBDD.getUsuarios()}. En caso de interrupción por fallo de conectividad
+     * o base de datos, delega la traza al manejador global {@link AppErrorHandler} para su registro y aislamiento de hilos,
+     * evitando el colapso de la interfaz de usuario de JavaFX.
+     * </p>
+     */
     private void actualizarUsuarios() {
         Map<Integer, Usuario> todosUsuarios;
         try {
@@ -267,13 +291,25 @@ public class UsuariosKanbanController implements Initializable {
             listViewUsuarios.refresh();
         }
     }
-
+    /**
+     * Finaliza de forma segura el ciclo de vida de la ventana secundaria/modal activa en el espacio de trabajo Kanban.
+     * <p>
+     * Resuelve de forma dinámica la ventana gráfica ({@link Stage}) a través del nodo raíz inyectado en el FXML y
+     * destruye el contexto de visualización actual mediante una llamada atómica a {@code close()}.
+     * </p>
+     *
+     * @throws IOException Si ocurre una anomalía crítica durante el desmontaje de la jerarquía de nodos de la escena.
+     */
     @FXML
     private void volverVentanaPrincipal() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
     }
-
+    /**
+     * Ejecuta una transición controlada de la interfaz mutando el contexto visual actual hacia el formulario de gestión de integrantes.
+     *
+     * @throws IOException Si el cargador del framework ({@code FXMLLoader}) experimenta fallos de lectura en el archivo FXML de destino.
+     */
     @FXML
     private void irAIntegrantesview() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();

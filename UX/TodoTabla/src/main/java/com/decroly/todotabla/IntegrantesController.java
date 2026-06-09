@@ -23,7 +23,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
-
+/**
+ * Controlador de gestión del módulo global de integrantes adscritos al contexto de un proyecto específico.
+ * <p>
+ * Proporciona abstracciones operativas y manejadores de eventos necesarios para auditar, dar de alta o
+ * de baja las relaciones entre la entidad Proyecto y los Usuarios finales, aplicando observadores reactivos
+ * ({@link ListChangeListener}) para actualizar la interfaz ante mutaciones concurrentes en los repositorios relacionales.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ */
 public class IntegrantesController implements Initializable {
 //    @FXML
 //    public ListView<Usuario> listViewUsuarios;
@@ -49,7 +59,17 @@ public class IntegrantesController implements Initializable {
         return ventanaSecundaria;
     }
 
-
+    /**
+     * Inicializa los escuchadores de eventos y estructuras del listado de integrantes del proyecto corporativo.
+     * <p>
+     * Recupera el mapa indexado de integrantes asociados al proyecto activo actual desde la base de datos relacional.
+     * Envuelve los resultados dentro de una abstracción observable y asocia un objeto de tipo {@code ListChangeListener}
+     * encargado de forzar la re-evaluación visual ({@code refresh}) de las celdas del contenedor gráfico ante inserciones o mutaciones secundarias.
+     * </p>
+     *
+     * @param url            Parámetro estructural del framework JavaFX.
+     * @param resourceBundle Parámetro estructural para la carga modular de idiomas o recursos.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //=================LISTA INTEGRANTES===================
@@ -151,7 +171,12 @@ public class IntegrantesController implements Initializable {
 //        }
 //    }
 
-
+    /**
+     * Redirige la navegación de la aplicación mutando la escena principal hacia el formulario extendido de
+     * gestión y administración de usuarios del ecosistema Kanban.
+     *
+     * @throws IOException Si el cargador secuencial {@link FXMLLoader} encuentra un fallo físico al recuperar el archivo FXML.
+     */
     @FXML
     private void irAUsuariosview() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();

@@ -31,7 +31,20 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
-
+/**
+ * Controlador maestro para el panel de administración general, auditoría y enrutamiento
+ * del catálogo global de usuarios del ecosistema de la aplicación.
+ * <p>
+ * Coordina las transiciones complejas de escenas (Scene Graph mutations) entre la vista de gestión
+ * global y los subformularios de integrantes de proyectos, aislando los recursos de ventanas modales
+ * mediante el control imperativo del ciclo de vida de los contenedores {@link Stage}.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ * @see com.decroly.todotabla.utils.Navigator
+ * @see com.decroly.todotabla.utils.EstadoPrograma
+ */
 public class UsuariosController implements Initializable {
     @FXML
     public ListView<Usuario> listViewUsuarios;
@@ -58,7 +71,16 @@ public class UsuariosController implements Initializable {
         return ventanaSecundaria;
     }
 
-
+    /**
+     * Inicializa los componentes estructurales y de colección para el panel maestro de usuarios.
+     * <p>
+     * Ejecuta las sub-rutinas necesarias para el aprovisionamiento inicial de las listas de datos observables
+     * y la vinculación de eventos de selección del ratón sobre los elementos de la lista de interfaz de usuario.
+     * </p>
+     *
+     * @param url            Ruta de resolución para los recursos declarativos FXML.
+     * @param resourceBundle Contenedor de recursos internacionales y localización de datos de la aplicación.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         actualizarUsuarios();
@@ -256,11 +278,18 @@ public class UsuariosController implements Initializable {
 //        Map<Integer, Integrante> integrantesList = IntegrantesBDD.getIntegrantes(EstadoPrograma.getInstance().getProyectoActivo());
 //        ObservableMap<Integer, Integrante> obsIntegrantesList = FXCollections.observableMap(integrantesList);
 //        else{
-////            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
-////            ProyectoController.getCrearProyecto().setDisable(true);
+//            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
+//            ProyectoController.getCrearProyecto().setDisable(true);
 //        }
 
-
+    /**
+     * Realiza una consulta síncrona a la base de datos relacional para refrescar el estado del componente visual de catálogo.
+     * <p>
+     * Envuelve la llamada a {@code UsuariosBDD.getUsuarios()} dentro de un bloque defensivo de control de excepciones.
+     * Si la lectura en la capa de datos es exitosa, fuerza una llamada al método {@code refresh()} del componente
+     * {@code listViewUsuarios} para mitigar discrepancias visuales derivadas de mutaciones concurrentes en el backend.
+     * </p>
+     */
     private void actualizarUsuarios() {
         Map<Integer, Usuario> todosUsuarios;
         try {
@@ -273,7 +302,15 @@ public class UsuariosController implements Initializable {
             listViewUsuarios.refresh();
         }
     }
-
+    /**
+     * Cierra el hilo gráfico actual y destruye la ventana contenedora activa.
+     * <p>
+     * Recupera de manera contextual la instancia de tipo {@link Stage} asociada a través del nodo raíz
+     * del grafo de la escena y despacha una instrucción explícita de clausura, liberando memoria del entorno gráfico.
+     * </p>
+     *
+     * @throws IOException Si el subsistema de E/S de JavaFX experimenta una anomalía al interrumpir los manejadores de eventos.
+     */
     @FXML
     private void volverVentanaPrincipal() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();

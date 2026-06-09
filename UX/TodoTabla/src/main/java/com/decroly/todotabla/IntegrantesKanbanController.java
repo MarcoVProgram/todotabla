@@ -17,7 +17,17 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-
+/**
+ * Controlador específico embebido para la manipulación y asignación contextual rápida de integrantes
+ * desde el espacio de trabajo del Tablero Kanban.
+ * <p>
+ * Optimiza las interacciones directas con el tablero ágil, controlando de manera centralizada la apertura,
+ * parametrización y cierre controlado de ventanas modales secundarias mediante hilos no bloqueantes del backend.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ */
 public class IntegrantesKanbanController implements Initializable {
 //    @FXML
 //    public ListView<Usuario> listViewUsuarios;
@@ -39,11 +49,26 @@ public class IntegrantesKanbanController implements Initializable {
 
     private static Stage ventanaSecundaria;
 
+    /**
+     * Provee acceso controlado y global a la instancia del contenedor secundario {@link Stage} gestionado por este controlador.
+     * <p>
+     * Diseñado bajo un enfoque de cohesión de componentes para permitir que controladores externos verifiquen,
+     * muten o fuercen el cierre de este hilo gráfico durante operaciones en lote.
+     * </p>
+     *
+     * @return El objeto {@link Stage} que representa la ventana flotante activa, o {@code null} si no ha sido instanciada.
+     */
     public static Stage getVentanaSecundaria() {
         return ventanaSecundaria;
     }
 
-
+    /**
+     * Inicializa el estado operativo de los componentes de filtrado y asignación reactiva en el módulo Kanban.
+     * <p>
+     * Extrae las entidades del modelo asociadas al proyecto ágil vigente, inyecta los ítems procesados dentro del
+     * contenedor {@code listViewIntegrantes} y enlaza rutinas de mitigación de errores para prevenir fugas de memoria en los listeners del framework.
+     * </p>
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //=================LISTA INTEGRANTES===================

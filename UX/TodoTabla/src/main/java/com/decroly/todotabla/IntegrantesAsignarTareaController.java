@@ -22,7 +22,20 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
-
+/**
+ * Controlador intermedio especializado en la lógica de asignación mutua y desasignación
+ * de recursos humanos (usuarios del sistema) a flujos de trabajo específicos (tareas) del proyecto.
+ * <p>
+ * Expone un control granular sobre las interacciones de selección (single-selection model) sobre listas
+ * heterogéneas, integrando de manera nativa factorías de celdas personalizadas ({@code CellFactories})
+ * para renderizar perfiles de usuario dinámicamente inyectados desde la base de datos de la aplicación.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ * @see com.decroly.todotabla.model.Usuario
+ * @see com.decroly.todotabla.model.sql.UsuariosBDD
+ */
 public class IntegrantesAsignarTareaController implements Initializable {
     @FXML
     public ListView<Usuario> listViewUsuarios;
@@ -49,7 +62,17 @@ public class IntegrantesAsignarTareaController implements Initializable {
         return ventanaSecundaria;
     }
 
-
+    /**
+     * Orquestador de arranque del ciclo de vida del componente visual.
+     * <p>
+     * Aplica patrones de inyección estructural sobre el {@link ListView} de usuarios, definiendo una factoría
+     * de celdas basada en layouts de tipo {@link VBox} estilizados mediante CSS externo para representar tarjetas corporativas.
+     * Configura de igual forma las restricciones operacionales del modelo de selección a una sola entidad simultánea.
+     * </p>
+     *
+     * @param url            Ruta de resolución para el recurso FXML de origen.
+     * @param resourceBundle Contenedor de internacionalización de datos.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         actualizarUsuarios();
@@ -247,11 +270,18 @@ public class IntegrantesAsignarTareaController implements Initializable {
 //        Map<Integer, Integrante> integrantesList = IntegrantesBDD.getIntegrantes(EstadoPrograma.getInstance().getProyectoActivo());
 //        ObservableMap<Integer, Integrante> obsIntegrantesList = FXCollections.observableMap(integrantesList);
 //        else{
-////            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
-////            ProyectoController.getCrearProyecto().setDisable(true);
+//            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
+//           ProyectoController.getCrearProyecto().setDisable(true);
 //        }
 
-
+    /**
+     * Sincroniza sincrónicamente el listado maestro de usuarios desde el almacenamiento relacional de base de datos.
+     * <p>
+     * Realiza un aislamiento de fallos pasivo invocando defensivamente a {@code UsuariosBDD.getUsuarios()}. En caso
+     * de éxito en la transacción de lectura, fuerza una actualización en cascada del componente gráfico {@code listViewUsuarios}
+     * para reflejar cambios atómicos globales.
+     * </p>
+     */
     private void actualizarUsuarios() {
         Map<Integer, Usuario> todosUsuarios;
         try {
@@ -264,7 +294,15 @@ public class IntegrantesAsignarTareaController implements Initializable {
             listViewUsuarios.refresh();
         }
     }
-
+    /**
+     * Clausura el ciclo de vida visual de la ventana secundaria/modal activa de forma segura.
+     * <p>
+     * Obtiene una referencia directa a la ventana contenedora ({@link Stage}) a través del nodo raíz inyectado
+     * y despacha la instrucción {@code close()}, liberando inmediatamente los recursos del entorno gráfico asignados.
+     * </p>
+     *
+     * @throws IOException Si ocurre una anomalía crítica durante la interrupción o despacho de escenas asociadas.
+     */
     @FXML
     private void volverVentanaPrincipal() throws IOException { //abrir panel kanban
         Stage stage = (Stage) root.getScene().getWindow();

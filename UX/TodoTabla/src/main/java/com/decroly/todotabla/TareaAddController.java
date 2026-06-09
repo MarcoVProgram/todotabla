@@ -17,7 +17,18 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
-
+/**
+ * Controlador de operaciones destinado a gobernar el formulario de creación, asignación inicial
+ * de metadatos y priorización de tareas individuales.
+ * <p>
+ * Expone facilidades para realizar selecciones múltiples simultáneas (Multiple Selection Mode) de operarios,
+ * enlazando de forma segura de manera transaccional la inserción de una tarea con sus respectivas entidades dependientes de
+ * asignación ({@code Asignacion}) bajo un único bloque lógico de control de errores.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ */
 public class TareaAddController implements Initializable { // TODO Comprobar su funcinamiento
 
     //PESTAÑA TAREA
@@ -33,12 +44,24 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
     private ObservableList<Usuario> listaUsuarios;
 
 
-
+    /**
+     * Prepara el entorno transaccional del formulario de alta de tareas.
+     * <p>
+     * Configura el {@link SelectionMode#MULTIPLE} sobre el componente estructurado de integrantes para permitir
+     * asignaciones masivas iniciales e inicia la recuperación asíncrona de recursos humanos.
+     * </p>
+     */
     public void initialize(URL url, ResourceBundle rb) {
         listViewIntegrantes.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         listarUsuarios();
     }
-
+    /**
+     * Recupera y mapea los usuarios que se encuentran capacitados para tomar responsabilidades en el proyecto en curso.
+     * <p>
+     * Extrae información relacional desde la base de datos a través del singleton de contexto de ejecución, poblando de
+     * forma segura la interfaz de usuario en el hilo principal de renderizado de JavaFX.
+     * </p>
+     */
     private void listarUsuarios() {
         listaUsuarios = FXCollections.observableList(misUsuarios);
 

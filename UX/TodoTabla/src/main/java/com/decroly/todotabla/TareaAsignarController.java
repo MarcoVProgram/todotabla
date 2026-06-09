@@ -20,7 +20,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
+/**
+ * Controlador especializado en la lógica pura de re-asignación dinámica de operarios sobre tareas en ejecución.
+ * <p>
+ * Actúa de manera atómica limpiando estructuras volátiles del singleton del sistema e inyectando listados de
+ * integrantes filtrados reactivamente por su estado de activación operativa dentro del proyecto activo.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ */
 public class TareaAsignarController implements Initializable {
     
     @FXML
@@ -33,13 +42,25 @@ public class TareaAsignarController implements Initializable {
     private AnchorPane root;
 
     private List<Usuario> listaAAsignar;
-
+    /**
+     * Inicializa los buffers volátiles e inicia la hidratación de datos de integrantes activos.
+     * <p>
+     * Ejecuta una purga de seguridad sobre los arrays temporales de {@link EstadoPrograma} para prevenir colisiones
+     * de referencias de memoria y despacha el cargado del listado maestro observable mediante {@code getObsIntegrantesList()}.
+     * </p>
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         EstadoPrograma.getInstance().setIntegrantesTemp(null);
         getObsIntegrantesList();
     }
-
+    /**
+     * Consulta, estructura y encapsula las entidades de usuario válidas para asignación en el contenedor visual.
+     * <p>
+     * Interroga a {@code IntegrantesBDD.getIntegrantesActivos()}, extrae los mapeos lógicos de usuario subyacentes,
+     * los introduce en una colección de tipo {@link ObservableList} y asocia una factoría de celdas customizada ({@link UsuariosCell}).
+     * </p>
+     */
     private void getObsIntegrantesList() {
         Map<Integer, Integrante> map = new HashMap<>();
 
@@ -69,7 +90,11 @@ public class TareaAsignarController implements Initializable {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
     }
-
+    /**
+     * Confirma la selección del operario actual y la exporta al ámbito temporal del programa para su uso transaccional.
+     *
+     * @param event El evento de acción originado desde el control de aceptación de la UI.
+     */
     @FXML
     public void asignarUsuarios(ActionEvent event) {
         listaAAsignar = listViewUsuarios.getSelectionModel().getSelectedItems();

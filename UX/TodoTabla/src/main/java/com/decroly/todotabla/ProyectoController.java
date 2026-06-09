@@ -15,7 +15,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-
+/**
+ * Controlador transaccional a cargo del formulario de definición, alta y parametrización de Proyectos.
+ * <p>
+ * Maneja la captura de metadatos de proyectos (títulos, cronogramas y fechas límite), implementa validaciones
+ * lógicas previas a la persistencia y encapsula la lógica para realizar confirmaciones atómicas (Commits) de inserción de
+ * recursos e integrantes en relaciones de bases de datos de carácter muchos-a-muchos (N:M).
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ */
 public class ProyectoController implements Initializable{
 
     @FXML
@@ -38,7 +48,15 @@ public class ProyectoController implements Initializable{
 //    @FXML
 //    private Button addButtom;
 
-
+    /**
+     * Despacha el guardado e inserción persistente de la información estructurada del proyecto.
+     * <p>
+     * Recupera los valores crudos de los formularios gráficos de la vista, instancia el modelo de negocio {@link Proyecto}
+     * y ejecuta una operación de escritura de tipo INSERT a través de {@code ProyetosBDD.insertar()}. Si la base de datos devuelve
+     * una clave primaria válida, asocia y confirma concurrentemente el listado temporal de integrantes antes de retornar
+     * el flujo gráfico a la ventana predecesora.
+     * </p>
+     */
     @FXML
     private void guardar() {
         Proyecto proyecto = new Proyecto(
@@ -84,7 +102,9 @@ public class ProyectoController implements Initializable{
         }
     }
 
-
+    /**
+     * Setea por defecto el estado de las marcas de tiempo iniciales del formulario al momento cronológico actual.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if(fechaProyecto != null){
@@ -92,7 +112,9 @@ public class ProyectoController implements Initializable{
         }
     }
 
-
+    /**
+     * Invoca y expone de forma aislada la ventana modal para asociar recursos humanos temporales a la transacción de este proyecto.
+     */
     @FXML
     private void abrirVentanaUsuarios() { //panel usuarios
         try {

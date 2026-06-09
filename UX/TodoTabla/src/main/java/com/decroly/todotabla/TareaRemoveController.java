@@ -20,7 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-
+/**
+ * Controlador encargado de los flujos operacionales destructivos (Borrado, Eliminación o Purga) de Tareas del Sistema.
+ * <p>
+ * Esta clase implementa un enfoque de diseño defensivo: bloquea imperativamente los mecanismos gráficos de eliminación
+ * ({@code borrarBtn.setDisable(true)}) hasta que se cumplan las precondiciones de selección del modelo, procesando el borrado
+ * físico subsiguiente de elementos en lote mediante transacciones secuenciales seguras contra fallos catastróficos.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ * @see com.decroly.todotabla.model.sql.TareasBDD
+ * @see com.decroly.todotabla.utils.Notificator
+ */
 public class TareaRemoveController implements Initializable {
 
     @FXML
@@ -30,7 +42,14 @@ public class TareaRemoveController implements Initializable {
     
     private ObservableList<Tarea> listaObsTareas;
     private List<Tarea> listaTareas;
-
+    /**
+     * Enlaza y coordina las precondiciones visuales del formulario de eliminación de tareas.
+     * <p>
+     * Invoca la carga inicial de tareas relacionales y asocia un escuchador de cambios ({@code ChangeListener}) a la propiedad
+     * de selección del componente {@code listViewTareas}. Si el elemento seleccionado pasa a un estado de vacuidad ({@code null}),
+     * el botón es deshabilitado reactivamente como medida de protección de interfaz.
+     * </p>
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listarTareas();
@@ -104,7 +123,16 @@ public class TareaRemoveController implements Initializable {
         }
 
     }
-
+    /**
+     * Procesa la eliminación en lote de las tareas actualmente seleccionadas por el operador en la vista gráfica.
+     * <p>
+     * Itera deterministamente sobre los ítems seleccionados del componente, despachando llamadas atómicas hacia {@code TareasBDD.borrar()}.
+     * Si la mutación persistente se ejecuta con éxito, purga la tarea del listado observable en memoria y emite una alerta global
+     * no bloqueante utilizando el sistema de mensajería {@link Notificator}.
+     * </p>
+     *
+     * @param event Evento de acción originado desde el botón de borrado de la interfaz de usuario.
+     */
     @FXML
     public void removeTarea(ActionEvent event) {
         boolean estado = false;

@@ -34,7 +34,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
+/**
+ * Controlador de la interfaz de usuario encargado de la gestión y visualización del historial
+ * de cambios de los estados de las tareas y asignaciones asociadas a un proyecto.
+ * <p>
+ * Esta clase actúa como el componente de control dentro del patrón MVC (Modelo-Vista-Controlador),
+ * sirviendo de puente entre la capa de persistencia remota/local (representada por las clases {@code BDD})
+ * y las vistas declarativas definidas mediante JavaFX FXML. Gestiona flujos transaccionales de borrado,
+ * actualización de estados operacionales de tareas y refresco reactivo de colecciones observables.
+ * </p>
+ *
+ * @author Senior Developer
+ * @version 1.0.0
+ * @see javafx.fxml.Initializable
+ * @see com.decroly.todotabla.utils.EstadoPrograma
+ */
 public class HistorialController implements Initializable {
 
     @FXML
@@ -73,7 +87,22 @@ public class HistorialController implements Initializable {
 
     private ObservableList<HistorialTareas> listaHistorialTareas;
     private ObservableList<Asignacion> listaHistorialAsignaciones;
-
+    /**
+     * Inicializa el estado del controlador tras la carga completa del grafo de nodos de la vista FXML.
+     * <p>
+     * Este método realiza las siguientes operaciones críticas de ciclo de vida:
+     * </p>
+     * <ul>
+     * <li>Recupera contextualmente la tarea y proyecto activos desde el singleton de estado dinámico {@link EstadoPrograma}.</li>
+     * <li>Hydrata los componentes visuales de texto ({@code Label}, {@code TextField}) con las propiedades del modelo.</li>
+     * <li>Consulta de manera segura la base de datos para obtener los estados de flujo de trabajo disponibles mediante {@code EstadosBDD.getEstados()}.</li>
+     * <li>Ordena y asocia los estados recuperados al componente de selección {@code ComboBox}.</li>
+     * <li>Dispara las sub-rutinas sincrónicas de consulta para poblar los componentes distribuidos de tipo {@link ListView}.</li>
+     * </ul>
+     *
+     * @param url            La ubicación utilizada para resolver rutas relativas para el objeto raíz, o {@code null} si no se conoce.
+     * @param resourceBundle Los recursos utilizados para localizar el objeto raíz, o {@code null} si el objeto raíz no fue localizado.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         tareaActiva = EstadoPrograma.getInstance().getTareaActiva();
@@ -109,7 +138,14 @@ public class HistorialController implements Initializable {
         listViewAsignaciones.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
-
+    /**
+     * Intercepta el evento de acción destinado a redirigir el flujo de navegación de la aplicación
+     * hacia el menú o pantalla principal.
+     * <p>
+     * Realiza el desacoplamiento de la ventana actual mediante la mutación segura de la escena del
+     * {@link Stage} raíz utilizando la clase utilitaria de enrutamiento {@link Navigator}.
+     * </p>
+     */
     @FXML
     private void returnToMain() { //abrir pantalla principal (menú)
         Stage stage = (Stage) returnBtn.getScene().getWindow();
@@ -119,7 +155,14 @@ public class HistorialController implements Initializable {
             AppErrorHandler.manejar(ex, "returnToMain");
         }
     }
-
+    /**
+     * Gestiona el evento de navegación inverso para retornar la vista del usuario al panel Kanban activo.
+     * <p>
+     * Extrae el contenedor de ventanas actual a través del nodo del botón emisor y delega la mutación
+     * topológica de la vista hacia {@code kanban-view.fxml}. Cualquier anomalía de entrada/salida (I/O)
+     * es capturada y redirigida centralizadamente hacia {@link AppErrorHandler}.
+     * </p>
+     */
     @FXML
     private void returnToKanban() {
         Stage stage = (Stage) returnBtn.getScene().getWindow();
@@ -129,7 +172,14 @@ public class HistorialController implements Initializable {
             AppErrorHandler.manejar(ex, "returnToMain");
         }
     }
-
+    /**
+        * Sincroniza de manera reactiva los datos locales en memoria del controlador con el almacenamiento persistente.
+     * <p>
+     * Consulta el estado actual de las asignaciones, integrantes y el histórico de cambios de la tarea bajo contexto,
+            * mitigando las inconsistencias de concurrencia mediante el aislamiento de hilos de JavaFX y el refresco ordenado
+     * de las estructuras estructuradas en colecciones de tipo {@link ObservableList}.
+            * </p>
+            */
     private void refrescarDatos() {
         Map<Integer, Asignacion> asignados = null;
         Map<Integer, Integrante> integrantes = null;
