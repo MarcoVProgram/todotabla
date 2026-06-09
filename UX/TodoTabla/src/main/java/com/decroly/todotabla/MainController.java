@@ -248,7 +248,7 @@ public class MainController implements Initializable {
     @FXML
     private void abrirVentanaUsuarios() {
         try {
-            Navigator.arbrirVentanaSecundaria("usuarios-create.fxml", "Crear usuarios", getClass());
+            Navigator.arbrirVentanaSecundaria("usuario-create.fxml", "Crear usuarios", getClass());
         } catch (IOException e) {
             AppErrorHandler.manejar(e, "abrirVentanaUsuarios (fxml)");
         }

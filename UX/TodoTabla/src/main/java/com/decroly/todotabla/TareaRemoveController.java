@@ -98,6 +98,7 @@ public class TareaRemoveController implements Initializable {
         }
 
         if (todasTareasDelProyecto != null) {
+            listaTareas.clear();
             listaTareas.addAll(todasTareasDelProyecto.values());
             listViewTareas.refresh();
         }
