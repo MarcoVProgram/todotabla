@@ -2,16 +2,10 @@ package com.decroly.todotabla;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import com.decroly.todotabla.model.Asignacion;
 import com.decroly.todotabla.model.Estado;
@@ -20,29 +14,24 @@ import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.Usuario;
-import com.decroly.todotabla.model.sql.AsignacionesBDD;
-import com.decroly.todotabla.model.sql.EstadosBDD;
-import com.decroly.todotabla.model.sql.HistorialTareasBDD;
-import com.decroly.todotabla.model.sql.IntegrantesBDD;
-import com.decroly.todotabla.model.sql.TareasBDD;
+import com.decroly.todotabla.model.sql.*;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
+import com.decroly.todotabla.utils.cells.AsignacionesCell;
 import com.decroly.todotabla.utils.cells.HistorialTareaCell;
 import com.decroly.todotabla.utils.cells.UsuariosCell;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
@@ -80,13 +69,10 @@ public class HistorialController implements Initializable {
     @FXML
     private ListView<HistorialTareas> listViewPasado;
     @FXML
-    private ListView<Usuario> listViewAsignaciones; // Historial de asignaciones
+    private ListView<Asignacion> listViewAsignaciones; // Historial de asignaciones
 
     private ObservableList<HistorialTareas> listaHistorialTareas;
     private ObservableList<Asignacion> listaHistorialAsignaciones;
-
-    private ObservableList<Usuario> listaUsuariosAsignados;
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -118,6 +104,10 @@ public class HistorialController implements Initializable {
         listarAsignados();
         listarAsignadosPasados();
         listarEstadosPasados();
+
+        listViewPasado.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listViewAsignaciones.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     @FXML
@@ -197,29 +187,14 @@ public class HistorialController implements Initializable {
     }
 
     private void listarAsignadosPasados() {
-        Map<Integer, Label> fechas = new LinkedHashMap<>();
-        listaUsuariosAsignados = FXCollections.observableList(new ArrayList<>());
-
         refrescarDatos();
 
         if (listaHistorialAsignaciones != null) {
-
             Collections.sort(listaHistorialAsignaciones, Comparator.comparingLong(h -> (h.getFechaAsignacion().toEpochDay())));
-            for (Asignacion asignacion : listaHistorialAsignaciones) {
-                Usuario user = asignacion.getIdUsuario();
-                listaUsuariosAsignados.add(user);
-                String duracion = "Desde " + asignacion.getFechaAsignacion().format(DateTimeFormatter.ISO_LOCAL_DATE) + " hasta ";
-                if (asignacion.getFechaFin() != null) {
-                    duracion += asignacion.getFechaFin().format(DateTimeFormatter.ISO_LOCAL_DATE);
-                } else {
-                    duracion += "hoy";
-                }
-                fechas.put(user.getId(), new Label(duracion));
-            }
         }
 
-        listViewAsignaciones.setItems(listaUsuariosAsignados);
-        listViewAsignaciones.setCellFactory(l -> new UsuariosCell(fechas));
+        listViewAsignaciones.setItems(listaHistorialAsignaciones);
+        listViewAsignaciones.setCellFactory(l -> new AsignacionesCell());
     }
 
     private void listarEstadosPasados() {
@@ -268,18 +243,18 @@ public class HistorialController implements Initializable {
         Stage ventanaSecundaria = MainController.getVentanaSecundaria();
 
         if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
+                Notificator.advertencia("Error al lanzar ventana", "No se puede lanzar la ventana secundaria");
                 return;
         }
 
         // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formAsignarTarea.fxml"));
-            Parent root;
-            try {
-                root = loader.load();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formAsignarTarea.fxml"));
+        Parent root;
+        try {
+            root = loader.load();
             // Crear una nueva ventana (Stage)
             ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Añadir tarea");
+            ventanaSecundaria.setTitle("Añadir Personas");
             ventanaSecundaria.setScene(new Scene(root));
 
             ventanaSecundaria.setResizable(false);
@@ -290,33 +265,110 @@ public class HistorialController implements Initializable {
                 ventanaSecundaria.setAlwaysOnTop(false);
             }
 
-//            listViewTareas.setItems(obsTareas);
-
             // Mostrar la ventana
             ventanaSecundaria.showAndWait();
 
-                for (Usuario u : TareaAsignarController.getlistaAAsignar()) {
+            List<Usuario> lAAsignar = EstadoPrograma.getInstance().getUsuariosTemp();
 
-                    listaUsuarios.add(u);
-
-                    System.out.println(u);
+            if (lAAsignar != null) {
+                Map<Integer, Asignacion> aa = AsignacionesBDD.getAsignacionesActivas(tareaActiva);
+                Map<Integer, Usuario> ua = new LinkedHashMap<>();
+                for (Asignacion asignacion  : aa.values()) {
+                    ua.put(asignacion.getIdUsuario().getId(), asignacion.getIdUsuario());
                 }
-
-                
-
-                // listViewUsuarios.refresh();
-
-            } catch (IOException e) {
-                AppErrorHandler.manejar(e, "load the loader");
+                for (Usuario u : lAAsignar) {
+                    if (ua.containsValue(u)) {
+                        continue;
+                    }
+                    try {
+                        Asignacion asignacion = new Asignacion(u, tareaActiva, LocalDate.now(), null);
+                        AsignacionesBDD.insertar(asignacion);
+                    } catch (Exception e) {
+                        AppErrorHandler.manejar(e, "insertarAsignacion");
+                    }
+                }
             }
+
+        } catch (IOException e) {
+            AppErrorHandler.manejar(e, "load the loader");
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getAsignacionesActivas");
+        }
+        listarAsignados();
+        listarAsignadosPasados();
     }
 
     @FXML
-    private void desasignar() {
-        for (Usuario u : listViewUsuarios.getSelectionModel().getSelectedItems()) {
-            listaUsuarios.remove(u);
+    private void desasignarIntegrantesSeleccionados() {
+        try {
+            int cambios = 0;
+            refrescarDatos();
+            for (Usuario u : listViewUsuarios.getSelectionModel().getSelectedItems()) {
+                for (Asignacion activo : listaAsignacionesATarea) {
+                    if (activo.getIdUsuario().equals(u)) {
+                        activo.setFechaFin(LocalDate.now());
+                        AsignacionesBDD.actualizar(activo);
+                        cambios++;
+                    }
+                }
+            }
+            if (cambios > 0) {
+                Notificator.exito("Desasignacion Realizada", "Se han archivado " + cambios + " asignaciones de usuarios");
+            } else {
+                Notificator.informar("Sin cambios", "No se han archivado datos");
+            }
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "borrar Integrantes seleccionados");
         }
-
+        listarAsignados();
+        listarAsignadosPasados();
     }
 
+    @FXML
+    private void desasignarHistorialesSeleccionados() {
+        try {
+            int cambios = 0;
+            refrescarDatos();
+
+            for (HistorialTareas historial : listViewPasado.getSelectionModel().getSelectedItems()) {
+                HistorialTareasBDD.borrar(historial);
+                cambios++;
+            }
+
+            if (cambios > 0) {
+                Notificator.exito("Borrado Realizado", "Se han borrado " + cambios + " historiales");
+            } else {
+                Notificator.informar("Sin cambios", "No se han borrado datos");
+            }
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "borrar Historiales seleccionados");
+        }
+        listarEstadosPasados();
+    }
+
+    @FXML
+    private void desasignarAsignacionesSeleccionados() {
+        try {
+            int cambios = 0;
+            refrescarDatos();
+
+            for (Asignacion todaAsignacion : listViewAsignaciones.getSelectionModel().getSelectedItems()) {
+                if (listaAsignacionesATarea.contains(todaAsignacion)) {
+                    Notificator.advertencia("No se puede borrar asignacion", "Solo se pueden borrar asignaciones terminadas");
+                    continue;
+                }
+                AsignacionesBDD.borrar(todaAsignacion);
+                cambios++;
+            }
+
+            if (cambios > 0) {
+                Notificator.exito("Borrado Realizado", "Se han borrado " + cambios + " asignaciones");
+            } else {
+                Notificator.informar("Sin cambios", "No se han borrado datos");
+            }
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "borrar Asignaciones seleccionadas");
+        }
+        listarAsignadosPasados();
+    }
 }

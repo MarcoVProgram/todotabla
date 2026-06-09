@@ -5,6 +5,7 @@ import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
+import com.decroly.todotabla.utils.cells.ProyectosCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -45,11 +46,8 @@ public class MainController implements Initializable {
     //lista proyectos
     private List<Proyecto> proyectos = new ArrayList<>();
     ObservableList<Proyecto> obsProyectos = FXCollections.observableList(proyectos);
-    
-    //PESTAÑA INICIO
-    @FXML
-    private Button panelKanbanBtn;
 
+    //PESTAÑA INICIO
     @FXML
     private Node root;
 
@@ -74,14 +72,10 @@ public class MainController implements Initializable {
     @FXML
     private ListView<Proyecto> listViewProyectos;
 
-    public ListView<Proyecto> getListViewProyectos() {
-        return listViewProyectos;
-    }
-
-    private List<Proyecto> proyectoListActivos = new ArrayList<>();
+    private List<Proyecto> proyectoListActivos = new LinkedList<>();
     private ObservableList<Proyecto> obsProyectoListActivos = FXCollections.observableList(proyectoListActivos);
 
-    private List<Proyecto> proyectoListArchivados = new ArrayList<>();
+    private List<Proyecto> proyectoListArchivados = new LinkedList<>();
     private ObservableList<Proyecto> obsProyectoListArchivados = FXCollections.observableList(proyectoListArchivados);
     
     private boolean mostrandoArchivados = false;
@@ -105,8 +99,8 @@ public class MainController implements Initializable {
 
     public void updateLists() {
         List<Proyecto> allProyectos = new LinkedList<>();
-        int valorOriginalProyectosActivos = contadorProyectosActivos();
-        int valorOriginalProyectosArchivados = contadorProyectosArchivados();
+        obsProyectoListActivos.clear();
+        obsProyectoListArchivados.clear();
 
         try {
             allProyectos.addAll(ProyetosBDD.getProyectos().values());
@@ -114,74 +108,17 @@ public class MainController implements Initializable {
             AppErrorHandler.manejar(e, "getProyectos");
         }
 
-
-        listViewProyectos.getItems().addAll();
-
         for (Proyecto p : allProyectos) {
 
-            if (p.getFechaCierre() != null) {
+            if (p.getFechaCierre() == null) {
                 obsProyectoListActivos.add(p);
             }else{
                 obsProyectoListArchivados.add(p);
             }
-
-            listViewProyectos.setItems(obsProyectoListArchivados);
-
-
-            
-            if(obsProyectoListActivos.size() > valorOriginalProyectosActivos){
-                listViewProyectos.refresh();
-//                proyectosAbiertos.setText(String.valueOf(contadorProyectosActivos()));
-            }else if(obsProyectoListArchivados.size() > valorOriginalProyectosArchivados){
-                listViewProyectos.refresh();
-//                proyectosArchivados.setText(String.valueOf(contadorProyectosArchivados()));
-            }
         }
 
-
-
-//        PauseTransition delay = new PauseTransition(Duration.seconds(2));
-//
-//        delay.setOnFinished(event -> {
-//            comprobarProyecto();
-//        });
-//
-//        delay.play();
-        listViewProyectos.setCellFactory(proyectoListView -> new ListCell<Proyecto>() {
-
-            @Override
-            protected void updateItem(Proyecto p, boolean empty) {
-                super.updateItem(p, empty);
-
-                if (empty || p == null) {
-
-                    setGraphic(null);
-
-                } else {
-
-                    // Título
-                    Label titulo = new Label(p.getTitulo());
-                    titulo.getStyleClass().add("titulo-tarea");
-
-                    // Fecha fin
-                    Label inicio = new Label("Fecha inicio: " + p.getFechaCreacion());
-
-                     //Fecha fin
-                    Label fin = new Label("Fecha fin: " + p.getFechaCierre());
-
-                    if(fin.getText().contentEquals("Fecha fin: " + null)){
-                        fin.setText("");
-                    }
-
-                    // Card completa
-                    VBox card = new VBox(10, titulo, inicio, fin);
-
-                    card.getStyleClass().add("task-card");
-
-                    setGraphic(card);
-                }
-            }
-        });
+        setTabActivos();
+        listViewProyectos.setCellFactory(proyectoListView -> new ProyectosCell());
 
         listViewProyectos.setOnMouseClicked(event -> {
             if(event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2){
@@ -195,94 +132,43 @@ public class MainController implements Initializable {
             }
         });
 
-        contAbiertos.setText(String.valueOf(contadorProyectosActivos()));
-        contArchivados.setText(String.valueOf(contadorProyectosArchivados()));
+        contAbiertos.setText(String.valueOf(obsProyectoListActivos.size()));
+        contArchivados.setText(String.valueOf(obsProyectoListArchivados.size()));
 
-        
+        proyectosAbiertos.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) setTabActivos();
+        });
+
+        proyectosArchivados.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) setTabArchivados();
+        });
 
         changeImage.setOnMouseClicked(event -> {
-
             if (event.getButton() == MouseButton.PRIMARY) {
-
-                mostrandoArchivados = !mostrandoArchivados;
-
-                if (mostrandoArchivados) {
-                    isEstado.setText("Proyectos Archivados");
-                    listViewProyectos.setItems(obsProyectoListArchivados);
-
-                    proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
-                    proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
-                } else {
-                    isEstado.setText("Proyectos Activos");
-                    listViewProyectos.setItems(obsProyectoListActivos);
-
-                    proyectosAbiertos.getStyleClass().add("proyectosArchivados");
-                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");
-                }
+                if (mostrandoArchivados) setTabActivos();
+                else setTabArchivados();
             }
-        });
-
-        proyectosAbiertos.setOnMouseClicked(event -> { // TODO revisar el cambio de lista
-
-            String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
-
-            if (event.getButton() == MouseButton.PRIMARY) {
-                cont++;
-
-                if ((cont % 2) == 0) {
-                    isEstado.setText(estado[0]);
-                    listViewProyectos.setItems(obsProyectoListActivos);
-                    proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
-                    proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
-                } else {
-                    cont++;
-                    /*isEstado.setText(estado[1]);
-                    listViewProyectos.setItems(obsProyectoListArchivados);
-                    proyectosAbiertos.getStyleClass().add("proyectosArchivados");
-                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");*/
-                }
-            }
-        });
-
-        proyectosArchivados.setOnMouseClicked(event -> { // TODO revisar el cambio de lista
-
-            String[] estado = {"Proyectos Abiertos", "Proyectos Archivados"};
-
-            if (event.getButton() == MouseButton.PRIMARY) {
-                cont++;
-
-                if ((cont % 2) == 0) {
-                    isEstado.setText(estado[0]);
-                    listViewProyectos.setItems(obsProyectoListActivos);
-
-                    proyectosAbiertos.getStyleClass().add("proyectosAbiertos");
-                    proyectosAbiertos.getStyleClass().add("proyectoArchivadoDeseleccionado");
-                    
-                } else {
-                    isEstado.setText(estado[1]);
-                    listViewProyectos.setItems(obsProyectoListArchivados);
-
-                    proyectosAbiertos.getStyleClass().add("proyectosArchivados");
-                    proyectosAbiertos.getStyleClass().add("proyectoAbiertoDeseleccionado");
-                }
-            }
-        });
-
-        obsProyectoListActivos.addListener((ListChangeListener<Proyecto>) change -> {
-            listViewProyectos.refresh();
-        });
-
-        obsProyectoListArchivados.addListener((ListChangeListener<Proyecto>) change -> {
-            listViewProyectos.refresh();
         });
     }
-    /*if (mostrandoArchivados) {
-    proyectosArchivados.getStyleClass().add("bold");
-    proyectosAbiertos.getStyleClass().remove("bold");
-} else {
-    proyectosAbiertos.getStyleClass().add("bold");
-    proyectosArchivados.getStyleClass().remove("bold");
-}*/
+
+    private void setTabActivos() {
+        listViewProyectos.setItems(obsProyectoListActivos);
+        proyectosAbiertos.getStyleClass().setAll("tab-proyectos", "tab-selected");
+        proyectosArchivados.getStyleClass().setAll("tab-proyectos", "tab-deselected");
+        mostrandoArchivados = false;
+        Button addButton = new Button("+ Crear Nuevo Proyecto");
+        addButton.getStyleClass().add("placeholder-add-button");
+        addButton.setOnAction(e -> abrirVentanaProyecto());
+        listViewProyectos.setPlaceholder(addButton);
+    }
+
+    private void setTabArchivados() {
+        listViewProyectos.setItems(obsProyectoListArchivados);
+        proyectosArchivados.getStyleClass().setAll("tab-proyectos", "tab-selected");
+        proyectosAbiertos.getStyleClass().setAll("tab-proyectos", "tab-deselected");
+        mostrandoArchivados = true;
+        listViewProyectos.setPlaceholder(null);
+    }
 
 
 //----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
@@ -324,29 +210,5 @@ public class MainController implements Initializable {
         } catch (IOException e) {
             AppErrorHandler.manejar(e, "abrirVentanaProyecto (fxml)");
         }
-    }
-
-    public int contadorProyectosActivos(){
-        int contActivos = 0;
-
-        for(Proyecto p : obsProyectoListActivos){
-            if(p != null){
-                contActivos++;
-            }
-        }
-
-        return contActivos;
-    }
-
-    public int contadorProyectosArchivados(){
-        int contArchivados = 0;
-
-        for(Proyecto p : obsProyectoListArchivados) {
-            if(p != null){
-                contArchivados++;
-            }
-        }
-
-        return contArchivados;
     }
 }

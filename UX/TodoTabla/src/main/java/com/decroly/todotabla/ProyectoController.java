@@ -4,8 +4,6 @@ import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.ProyetosBDD;
 
-import com.decroly.todotabla.model.sql.TareasBDD;
-import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,8 +17,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.chrono.IsoChronology;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ProyectoController implements Initializable{
@@ -48,16 +44,13 @@ public class ProyectoController implements Initializable{
 //    @FXML
 //    private Button addButtom;
 
-    ProyetosBDD proyecto = new ProyetosBDD();
-
-
 
     @FXML
     private void guardar() {
         Proyecto proyecto = new Proyecto(
                     tituloProyecto.getText(),
-                    fechaProyecto.getValue(),
-                    null
+                    LocalDate.now(),
+                    fechaProyecto.getValue()
             );
         try {
             int index = ProyetosBDD.insertar(proyecto);
@@ -65,8 +58,8 @@ public class ProyectoController implements Initializable{
                 proyecto = new Proyecto(
                         index,
                     tituloProyecto.getText(),
-                    fechaProyecto.getValue(),
-                    null
+                    LocalDate.now(),
+                    fechaProyecto.getValue()
             );
             }
         } catch (Exception ex) {
@@ -93,7 +86,7 @@ public class ProyectoController implements Initializable{
             volverVentanaPrincipal();
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            AppErrorHandler.manejar(e, "volverVentanaPrincipal");
         }
     }
 

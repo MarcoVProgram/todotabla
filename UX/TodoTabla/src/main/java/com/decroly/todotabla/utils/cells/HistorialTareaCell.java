@@ -49,7 +49,7 @@ public class HistorialTareaCell extends ListCell<HistorialTareas> {
             return;
         }
 
-        this.titulo.setText("Change: " + h.getFechaCambio().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        this.titulo.setText("Cambio: " + h.getFechaCambio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss")));
         this.circle.setStyle("-fx-fill: " + h.getEstado().getColor()+";");
         this.estado.setText(h.getEstado().getNombre());
 

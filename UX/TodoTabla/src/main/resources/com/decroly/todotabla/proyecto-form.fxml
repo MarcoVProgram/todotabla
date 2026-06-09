@@ -34,12 +34,12 @@
       </HBox>
       <HBox alignment="CENTER">
          <children>
-            <Label styleClass="notice-text" text="Fecha de creacion:">
+            <Label styleClass="notice-text" text="Fecha de cierre (opcional):">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
             </Label>
-            <DatePicker fx:id="fechaProyecto" disable="true" editable="true">
+            <DatePicker fx:id="fechaProyecto" editable="true">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
@@ -51,8 +51,8 @@
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="150.0">
          <children>
-            <Button fx:id="anadirUsuariosBtn" mnemonicParsing="false" onMouseClicked="#irAUsuariosview" styleClass="btnAdd" text="addUsuarios" />
-            <Button fx:id="crearProyecto" defaultButton="true" mnemonicParsing="false" onAction="#guardar" text="Guardar">
+            <Button fx:id="anadirUsuariosBtn" mnemonicParsing="false" onMouseClicked="#irAUsuariosview" styleClass="btnAdd" text="+ Añadir Usuarios" />
+            <Button fx:id="crearProyecto" defaultButton="true" mnemonicParsing="false" onAction="#guardar" styleClass="btnAdd" text="Guardar">
                <HBox.margin>
                   <Insets right="30.0" />
                </HBox.margin>

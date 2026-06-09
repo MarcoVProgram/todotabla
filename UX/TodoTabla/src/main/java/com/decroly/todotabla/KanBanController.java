@@ -17,10 +17,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
@@ -136,6 +133,16 @@ public class KanBanController implements Initializable {
             }
         });
 
+        try {
+            if (estado.getNombre().equalsIgnoreCase("pendiente")) {
+                Button addButton = new Button("+ Crear Nueva Tarea");
+                addButton.getStyleClass().add("placeholder-add-button");
+                addButton.setOnAction(e -> abrirVentanaCrearTarea());
+                listView.setPlaceholder(addButton);
+            }
+        } catch (Exception e) {
+            AppErrorHandler.manejar(e, "getEstado");
+        }
         return new ColumnaKanban(estado, listView, items, filteredTareas);
     }
 
