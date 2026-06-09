@@ -7,7 +7,15 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Navigator { //para cambiar entre escenas de manera fácil
+public class Navigator {
+
+    private static Stage ventanaSecundaria;
+
+    private static Stage getVentanaSecundaria() {
+        return ventanaSecundaria;
+    }
+
+    //para cambiar entre escenas de manera fácil
     public static void changeScene(Stage current, String fxml) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(Navigator.class.getResource(fxml));
@@ -20,5 +28,31 @@ public class Navigator { //para cambiar entre escenas de manera fácil
         } else {
             scene.setRoot(root);
         }
+    }
+
+
+    public static void arbrirVentanaSecundaria(String fxml, String title, Class clase) throws IOException {
+        if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
+            Notificator.advertencia("Sesión no válida", "No se puede volver a abrir, hay una sesión existente");
+            System.out.println("No se puede volver a abrir, hay una sesion existente");
+            return;
+        }
+
+        // Cargar el archivo FXML
+        FXMLLoader loader = new FXMLLoader(clase.getResource(fxml));
+        Parent root = loader.load();
+
+        // Crear una nueva ventana (Stage)
+        ventanaSecundaria = new Stage();
+        ventanaSecundaria.setTitle(title);
+        ventanaSecundaria.setScene(new Scene(root));
+
+        ventanaSecundaria.setResizable(false);
+        ventanaSecundaria.setAlwaysOnTop(false);
+
+//            listViewTareas.setItems(obsTareas);
+
+        // Mostrar la ventana
+        ventanaSecundaria.showAndWait();
     }
 }

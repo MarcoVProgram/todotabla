@@ -240,33 +240,11 @@ public class HistorialController implements Initializable {
     @FXML
     private void abrirVentanaPersonas() {
 
-        Stage ventanaSecundaria = MainController.getVentanaSecundaria();
-
-        if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                Notificator.advertencia("Error al lanzar ventana", "No se puede lanzar la ventana secundaria");
-                return;
-        }
-
-        // Cargar el archivo FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formAsignarTarea.fxml"));
-        Parent root;
         try {
-            root = loader.load();
-            // Crear una nueva ventana (Stage)
-            ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Añadir Personas");
-            ventanaSecundaria.setScene(new Scene(root));
+            String fxml = "usuarios-formAsignarTarea.fxml";
+            String titulo = "Añadir Personas";
 
-            ventanaSecundaria.setResizable(false);
-
-            if (ventanaSecundaria.isFocused()){
-                ventanaSecundaria.setAlwaysOnTop(true);
-            }else{
-                ventanaSecundaria.setAlwaysOnTop(false);
-            }
-
-            // Mostrar la ventana
-            ventanaSecundaria.showAndWait();
+            Navigator.arbrirVentanaSecundaria(fxml, titulo, getClass());
 
             List<Usuario> lAAsignar = EstadoPrograma.getInstance().getUsuariosTemp();
 

@@ -81,15 +81,6 @@ public class MainController implements Initializable {
     
     private boolean mostrandoArchivados = false;
 
-
-
-    //VARIABLES AUXILIARES
-    private static Stage ventanaSecundaria;
-
-    public static Stage getVentanaSecundaria() {
-        return ventanaSecundaria;
-    }
-
     private int cont = 0;
     
     @FXML
@@ -241,33 +232,25 @@ public class MainController implements Initializable {
     private void abrirVentanaProyecto() { //panel proyecto
         try {
 
-            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
-                return;
-            }
+            String fxml = "proyecto-form.fxml";
+            String title = "Añadir proyecto";
 
-            // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("proyecto-form.fxml"));
-            Parent root = loader.load();
-
-            // Crear una nueva ventana (Stage)
-            ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Añadir proyecto");
-            ventanaSecundaria.setScene(new Scene(root));
-
-            ventanaSecundaria.setResizable(false);
-            ventanaSecundaria.setAlwaysOnTop(false);
-
-//            listViewTareas.setItems(obsTareas);
-
-            // Mostrar la ventana
-            ventanaSecundaria.showAndWait();
+            Navigator.arbrirVentanaSecundaria(fxml, title, getClass());
 
             updateLists();
             listViewProyectos.refresh();
 
         } catch (IOException e) {
             AppErrorHandler.manejar(e, "abrirVentanaProyecto (fxml)");
+        }
+    }
+
+    @FXML
+    private void abrirVentanaUsuarios() {
+        try {
+            Navigator.arbrirVentanaSecundaria("usuarios-create.fxml", "Crear usuarios", getClass());
+        } catch (IOException e) {
+            AppErrorHandler.manejar(e, "abrirVentanaUsuarios (fxml)");
         }
     }
 }

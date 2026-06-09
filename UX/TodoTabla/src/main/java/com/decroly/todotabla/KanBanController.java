@@ -1,11 +1,26 @@
 package com.decroly.todotabla;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import com.decroly.todotabla.model.Estado;
-import com.decroly.todotabla.model.*;
+import com.decroly.todotabla.model.Integrante;
+import com.decroly.todotabla.model.Proyecto;
+import com.decroly.todotabla.model.Tarea;
 import com.decroly.todotabla.model.sql.EstadosBDD;
 import com.decroly.todotabla.model.sql.TareasBDD;
-import com.decroly.todotabla.utils.*;
+import com.decroly.todotabla.utils.AppErrorHandler;
+import com.decroly.todotabla.utils.ColumnaKanban;
+import com.decroly.todotabla.utils.EstadoPrograma;
+import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.cells.TareaMovableCell;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -17,16 +32,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
 
 public class KanBanController implements Initializable {
     @FXML
@@ -39,10 +57,6 @@ public class KanBanController implements Initializable {
     private List<Integrante> integrantes = new ArrayList<>();
     private ObservableList<Integrante> obsIntegrantes = FXCollections.observableList(integrantes);
 
-
-    private Stage ventanaSecundaria = getVentanaSecundaria();
-
-
     private static Stage ventanaTerciaria;
 
     private Proyecto proyectoSeleccionado;
@@ -51,9 +65,7 @@ public class KanBanController implements Initializable {
     @FXML
     private BorderPane root;
 
-    private static Stage getVentanaSecundaria() {
-        return MainController.getVentanaSecundaria();
-    }
+
 
     @FXML
     private Label proyectoTitulo;
@@ -214,32 +226,8 @@ public class KanBanController implements Initializable {
     private void abrirVentanaCrearTarea() { //panel tarea
         try {
 
-            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
-                return;
-            }
+            Navigator.arbrirVentanaSecundaria("tarea-view-create.fxml", "Añadir tarea", getClass());
 
-            // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view-create.fxml"));
-            Parent root = loader.load();
-
-            // Crear una nueva ventana (Stage)
-            ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Añadir tarea");
-            ventanaSecundaria.setScene(new Scene(root));
-
-            ventanaSecundaria.setResizable(false);
-
-            if(ventanaSecundaria.isFocused()){
-                ventanaSecundaria.setAlwaysOnTop(true);
-            }else{
-                ventanaSecundaria.setAlwaysOnTop(false);
-            }
-
-//            listViewTareas.setItems(obsTareas);
-
-            // Mostrar la ventana
-            ventanaSecundaria.showAndWait();
             actualizarTareas();
 
         } catch (IOException e) {
@@ -251,24 +239,12 @@ public class KanBanController implements Initializable {
     private void abrirVentanaEditarTarea() { //panel tarea
         try {
 
-            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
-                return;
-            }
+            String fxml = "tarea-view-mod.fxml";
+            String titulo = "Editar tarea";
 
-            // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view-mod.fxml"));
-            Parent root = loader.load();
 
-            // Crear una nueva ventana (Stage)
-            ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Editar tarea");
-            ventanaSecundaria.setScene(new Scene(root));
+            Navigator.arbrirVentanaSecundaria(fxml, titulo, getClass());
 
-            ventanaSecundaria.setResizable(false);
-
-            // Mostrar la ventana
-            ventanaSecundaria.showAndWait();
             actualizarTareas();
 
         } catch (IOException e) {
@@ -280,24 +256,12 @@ public class KanBanController implements Initializable {
     private void abrirVentanaBorrarTarea() { //panel tarea
         try {
 
-            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesión existente");
-                return;
-            }
+            String titulo = "Borrar tarea";
 
-            // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("tarea-view-remove.fxml"));
-            Parent root = loader.load();
+            String fxml = "tarea-view-remove.fxml";
 
-            // Crear una nueva ventana (Stage)
-            ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Borrar tarea");
-            ventanaSecundaria.setScene(new Scene(root));
+            Navigator.arbrirVentanaSecundaria(fxml, titulo, getClass());
 
-            ventanaSecundaria.setResizable(false);
-
-            // Mostrar la ventana
-            ventanaSecundaria.showAndWait();
             actualizarTareas();
 
         } catch (IOException e) {
@@ -309,34 +273,12 @@ public class KanBanController implements Initializable {
     private void abrirVentanaIntegrantes() { //panel gestión usuarios
         try {
 
-            if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
-                System.out.println("No se puede volver a abrir, hay una sesion existente");
-                return;
-            }
+            String fxml = "usuarios-formIntegrantes.fxml";
 
-            // Cargar el archivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-formIntegrantes.fxml"));
-            Parent root = loader.load();
+            String titulo = "Gestionar usuarios";
 
-            // Crear una nueva ventana (Stage)
-            ventanaSecundaria = new Stage();
-            ventanaSecundaria.setTitle("Gestionar usuarios");
-            ventanaSecundaria.setScene(new Scene(root));
+            Navigator.arbrirVentanaSecundaria(fxml, titulo, getClass());
 
-            ventanaSecundaria.setResizable(false);
-
-            if(ventanaSecundaria.isFocused()){
-                ventanaSecundaria.setAlwaysOnTop(true);
-            }else{
-                ventanaSecundaria.setAlwaysOnTop(false);
-            }
-
-//            listViewTareas.setItems(obsTareas);
-
-            // Mostrar la ventana
-            ventanaSecundaria.showAndWait();
-
-            // TODO Hay que refrescar las listas del Kanban controller
 
         } catch (IOException e) {
             e.printStackTrace();
