@@ -100,6 +100,7 @@ public class HistorialController implements Initializable {
 
         estadoChoice.setItems(listaEstados);
         estadoChoice.setValue(tareaActiva.getEstado().getNombre());
+        estadoChoice.getStyleClass().add("choice-box-popup");
 
         listarAsignados();
         listarAsignadosPasados();

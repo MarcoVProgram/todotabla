@@ -519,15 +519,23 @@
 
 /*historial*/
 .choice-box-choice > * {
-    -fx-text-fill: white;
+    -fx-text-fill: #e6edf3;
 }
+
 .choice-box-choice {
-    -fx-border-radius: 16px;
-    -fx-background-radius: 16px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
     -fx-pref-width: 200px;
-    -fx-min-height: 40px;
-    -fx-background-color: #101d21;
-    -fx-effect: dropshadow(gaussian, rgba(59, 83, 89, 0.45), 10, 0, 0, 1);
+    -fx-min-height: 32px;
+    -fx-background-color: #21262d;
+    -fx-border-color: #30363d;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0, 0, 1);
+}
+
+.choice-box-choice:hover {
+    -fx-background-color: #30363d;
+    -fx-border-color: #8b949e;
 }
 
 .circle-estado {
@@ -927,7 +935,7 @@
 }
 
 /* ==========================================================================
-   BOTONES (Estilo base aplica a Cancelar, :default aplica a Aceptar)
+   BOTONES (Estºilo base aplica a Cancelar, :default aplica a Aceptar)
    ========================================================================== */
 
 /* Estilo general para AMBOS botones (Por defecto actúa como el botón Cancelar) */
@@ -967,6 +975,34 @@
     -fx-background-color: #2ea043;
     -fx-text-fill: #ffffff;
     -fx-border-color: rgba(240, 246, 252, 0.2);
+}
+
+/* Main box — use layered backgrounds for border simulation */
+.choice-box {
+    -fx-background-color: #30363d, #21262d;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 6px, 5px;
+}
+
+/* Selected value text */
+.choice-box .label {
+    -fx-text-fill: #c9d1d9 !important;
+}
+
+/* Dropdown arrow button area */
+.choice-box .open-button {
+    -fx-background-color: transparent;
+}
+
+/* The arrow itself */
+.choice-box .open-button .arrow {
+    -fx-background-color: #c9d1d9;
+}
+
+/* Hover */
+.choice-box:hover {
+    -fx-background-color: #8b949e, #30363d;
+    -fx-background-insets: 0, 1;
 }
 
 /* ==========================================================================

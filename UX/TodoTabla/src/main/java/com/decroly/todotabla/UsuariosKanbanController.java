@@ -14,8 +14,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -101,7 +103,7 @@ public class UsuariosKanbanController implements Initializable {
         //==============CREAR POPUP AL CLICKEAR USUARIO PARA AÑADIR===================
         listViewUsuarios.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
-                //Popup combobox
+
                 List<String> roles = List.of(
                         "Product Owner",
                         "Scrum Master",
@@ -112,45 +114,53 @@ public class UsuariosKanbanController implements Initializable {
                         "Stakeholder"
                 );
 
-                ChoiceDialog<String> dialog =
-                        new ChoiceDialog<>("Developer", roles);
+                ChoiceBox<String> choiceBox = new ChoiceBox<>();
+                choiceBox.getItems().addAll(roles);
+                choiceBox.setValue("Developer");
+                choiceBox.getStyleClass().add("choice-box-choice");
 
+                Dialog<String> dialog = new Dialog<>();
                 dialog.setTitle("Seleccionar Rol");
                 dialog.setHeaderText("Asignar rol al usuario");
 
                 DialogPane dialogPane = dialog.getDialogPane();
-                dialogPane.getStylesheets().add(getClass().getResource("/com/decroly/todotabla/style.css").toExternalForm());
+                dialogPane.setContent(choiceBox);
+                dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
                 dialogPane.getStyleClass().add("dialog-info");
-                dialogPane.getStyleClass().add("choice-box-popup");
 
-                Optional<String> result = dialog.showAndWait();
+                dialog.setOnShown(e ->
+                    dialogPane.getScene().getStylesheets().add(
+                        getClass().getResource("/com/decroly/todotabla/style.css").toExternalForm()
+                    )
+                );
 
-                result.ifPresent(rol -> {
-                    System.out.println("Rol seleccionado: " + rol);
+                dialog.setResultConverter(btn ->
+                    btn == ButtonType.OK ? choiceBox.getValue() : null
+                );
 
+                dialog.showAndWait().ifPresent(rol -> {
+                    Usuario seleccionado = listViewUsuarios.getSelectionModel().getSelectedItem();
 
-                    if (rol != null) {
-                        Integrante i = new Integrante(rol, LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
+                    Integrante i = new Integrante(
+                            rol,
+                            LocalDate.now(),
+                            null,
+                            seleccionado,
+                            EstadoPrograma.getInstance().getProyectoActivo()
+                    );
 
-                        try {
-                            IntegrantesBDD.insertar(i);
-
-                        } catch (Exception e) {
-                            e.getStackTrace();
-                        }
-
-                        try {
-                            if (IntegrantesBDD.getIntegrante(i.getId()) != null) {
-                                Notificator.exito("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-                                        + ", al proyecto actual ");
-
-                            } else {
-                                Notificator.exito("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-                                        + ", al proyecto actual ");
-                            }
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
+                    try {
+                        IntegrantesBDD.insertar(i);
+                        Notificator.exito(
+                                "Éxito",
+                                "Se insertó correctamente al usuario " + seleccionado.getNombre() + " al proyecto actual"
+                        );
+                    } catch (Exception e) {
+                        AppErrorHandler.manejar(e, "insertar integrante");
+                        Notificator.error(
+                                "Error",
+                                "No se pudo insertar al usuario " + seleccionado.getNombre()
+                        );
                     }
                 });
             }

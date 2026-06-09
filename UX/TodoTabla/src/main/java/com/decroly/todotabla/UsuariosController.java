@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -174,21 +175,33 @@ public class UsuariosController implements Initializable {
                         "Stakeholder"
                 );
 
-                ChoiceDialog<String> dialog = new ChoiceDialog<>("Developer", roles);
+                ChoiceBox<String> choiceBox = new ChoiceBox<>();
+                choiceBox.getItems().addAll(roles);
+                choiceBox.setValue("Developer");
+                choiceBox.getStyleClass().add("choice-box-choice");
+
+                Dialog<String> dialog = new Dialog<>();
                 dialog.setTitle("Seleccionar Rol");
                 dialog.setHeaderText("Asignar rol al usuario");
 
                 DialogPane dialogPane = dialog.getDialogPane();
-                dialogPane.getStylesheets().add(getClass().getResource("/com/decroly/todotabla/style.css").toExternalForm());
+                dialogPane.setContent(choiceBox);
+                dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
                 dialogPane.getStyleClass().add("dialog-info");
-                dialogPane.getStyleClass().add("choice-box-popup");
-                
+
+                dialog.setOnShown(e ->
+                    dialogPane.getScene().getStylesheets().add(
+                        getClass().getResource("/com/decroly/todotabla/style.css").toExternalForm()
+                    )
+                );
+
+                dialog.setResultConverter(btn ->
+                    btn == ButtonType.OK ? choiceBox.getValue() : null
+                );
+
                 Optional<String> result = dialog.showAndWait();
 
-
                 result.ifPresent(rol -> {
-
-
                     try {
 
                         Integrante i = new Integrante(
