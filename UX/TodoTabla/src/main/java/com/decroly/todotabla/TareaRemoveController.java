@@ -7,6 +7,7 @@ import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,7 +30,11 @@ public class TareaRemoveController implements Initializable {
     public Button borrarBtn;
     
     private ObservableList<Tarea> listaObsTareas;
+    private FilteredList<Tarea> filteredTareas;
     private List<Tarea> listaTareas;
+
+    @FXML
+    private TextField buscarTareaEliminar;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -37,7 +42,6 @@ public class TareaRemoveController implements Initializable {
         
         borrarBtn.setDisable(true);
 
-        final String[] t = {""};
         listViewTareas.getSelectionModel().selectedItemProperty().addListener((obs, oldTask, newTask) -> {
             if (newTask != null) {
                 borrarBtn.setDisable(false);
@@ -45,6 +49,8 @@ public class TareaRemoveController implements Initializable {
                 borrarBtn.setDisable(true);
             }
         });
+
+        this.buscarTareaEliminar.textProperty().addListener((obs) -> filtrarTareas());
     }
 
     private void listarTareas() {
@@ -52,13 +58,13 @@ public class TareaRemoveController implements Initializable {
             listaTareas = new ArrayList<>(TareasBDD.getTareas(
                     EstadoPrograma.getInstance().getProyectoActivo()
             ).values());
-            listaObsTareas = FXCollections.observableList(
-                    listaTareas
-            );
+            listaObsTareas = FXCollections.observableList(listaTareas);
         } catch (Exception e) {
             AppErrorHandler.manejar(e, "getTareas");
         }
 
+        filteredTareas = new FilteredList<>(listaObsTareas, e -> true);
+        listViewTareas.setItems(filteredTareas);
         listViewTareas.setCellFactory(listaTareas ->  new ListCell<Tarea>() {
             @Override
             protected void updateItem(Tarea tarea, boolean empty) {
@@ -82,8 +88,12 @@ public class TareaRemoveController implements Initializable {
                 }
             }
         });
+    }
 
-        listViewTareas.setItems(listaObsTareas);
+    private void filtrarTareas() {
+        filteredTareas.setPredicate(proyecto ->
+                    this.buscarTareaEliminar.getText().isBlank() ||
+                            proyecto.getNombre().toLowerCase().contains(this.buscarTareaEliminar.getText().toLowerCase()) );
     }
 
     private void actualizarTareas() {
@@ -106,9 +116,9 @@ public class TareaRemoveController implements Initializable {
     }
 
     @FXML
-    public void removeTarea(ActionEvent event) {
+    public void removeTarea() {
         boolean estado = false;
-        ObservableList<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
+        List<Tarea> listaDeTareas = listViewTareas.getSelectionModel().getSelectedItems();
 
         for (Tarea t: listaDeTareas) {
             try {
@@ -120,7 +130,7 @@ public class TareaRemoveController implements Initializable {
         }
 
         if (estado) {
-            Notificator.informar("Borrar Tarea", "Se ha borrado correctamente");
+            Notificator.exito("Borrar Tarea", "Se ha borrado correctamente");
             actualizarTareas();
         } else {
             Notificator.advertencia("Borrar Tarea", "No se ha podido borrar");

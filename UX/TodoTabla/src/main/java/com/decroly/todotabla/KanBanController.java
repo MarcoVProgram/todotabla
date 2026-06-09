@@ -26,18 +26,14 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -47,8 +43,6 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class KanBanController implements Initializable {
-    @FXML
-    private ImageView returnBtn;
 
     //Contenedor
     @FXML
@@ -150,6 +144,7 @@ public class KanBanController implements Initializable {
                 Button addButton = new Button("+ Crear Nueva Tarea");
                 addButton.getStyleClass().add("placeholder-add-button");
                 addButton.setOnAction(e -> abrirVentanaCrearTarea());
+                addButton.setAlignment(Pos.TOP_CENTER);
                 listView.setPlaceholder(addButton);
             }
         } catch (Exception e) {
@@ -232,23 +227,6 @@ public class KanBanController implements Initializable {
 
         } catch (IOException e) {
             AppErrorHandler.manejar(e, "abrirVentanaCrearTarea");
-        }
-    }
-
-    @FXML
-    private void abrirVentanaEditarTarea() { //panel tarea
-        try {
-
-            String fxml = "tarea-view-mod.fxml";
-            String titulo = "Editar tarea";
-
-
-            Navigator.arbrirVentanaSecundaria(fxml, titulo, getClass());
-
-            actualizarTareas();
-
-        } catch (IOException e) {
-            AppErrorHandler.manejar(e,  "abrirVentanaEditarTarea (fxml)");
         }
     }
 

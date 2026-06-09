@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaAsignarController">
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaAsignarController">
    <children>
       <GridPane prefHeight="400.0" prefWidth="600.0">
         <columnConstraints>
@@ -51,7 +51,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="583.0" spacing="10" styleClass="search-container">
                <children>
                   <Label styleClass="search-icon" text="🔍" />
-                  <TextField fx:id="buscarUsuario" editable="false" promptText="Busca usuario" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="buscarUsuario" promptText="Busca usuario" styleClass="search-field" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>
