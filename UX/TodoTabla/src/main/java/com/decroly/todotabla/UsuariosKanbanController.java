@@ -120,7 +120,7 @@ public class UsuariosKanbanController implements Initializable {
 
                 DialogPane dialogPane = dialog.getDialogPane();
                 dialogPane.getStylesheets().add(getClass().getResource("/com/decroly/todotabla/style.css").toExternalForm());
-                dialogPane.getStyleClass().add("choice-dialog");
+                dialogPane.getStyleClass().add("dialog-info");
 
                 Optional<String> result = dialog.showAndWait();
 

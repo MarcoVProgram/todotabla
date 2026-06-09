@@ -447,143 +447,6 @@
     -fx-border-width: 1.5;
 }
 
-
-/* Alerts */
-/* === ERROR === */
-.error-alert {
-    -fx-background-color: error-body;
-}
-
-.error-alert .header-panel {
-    -fx-background-color: error-header;
-}
-
-.error-alert .header-panel .label {
-    -fx-text-fill: error-text;
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-}
-
-.error-alert .content.label {
-    -fx-text-fill: content-text;
-    -fx-font-size: 13px;
-}
-
-.error-alert .button {
-    -fx-background-color: transparent;
-    -fx-text-fill: error-header;
-    -fx-border-color: error-header;
-    -fx-border-width: 1.5px;
-    -fx-border-radius: 6px;
-}
-
-.error-alert .button:hover {
-    -fx-background-color: error-header;
-    -fx-text-fill: white;
-}
-
-
-/* === WARNING === */
-.warning-alert {
-    -fx-background-color: warning-body;
-}
-
-.warning-alert .header-panel {
-    -fx-background-color: warning-header;
-}
-
-.warning-alert .header-panel .label {
-    -fx-text-fill: warning-text;
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-}
-
-.warning-alert .content.label {
-    -fx-text-fill: content-text;
-    -fx-font-size: 13px;
-}
-
-.warning-alert .button {
-    -fx-background-color: transparent;
-    -fx-text-fill: warning-header;
-    -fx-border-color: warning-header;
-    -fx-border-width: 1.5px;
-    -fx-border-radius: 6px;
-}
-
-.warning-alert .button:hover {
-    -fx-background-color: warning-header;
-    -fx-text-fill: white;
-}
-
-
-/* === SUCCESS === */
-.success-alert {
-    -fx-background-color: success-body;
-}
-
-.success-alert .header-panel {
-    -fx-background-color: success-header;
-}
-
-.success-alert .header-panel .label {
-    -fx-text-fill: success-text;
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-}
-
-.success-alert .content.label {
-    -fx-text-fill: content-text;
-    -fx-font-size: 13px;
-}
-
-.success-alert .button {
-    -fx-background-color: transparent;
-    -fx-text-fill: success-header;
-    -fx-border-color: success-header;
-    -fx-border-width: 1.5px;
-    -fx-border-radius: 6px;
-}
-
-.success-alert .button:hover {
-    -fx-background-color: success-header;
-    -fx-text-fill: white;
-}
-
-
-/* === INFO === */
-.inform-alert {
-    -fx-background-color: inform-body;
-}
-
-.inform-alert .header-panel {
-    -fx-background-color: inform-header;
-}
-
-.inform-alert .header-panel .label {
-    -fx-text-fill: inform-text;
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-}
-
-.inform-alert .content.label {
-    -fx-text-fill: content-text;
-    -fx-font-size: 13px;
-}
-
-.inform-alert .button {
-    -fx-background-color: transparent;
-    -fx-text-fill: inform-header;
-    -fx-border-color: inform-header;
-    -fx-border-width: 1.5px;
-    -fx-border-radius: 6px;
-}
-
-.inform-alert .button:hover {
-    -fx-background-color: inform-header;
-    -fx-text-fill: white;
-}
-
 /* user list*/
 .user-list {
     -fx-background-color: transparent;
@@ -990,7 +853,7 @@
    ========================================================================== */
 
 /* Fondo principal del diálogo y bordes */
-.dialog-pane {
+.dialog-info {
     -fx-background-color: #0d1117; /* Fondo oscuro de GitHub */
     -fx-border-color: #30363d;     /* Color de borde sutil */
     -fx-border-width: 1px;
@@ -999,7 +862,7 @@
 }
 
 /* Encabezado (Header) */
-.dialog-pane .header-panel {
+.dialog-info .header-panel {
     -fx-background-color: #161b22; /* Un gris un poco más claro para separar */
     -fx-border-color: transparent transparent #30363d transparent; /* Línea divisoria inferior */
     -fx-border-width: 1px;
@@ -1007,26 +870,26 @@
 }
 
 /* Todos los textos dentro del diálogo */
-.dialog-pane .label {
+.dialog-info .label {
     -fx-text-fill: #c9d1d9;        /* Blanco grisáceo del texto de GitHub */
     -fx-font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
     -fx-font-size: 14px;
 }
 
 /* El texto del título/cabecera (un poco más brillante y fuerte) */
-.dialog-pane .header-panel .label {
+.dialog-info .header-panel .label {
     -fx-text-fill: #f0f6fc;
     -fx-font-weight: bold;
     -fx-font-size: 15px;
 }
 
 /* Contenedor del ChoiceBox (Desplegable) */
-.dialog-pane .content {
+.dialog-info .content {
     -fx-padding: 20px;
 }
 
 /* El componente ChoiceBox (El desplegable en sí) */
-.dialog-pane .choice-box {
+.dialog-info .choice-box {
     -fx-background-color: #21262d;
     -fx-border-color: #30363d;
     -fx-border-width: 1px;
@@ -1037,26 +900,26 @@
 }
 
 /* Forzar el color del texto de la opción seleccionada dentro del ChoiceBox */
-.dialog-pane .choice-box .label {
+.dialog-info .choice-box .label {
     -fx-text-fill: #c9d1d9 !important;
 }
 
 /* Cuando pasas el ratón por encima del desplegable */
-.dialog-pane .choice-box:hover {
+.dialog-info .choice-box:hover {
     -fx-background-color: #30363d;
     -fx-border-color: #8b949e;
 }
 
 /* La flechita hacia abajo del desplegable */
-.dialog-pane .choice-box .arrow {
+.dialog-info .choice-box .arrow {
     -fx-background-color: #8b949e;
 }
-.dialog-pane .choice-box .arrow-button {
+.dialog-info .choice-box .arrow-button {
     -fx-background-color: transparent;
 }
 
 /* Barra de botones (Aceptar / Cancelar) */
-.dialog-pane .button-bar {
+.dialog-info .button-bar {
     -fx-background-color: #161b22;
     -fx-border-color: #30363d transparent transparent transparent;
     -fx-border-width: 1px;
@@ -1068,7 +931,7 @@
    ========================================================================== */
 
 /* Estilo general para AMBOS botones (Por defecto actúa como el botón Cancelar) */
-.dialog-pane .button {
+.dialog-info .button {
     -fx-font-family: "-apple-system", "Segoe UI", Arial;
     -fx-font-size: 13px;
     -fx-font-weight: bold;
@@ -1085,14 +948,14 @@
 }
 
 /* Hover general (Afecta principalmente al botón Cancelar) */
-.dialog-pane .button:hover {
+.dialog-info .button:hover {
     -fx-background-color: #30363d;
     -fx-border-color: #8b949e;
     -fx-text-fill: #f0f6fc;
 }
 
 /* Botón ACEPTAR / OK (Estilo verde "Success" de GitHub, pisa el estilo base) */
-.dialog-pane .button:default {
+.dialog-info .button:default {
     -fx-background-color: #238636;
     -fx-text-fill: #ffffff;
     -fx-border-color: rgba(240, 246, 252, 0.1);
@@ -1100,7 +963,7 @@
 }
 
 /* Hover exclusivo del botón de Aceptar */
-.dialog-pane .button:default:hover {
+.dialog-info .button:default:hover {
     -fx-background-color: #2ea043;
     -fx-text-fill: #ffffff;
     -fx-border-color: rgba(240, 246, 252, 0.2);
@@ -1166,4 +1029,140 @@
 /* Quitar el borde azul feo que mete JavaFX por defecto al enfocar la lista */
 .choice-box-popup .list-view:focused {
     -fx-background-color: #161b22;
+}
+
+/* Alerts */
+/* === ERROR === */
+.error-alert {
+    -fx-background-color: error-body;
+}
+
+.error-alert .header-panel {
+    -fx-background-color: error-header;
+}
+
+.error-alert .header-panel .label {
+    -fx-text-fill: error-text;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.error-alert .content.label {
+    -fx-text-fill: content-text;
+    -fx-font-size: 13px;
+}
+
+.error-alert .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: error-header;
+    -fx-border-color: error-header;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.error-alert .button:hover {
+    -fx-background-color: error-header;
+    -fx-text-fill: white;
+}
+
+
+/* === WARNING === */
+.warning-alert {
+    -fx-background-color: warning-body;
+}
+
+.warning-alert .header-panel {
+    -fx-background-color: warning-header;
+}
+
+.warning-alert .header-panel .label {
+    -fx-text-fill: warning-text;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.warning-alert .content.label {
+    -fx-text-fill: content-text;
+    -fx-font-size: 13px;
+}
+
+.warning-alert .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: warning-header;
+    -fx-border-color: warning-header;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.warning-alert .button:hover {
+    -fx-background-color: warning-header;
+    -fx-text-fill: white;
+}
+
+
+/* === SUCCESS === */
+.success-alert {
+    -fx-background-color: success-body;
+}
+
+.success-alert .header-panel {
+    -fx-background-color: success-header;
+}
+
+.success-alert .header-panel .label {
+    -fx-text-fill: success-text;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.success-alert .content.label {
+    -fx-text-fill: content-text;
+    -fx-font-size: 13px;
+}
+
+.success-alert .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: success-header;
+    -fx-border-color: success-header;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.success-alert .button:hover {
+    -fx-background-color: success-header;
+    -fx-text-fill: white;
+}
+
+
+/* === INFO === */
+.inform-alert {
+    -fx-background-color: inform-body;
+}
+
+.inform-alert .header-panel {
+    -fx-background-color: inform-header;
+}
+
+.inform-alert .header-panel .label {
+    -fx-text-fill: inform-text;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.inform-alert .content.label {
+    -fx-text-fill: content-text;
+    -fx-font-size: 13px;
+}
+
+.inform-alert .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: inform-header;
+    -fx-border-color: inform-header;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+}
+
+.inform-alert .button:hover {
+    -fx-background-color: inform-header;
+    -fx-text-fill: white;
 }
