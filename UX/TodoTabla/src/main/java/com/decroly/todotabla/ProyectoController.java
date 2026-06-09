@@ -44,17 +44,15 @@ public class ProyectoController implements Initializable{
         Proyecto proyecto = new Proyecto(
                     tituloProyecto.getText(),
                     LocalDate.now(),
-                    fechaProyecto.getValue()
-            );
+                    fechaProyecto.getValue());
         try {
             int index = ProyetosBDD.insertar(proyecto);
             if (index != -1) {
                 proyecto = new Proyecto(
                         index,
-                    tituloProyecto.getText(),
-                    LocalDate.now(),
-                    fechaProyecto.getValue()
-            );
+                        tituloProyecto.getText(),
+                        LocalDate.now(),
+                        fechaProyecto.getValue());
             }
         } catch (Exception ex) {
             AppErrorHandler.manejar(ex, "insertar");
@@ -87,9 +85,6 @@ public class ProyectoController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if(fechaProyecto != null){
-            fechaProyecto.setValue(LocalDate.now());
-        }
     }
 
 

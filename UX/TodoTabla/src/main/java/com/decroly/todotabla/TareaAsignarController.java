@@ -12,6 +12,7 @@ import com.decroly.todotabla.utils.cells.UsuariosCell;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,9 +23,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class TareaAsignarController implements Initializable {
-    
-    @FXML
-    private TextField buscarUsuario;
 
     @FXML
     private ListView<Usuario> listViewUsuarios;
@@ -34,10 +32,18 @@ public class TareaAsignarController implements Initializable {
 
     private List<Usuario> listaAAsignar;
 
+    private FilteredList<Usuario> filteredIntegranteList;
+
+
+    @FXML
+    private TextField buscarUsuario;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         EstadoPrograma.getInstance().setIntegrantesTemp(null);
         getObsIntegrantesList();
+        buscarUsuario.textProperty().addListener((observable) -> filtarUsers());
     }
 
     private void getObsIntegrantesList() {
@@ -59,19 +65,27 @@ public class TareaAsignarController implements Initializable {
 
         ObservableList<Usuario> obsIntegrantesList =
                 FXCollections.observableArrayList(al);
+        filteredIntegranteList = new FilteredList<>(obsIntegrantesList,  p -> true);
 
-        listViewUsuarios.setItems(obsIntegrantesList);
+
+        listViewUsuarios.setItems(filteredIntegranteList);
         listViewUsuarios.setCellFactory(cell -> new UsuariosCell());
     }
 
+    private void filtarUsers() {
+        filteredIntegranteList.setPredicate(proyecto ->
+                    this.buscarUsuario.getText().isBlank() ||
+                            proyecto.getNombre().toLowerCase().contains(this.buscarUsuario.getText().toLowerCase()) );
+    }
+
     @FXML
-    public void salir(MouseEvent event) {
+    public void salir() {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
     }
 
     @FXML
-    public void asignarUsuarios(ActionEvent event) {
+    public void asignarUsuarios() {
         listaAAsignar = listViewUsuarios.getSelectionModel().getSelectedItems();
         EstadoPrograma.getInstance().setUsuariosTemp(listaAAsignar);
         Stage stage = (Stage) root.getScene().getWindow();

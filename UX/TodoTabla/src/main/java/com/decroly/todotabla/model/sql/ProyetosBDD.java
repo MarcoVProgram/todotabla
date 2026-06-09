@@ -10,18 +10,24 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ProyetosBDD {
-    public static int insertar(Proyecto p) throws Exception{ // TODO obtener numero del id al insertar
+    public static int insertar(Proyecto p) throws Exception{
         boolean estado = false;
         int clave = -1;
 
         try (Connection conexion = BDD.getConnection();
              PreparedStatement stmnt = conexion.prepareStatement(
-                     "INSERT INTO proyecto VALUES (NULL, ?, ?, NULL)", Statement.RETURN_GENERATED_KEYS
+                     "INSERT INTO proyecto VALUES (NULL, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS
              )
         ){
 
             stmnt.setString(1, p.getTitulo());
             stmnt.setDate(2, Date.valueOf(p.getFechaCreacion()));
+
+            if (p.getFechaCierre() != null) {
+                stmnt.setDate(3, Date.valueOf(p.getFechaCierre()));
+            } else {
+                stmnt.setNull(3, Types.DATE);
+            }
 
             estado = (stmnt.executeUpdate() == 1);
 

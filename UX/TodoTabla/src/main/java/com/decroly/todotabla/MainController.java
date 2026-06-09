@@ -10,9 +10,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -81,28 +83,29 @@ public class MainController implements Initializable {
     
     private boolean mostrandoArchivados = false;
 
-    private int cont = 0;
+    private FilteredList<Proyecto> filteredProyectos;
     
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
         configurarContextMenu();
         updateLists();
+        isEstado.textProperty().addListener((observable) -> filtrarProyectos());
     }
 
     public void updateLists() {
-        List<Proyecto> allProyectos = new LinkedList<>();
+        obsProyectos.clear();
         obsProyectoListActivos.clear();
         obsProyectoListArchivados.clear();
 
         try {
-            allProyectos.addAll(ProyetosBDD.getProyectos().values());
+            obsProyectos.addAll(ProyetosBDD.getProyectos().values());
         } catch (Exception e) {
             AppErrorHandler.manejar(e, "getProyectos");
         }
 
-        for (Proyecto p : allProyectos) {
+        for (Proyecto p : obsProyectos) {
 
-            if (p.getFechaCierre() == null) {
+            if (p.getFechaCierre() == null || p.getFechaCierre().isAfter(LocalDate.now())) {
                 obsProyectoListActivos.add(p);
             }else{
                 obsProyectoListArchivados.add(p);
@@ -132,18 +135,21 @@ public class MainController implements Initializable {
     }
 
     private void setTabActivos() {
-        listViewProyectos.setItems(obsProyectoListActivos);
+        filteredProyectos = new FilteredList<>(obsProyectoListActivos, p -> true);
+        listViewProyectos.setItems(filteredProyectos);
         proyectosAbiertos.getStyleClass().setAll("tab-proyectos", "tab-selected");
         proyectosArchivados.getStyleClass().setAll("tab-proyectos", "tab-deselected");
         mostrandoArchivados = false;
         Button addButton = new Button("+ Crear Nuevo Proyecto");
         addButton.getStyleClass().add("placeholder-add-button");
         addButton.setOnAction(e -> abrirVentanaProyecto());
+        addButton.setAlignment(Pos.TOP_CENTER);
         listViewProyectos.setPlaceholder(addButton);
     }
 
     private void setTabArchivados() {
-        listViewProyectos.setItems(obsProyectoListArchivados);
+        filteredProyectos = new FilteredList<>(obsProyectoListArchivados, p -> true);
+        listViewProyectos.setItems(filteredProyectos);
         proyectosArchivados.getStyleClass().setAll("tab-proyectos", "tab-selected");
         proyectosAbiertos.getStyleClass().setAll("tab-proyectos", "tab-deselected");
         mostrandoArchivados = true;
@@ -200,7 +206,7 @@ public class MainController implements Initializable {
                     cerrarItem.setText("🔓 Abrir proyecto");
                     cerrarItem.setStyle("-fx-text-fill: #3fb950;");
                 } else {
-                    cerrarItem.setText("🔒 Cerrar proyecto");
+                    cerrarItem.setText("🔒 Archivar proyecto");
                     cerrarItem.setStyle("-fx-text-fill: #e3b341;");
                 }
 
@@ -218,6 +224,12 @@ public class MainController implements Initializable {
                 }
             }
         });
+    }
+
+    private void filtrarProyectos() {
+        filteredProyectos.setPredicate(proyecto ->
+                    this.isEstado.getText().isBlank() ||
+                            proyecto.getTitulo().toLowerCase().contains(this.isEstado.getText().toLowerCase()) );
     }
 
 

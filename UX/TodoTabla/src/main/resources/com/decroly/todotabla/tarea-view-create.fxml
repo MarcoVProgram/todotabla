@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="720.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaAddController">
+<BorderPane prefHeight="720.0" prefWidth="720.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decroly.todotabla.TareaAddController">
    <top>
       <VBox>
          <children>
@@ -48,7 +48,7 @@
                <children>
                   <VBox prefHeight="865.0" prefWidth="1000.0" styleClass="board">
                      <children>
-                        <TextField fx:id="nombreTareaFormCrear" prefHeight="23.0" prefWidth="454.0" promptText="Descripción tarea" style="-fx-background-color: #2c2c2c;" styleClass="descTarea" />
+                        <TextField fx:id="nombreTareaFormCrear" prefHeight="23.0" prefWidth="454.0" promptText="Escribe el nombre de la tarea" style="-fx-background-color: #2c2c2c;" styleClass="descTarea" />
                         <VBox>
                            <VBox.margin>
                               <Insets top="100.0" />
@@ -60,7 +60,7 @@
                         </VBox>
                         <HBox alignment="TOP_RIGHT" prefHeight="74.0" prefWidth="1342.0">
                            <children>
-                              <Button fx:id="addTarea" layoutX="485.0" layoutY="10.0" onAction="#addTarea" styleClass="btnAdd" text="Añadir task" />
+                              <Button layoutX="485.0" layoutY="10.0" onAction="#addTarea" onMouseClicked="#addTarea" styleClass="btnAdd" text="Añadir Tarea" />
                            </children>
                         </HBox>
                      </children>
