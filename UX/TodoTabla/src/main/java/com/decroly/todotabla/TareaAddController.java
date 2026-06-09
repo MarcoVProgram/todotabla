@@ -46,6 +46,7 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
         };
 
         nombreTareaFormCrear.textProperty().addListener(campo);
+        
         listarUsuarios();
     }
 
@@ -136,6 +137,9 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
         }
         if (insertarExito) {
             Notificator.exito("Creación de Tarea", "Se ha creado la tarea con éxito, puede cerrar esta ventana");
+            nombreTareaFormCrear.clear();
+
+            listViewIntegrantes.getSelectionModel().clearSelection();
         }
     }
 
