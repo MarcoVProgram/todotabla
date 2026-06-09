@@ -1,10 +1,13 @@
 package com.decroly.todotabla.model.sql;
 
-import com.decroly.todotabla.model.Usuario;
-import com.decroly.todotabla.utils.AppErrorHandler;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import java.sql.*;
-import java.util.*;
+import com.decroly.todotabla.model.Usuario;
 
 public class UsuariosBDD {
     public static boolean insertar(Usuario m) throws Exception {
@@ -144,5 +147,24 @@ public class UsuariosBDD {
 
 
         }
+    }
+
+    public static boolean correoExiste(String correo) throws Exception {
+
+        boolean estado = false;
+
+        try (Connection conexion = BDD.getConnection();
+            PreparedStatement stmnt = conexion.prepareStatement(
+                "SELECT * FROM usuario WHERE email LIKE ?;"
+        )) {
+            
+            stmnt.setString(1, correo);
+
+            ResultSet usuarios = stmnt.executeQuery();
+
+            estado = usuarios.next();
+        }
+
+        return estado;
     }
 }

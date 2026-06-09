@@ -1,5 +1,7 @@
 package com.decroly.todotabla;
 
+import java.util.regex.Pattern;
+
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
@@ -19,14 +21,10 @@ public class UsuariosAddController {
     @FXML
     private TextField nombreUsuarioCrear;
 
-    private Usuario ultimoIntroducido = new Usuario("", "", "");
-
     @FXML
     public void addTarea() {
 
-        System.out.println(nombreUsuarioCrear.getText() + "/n" +
-                    apellidosUsuarioCrear.getText() + "/n" +
-                    emailUsuarioCrear.getText());
+        
 
         if (
             nombreUsuarioCrear.getText() != null && 
@@ -34,8 +32,20 @@ public class UsuariosAddController {
             apellidosUsuarioCrear.getText() != null && 
             !apellidosUsuarioCrear.getText().isBlank() &&
             emailUsuarioCrear.getText() != null &&
-            !emailUsuarioCrear.getText().isBlank()
+            !emailUsuarioCrear.getText().isBlank() &&
+            Pattern.matches(
+                "[A-Za-z-._0-9Ññ]+@[A-Za-z]+[.][A-Za-z]{2,4}", 
+                emailUsuarioCrear.getText().toUpperCase()
+            ) && 
+            Pattern.matches(
+                "^[A-Za-z 0-9Ññ_-]{2,45}$", 
+                apellidosUsuarioCrear.getText()
+            ) &&
+            Pattern.matches(
+                "^[A-Za-z 0-9Ññ_-]{2,30}$", 
+                nombreUsuarioCrear.getText()
             )
+        )
         {
             Usuario u = new Usuario(
                     nombreUsuarioCrear.getText(),
@@ -43,12 +53,20 @@ public class UsuariosAddController {
                     emailUsuarioCrear.getText()
             );
 
-            if (!(u.getEmail().equals(ultimoIntroducido.getEmail()))){ 
+            boolean yaExiste = true;
+
+            try {
+                yaExiste = UsuariosBDD.correoExiste(u.getEmail());
+            } catch (Exception e) {
+                AppErrorHandler.manejar(e, 
+                    "UsuariosBDD.correoExiste(u.getEmail())");
+            }
+
+            if (!yaExiste){ 
                 try {
                     UsuariosBDD.insertar(u);
                     Notificator.exito("Usuario introducido", 
                     "El usuario se ha agregado correctamente");
-                    ultimoIntroducido = u;
                 } catch (Exception e) {
                     AppErrorHandler.manejar(e, "UsuariosBDD.insertar(u);");
                 }
@@ -56,8 +74,31 @@ public class UsuariosAddController {
                 Notificator.advertencia("Intento de duplicado", "Ese usuario ya existe.");
             }
         } else {
+
+            String ayuda = "";
+
+            if (Pattern.matches(
+                "^[A-Za-z 0-9Ññ_-]{2,30}$", 
+                nombreUsuarioCrear.getText()
+            )) {
+                ayuda += "\nPara rellenera correctamente  el nombre sin caracteres especiales."; 
+            }
+            if (Pattern.matches(
+                "^[A-Za-z 0-9Ññ_-]{2,45}$", 
+                apellidosUsuarioCrear.getText()
+            )) {
+                ayuda += "\nPara rellenera correctamente los apellidos sin caracteres especiales.";
+            }
+            if (Pattern.matches(
+                "[A-Za-z-._0-9Ññ]+@[A-Za-z]+[.][A-Za-z]{2,4}", 
+                emailUsuarioCrear.getText().toUpperCase()
+            )) {
+                ayuda += "\nPara la direccion correo ponga el nombre de usuario, el arroba y despues el dominio valido que le corresponada";
+            }
+
             Notificator.error("Formulario vacio o mal", 
-            "Por favor rellene correctamente el formulario");
+            "Por favor rellene correctamente el formulario." + "\n" + 
+            ayuda);
         }
     }
 }
