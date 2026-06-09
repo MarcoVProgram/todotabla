@@ -41,10 +41,10 @@ public class TareaRemoveController implements Initializable {
         listViewTareas.getSelectionModel().selectedItemProperty().addListener((obs, oldTask, newTask) -> {
             if (newTask != null) {
                 borrarBtn.setDisable(false);
-            } else {
-                borrarBtn.setDisable(true);
             }
         });
+        
+        
     }
 
     private void listarTareas() {

@@ -6,6 +6,7 @@ import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
 import com.decroly.todotabla.utils.Notificator;
 import com.decroly.todotabla.utils.cells.UsuariosCell;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,8 +22,8 @@ import java.util.*;
 public class TareaAddController implements Initializable { // TODO Comprobar su funcinamiento
 
     //PESTAÑA TAREA
-//    @FXML
-//    private Button addTarea;
+    @FXML
+    private Button addTarea;
 
     @FXML
     public TextField nombreTareaFormCrear;
@@ -36,6 +37,15 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
 
     public void initialize(URL url, ResourceBundle rb) {
         listViewIntegrantes.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        addTarea.setDisable(true);
+        ChangeListener<String> campo = (obs, oldVal, newVal)->{
+            boolean vacio = nombreTareaFormCrear.getText().trim().isEmpty();
+
+            addTarea.setDisable(vacio);
+        };
+
+        nombreTareaFormCrear.textProperty().addListener(campo);
         listarUsuarios();
     }
 
