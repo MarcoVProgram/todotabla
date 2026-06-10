@@ -7,21 +7,16 @@ import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.model.*;
 import com.decroly.todotabla.utils.cells.ProyectosCell;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -32,25 +27,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controlador de la vista principal de la aplicación.
+ * Muestra los proyectos activos y archivados en pestañas separadas, permite filtrarlos
+ * por título y ofrece un menú contextual para archivar, restaurar o eliminar proyectos.
+ */
 public class MainController implements Initializable {
-    //lista miembros
 
-    private List<Usuario> usuarios = new ArrayList<>();
-    ObservableList<Usuario> obsUsuarios = FXCollections.observableList(usuarios);
-
-    //lista tareas
-    private List<Tarea> tareas = new ArrayList<>();
-    ObservableList<Tarea> obsTareas = FXCollections.observableList(tareas);
-
-    private List<Usuario> miembros = new ArrayList<>();
-    ObservableList<Usuario> obsMiembros = FXCollections.observableList(miembros);
-
-    
-    //lista proyectos
     private List<Proyecto> proyectos = new ArrayList<>();
     ObservableList<Proyecto> obsProyectos = FXCollections.observableList(proyectos);
 
-    //PESTAÑA INICIO
     @FXML
     private Node root;
 
@@ -92,6 +78,10 @@ public class MainController implements Initializable {
         isEstado.textProperty().addListener((observable) -> filtrarProyectos());
     }
 
+    /**
+     * Recarga todos los proyectos desde la base de datos, los clasifica en activos y archivados,
+     * actualiza los contadores y configura los listeners de las pestañas y el botón de cambio de vista.
+     */
     public void updateLists() {
         obsProyectos.clear();
         obsProyectoListActivos.clear();
@@ -134,6 +124,10 @@ public class MainController implements Initializable {
         });
     }
 
+    /**
+     * Muestra la pestaña de proyectos activos con su lista filtrada y el botón de crear proyecto
+     * como placeholder si la lista está vacía.
+     */
     private void setTabActivos() {
         filteredProyectos = new FilteredList<>(obsProyectoListActivos, p -> true);
         listViewProyectos.setItems(filteredProyectos);
@@ -147,6 +141,9 @@ public class MainController implements Initializable {
         listViewProyectos.setPlaceholder(addButton);
     }
 
+    /**
+     * Muestra la pestaña de proyectos archivados con su lista filtrada.
+     */
     private void setTabArchivados() {
         filteredProyectos = new FilteredList<>(obsProyectoListArchivados, p -> true);
         listViewProyectos.setItems(filteredProyectos);
@@ -156,6 +153,11 @@ public class MainController implements Initializable {
         listViewProyectos.setPlaceholder(null);
     }
 
+    /**
+     * Configura el menú contextual de la lista de proyectos.
+     * Permite archivar o restaurar un proyecto con clic secundario,
+     * y navegar al tablero Kanban con doble clic.
+     */
     private void configurarContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
 
@@ -226,24 +228,33 @@ public class MainController implements Initializable {
         });
     }
 
+    /**
+     * Aplica el predicado de búsqueda sobre la lista filtrada de proyectos
+     * según el texto introducido en el campo de búsqueda.
+     */
     private void filtrarProyectos() {
         filteredProyectos.setPredicate(proyecto ->
                     this.isEstado.getText().isBlank() ||
                             proyecto.getTitulo().toLowerCase().contains(this.isEstado.getText().toLowerCase()) );
     }
 
-
-//----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
+    /**
+     * Navega al tablero Kanban del proyecto activo.
+     *
+     * @throws IOException si el fichero FXML no puede cargarse
+     */
     @FXML
-    private void abrirVentanaPrincipal() throws IOException { //abrir panel kanban
+    private void abrirVentanaPrincipal() throws IOException {
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/kanban-view.fxml");
     }
 
+    /**
+     * Abre la ventana secundaria de creación de proyecto y recarga la lista al cerrarla.
+     */
     @FXML
-    private void abrirVentanaProyecto() { //panel proyecto
+    private void abrirVentanaProyecto() {
         try {
-
             String fxml = "proyecto-form.fxml";
             String title = "Añadir proyecto";
 
@@ -257,6 +268,9 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Abre la ventana secundaria de creación de usuarios.
+     */
     @FXML
     private void abrirVentanaUsuarios() {
         try {

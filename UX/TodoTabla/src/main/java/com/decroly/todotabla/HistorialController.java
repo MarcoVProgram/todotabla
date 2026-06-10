@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.decroly.todotabla.model.Asignacion;
@@ -25,16 +24,17 @@ import com.decroly.todotabla.utils.cells.UsuariosCell;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+/**
+ * Controlador de la vista de historial de una tarea.
+ * Gestiona la visualización y edición del nombre y estado de la tarea activa,
+ * el historial de cambios de estado, el historial de asignaciones y los usuarios actualmente asignados.
+ */
 public class HistorialController implements Initializable {
 
     @FXML
@@ -53,7 +53,7 @@ public class HistorialController implements Initializable {
     private TextField nuevoNombreTarea;
 
     @FXML
-    private ListView<Usuario> listViewUsuarios; // ¿Que clase de objeto usa?
+    private ListView<Usuario> listViewUsuarios;
     @FXML
     private Label circleEstado;
 
@@ -69,7 +69,7 @@ public class HistorialController implements Initializable {
     @FXML
     private ListView<HistorialTareas> listViewPasado;
     @FXML
-    private ListView<Asignacion> listViewAsignaciones; // Historial de asignaciones
+    private ListView<Asignacion> listViewAsignaciones;
 
     private ObservableList<HistorialTareas> listaHistorialTareas;
     private ObservableList<Asignacion> listaHistorialAsignaciones;
@@ -111,8 +111,11 @@ public class HistorialController implements Initializable {
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
+    /**
+     * Navega de vuelta a la vista principal del menú.
+     */
     @FXML
-    private void returnToMain() { //abrir pantalla principal (menú)
+    private void returnToMain() {
         Stage stage = (Stage) returnBtn.getScene().getWindow();
         try {
             Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
@@ -121,6 +124,9 @@ public class HistorialController implements Initializable {
         }
     }
 
+    /**
+     * Navega de vuelta a la vista del tablero Kanban.
+     */
     @FXML
     private void returnToKanban() {
         Stage stage = (Stage) returnBtn.getScene().getWindow();
@@ -131,6 +137,10 @@ public class HistorialController implements Initializable {
         }
     }
 
+    /**
+     * Recarga desde la base de datos las asignaciones activas, los integrantes activos,
+     * el historial de estados y el historial de asignaciones de la tarea activa.
+     */
     private void refrescarDatos() {
         Map<Integer, Asignacion> asignados = null;
         Map<Integer, Integrante> integrantes = null;
@@ -164,6 +174,10 @@ public class HistorialController implements Initializable {
         }
     }
 
+    /**
+     * Carga y muestra en {@code listViewUsuarios} los usuarios actualmente asignados a la tarea,
+     * junto con su rol en el proyecto.
+     */
     private void listarAsignados() {
         listaUsuarios = FXCollections.observableList(new ArrayList<>());
         Map<Integer, Label> rols = new LinkedHashMap<>();
@@ -187,6 +201,10 @@ public class HistorialController implements Initializable {
         listViewUsuarios.setCellFactory(listaAsignados -> new UsuariosCell(rols));
     }
 
+    /**
+     * Carga y muestra en {@code listViewAsignaciones} el historial completo de asignaciones
+     * de la tarea, ordenado por fecha de asignación ascendente.
+     */
     private void listarAsignadosPasados() {
         refrescarDatos();
 
@@ -198,6 +216,10 @@ public class HistorialController implements Initializable {
         listViewAsignaciones.setCellFactory(l -> new AsignacionesCell());
     }
 
+    /**
+     * Carga y muestra en {@code listViewPasado} el historial de cambios de estado de la tarea,
+     * ordenado por fecha de cambio ascendente.
+     */
     private void listarEstadosPasados() {
         refrescarDatos();
 
@@ -208,6 +230,10 @@ public class HistorialController implements Initializable {
         listViewPasado.setCellFactory(l -> new HistorialTareaCell());
     }
 
+    /**
+     * Valida y persiste los cambios de nombre y estado introducidos por el usuario para la tarea activa.
+     * Muestra un aviso si los nuevos valores ya existen en el proyecto.
+     */
     @FXML
     private void actualizarTareaEdicion() {
         String newName  = nuevoNombreTarea.getText();
@@ -236,8 +262,10 @@ public class HistorialController implements Initializable {
         }
     }
 
-    // Para signar seria preferible abrir otro panel que este oculto o una ventana nueva
-
+    /**
+     * Abre la ventana secundaria de selección de personas para asignarlas a la tarea activa.
+     * Una vez cerrada la ventana, inserta las nuevas asignaciones evitando duplicados.
+     */
     @FXML
     private void abrirVentanaPersonas() {
 
@@ -277,6 +305,10 @@ public class HistorialController implements Initializable {
         listarAsignadosPasados();
     }
 
+    /**
+     * Archiva las asignaciones activas de los usuarios seleccionados en {@code listViewUsuarios}
+     * estableciendo su fecha de fin al día actual.
+     */
     @FXML
     private void desasignarIntegrantesSeleccionados() {
         try {
@@ -303,6 +335,10 @@ public class HistorialController implements Initializable {
         listarAsignadosPasados();
     }
 
+    /**
+     * Elimina de la base de datos los registros del historial de estados seleccionados
+     * en {@code listViewPasado}.
+     */
     @FXML
     private void desasignarHistorialesSeleccionados() {
         try {
@@ -325,6 +361,10 @@ public class HistorialController implements Initializable {
         listarEstadosPasados();
     }
 
+    /**
+     * Elimina de la base de datos las asignaciones seleccionadas en {@code listViewAsignaciones}.
+     * Solo permite borrar asignaciones ya finalizadas; las activas se omiten con un aviso.
+     */
     @FXML
     private void desasignarAsignacionesSeleccionados() {
         try {

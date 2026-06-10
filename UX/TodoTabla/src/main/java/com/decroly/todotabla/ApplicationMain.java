@@ -13,10 +13,22 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Punto de entrada de la aplicación JavaFX.
+ * Verifica la conexión a la base de datos antes de cargar la interfaz principal
+ * y cierra la aplicación si la conexión no puede establecerse.
+ */
 public class ApplicationMain extends Application {
+
+    /**
+     * Inicializa y muestra la ventana principal de la aplicación.
+     * Si la verificación de conexión falla, la aplicación se cierra antes de cargar la interfaz.
+     *
+     * @param stage el {@link Stage} principal proporcionado por JavaFX
+     * @throws IOException si el fichero FXML no se encuentra o no puede cargarse
+     */
     @Override
     public void start(Stage stage) throws IOException {
-//        WindowWatcher.init(); //iniciar clase que comprueba ventanas abiertas
         if (launchTest()) return;
 
         FXMLLoader fxmlLoader = new FXMLLoader(ApplicationMain.class.getResource("main-view.fxml"));
@@ -30,17 +42,20 @@ public class ApplicationMain extends Application {
             stage.setAlwaysOnTop(false);
         }
 
-        stage.setResizable(false);//hacer que no se pueda cambiar tamaño de la ventana
+        stage.setResizable(false);
         stage.show();
     }
 
+    /**
+     * Verifica que la conexión a la base de datos es válida antes de arrancar la aplicación.
+     * En caso de error muestra un diálogo descriptivo y marca el arranque como inválido.
+     *
+     * @return {@code true} si la verificación falló y la aplicación debe cerrarse,
+     *         {@code false} si la conexión es correcta y el arranque puede continuar
+     */
     private boolean launchTest() {
         boolean invalid = false;
         try {
-            /*Notificator.advertencia("Hola", "Mundo");
-            Notificator.error("Hola", "Mundo");
-            Notificator.exito("Hola", "Mundo");
-            Notificator.informar("Hola", "Mundo");*/
             Connection x = BDD.getConnection();
             x.close();
         } catch (SQLException e) {
@@ -63,10 +78,18 @@ public class ApplicationMain extends Application {
         return false;
     }
 
+    /**
+     * Cierra la aplicación JavaFX de forma ordenada.
+     */
     private void exitProgram() {
         Platform.exit();
     }
 
+    /**
+     * Método principal que lanza la aplicación.
+     *
+     * @param args argumentos de línea de comandos, no utilizados
+     */
     public static void main(String[] args) {
         launch();
     }

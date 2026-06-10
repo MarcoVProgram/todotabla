@@ -9,7 +9,19 @@ import java.util.Map;
 
 import com.decroly.todotabla.model.Usuario;
 
+/**
+ * Clase de acceso a datos para la entidad {@link Usuario}.
+ * Proporciona operaciones CRUD y consultas de búsqueda contra la tabla {@code usuario} de la base de datos.
+ */
 public class UsuariosBDD {
+
+    /**
+     * Inserta un nuevo usuario en la base de datos.
+     *
+     * @param m el usuario a insertar
+     * @return {@code true} si la inserción afectó exactamente una fila, {@code false} en caso contrario
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static boolean insertar(Usuario m) throws Exception {
         boolean estado = false;
 
@@ -28,6 +40,13 @@ public class UsuariosBDD {
         return estado;
     }
 
+    /**
+     * Actualiza el nombre, los apellidos y el correo electrónico de un usuario existente.
+     *
+     * @param m el usuario con los datos actualizados
+     * @return {@code true} si la actualización afectó exactamente una fila, {@code false} en caso contrario
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static boolean actualizar(Usuario m) throws Exception {
         boolean estado = false;
 
@@ -63,6 +82,13 @@ public class UsuariosBDD {
         return estado;
     }
 
+    /**
+     * Elimina un usuario de la base de datos.
+     *
+     * @param m el usuario a eliminar
+     * @return {@code true} si la eliminación afectó exactamente una fila, {@code false} en caso contrario
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static boolean borrar(Usuario m) throws Exception {
         boolean estado = false;
 
@@ -86,6 +112,12 @@ public class UsuariosBDD {
         return estado;
     }
 
+    /**
+     * Recupera todos los usuarios almacenados en la base de datos.
+     *
+     * @return un {@link Map} ordenado de ID a {@link Usuario}
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static Map<Integer, Usuario> getUsuarios() throws Exception{
         Map<Integer, Usuario> miembros = new LinkedHashMap<>();
 
@@ -107,6 +139,13 @@ public class UsuariosBDD {
         return miembros;
     }
 
+    /**
+     * Recupera un usuario concreto a partir de su ID.
+     *
+     * @param id el identificador del usuario a buscar
+     * @return el {@link Usuario} correspondiente
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static Usuario getUsuario(int id) throws Exception {
         try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement(
@@ -128,6 +167,13 @@ public class UsuariosBDD {
         }
     }
 
+    /**
+     * Busca un usuario cuyo nombre contenga el texto indicado.
+     *
+     * @param nombre el texto parcial a buscar en el nombre del usuario
+     * @return el primer {@link Usuario} que coincida con la búsqueda
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static Usuario getUsuario(String nombre) throws Exception {
         try (Connection conexion = BDD.getConnection();
                 PreparedStatement stmnt = conexion.prepareStatement(
@@ -149,6 +195,13 @@ public class UsuariosBDD {
         }
     }
 
+    /**
+     * Comprueba si un correo electrónico ya está registrado en la base de datos.
+     *
+     * @param correo el correo electrónico a verificar
+     * @return {@code true} si el correo ya existe, {@code false} en caso contrario
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static boolean correoExiste(String correo) throws Exception {
 
         boolean estado = false;

@@ -32,9 +32,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Celda de lista arrastrable que representa una {@link Tarea} en el tablero Kanban.
+ * Permite mover tareas entre columnas mediante drag and drop, mostrando un fantasma visual
+ * durante el arrastre y actualizando la prioridad y el estado al soltar.
+ */
+
 public class TareaMovableCell extends ListCell<Tarea> {
 
-    //Variables a dibujar
     private final Label titulo;
     private final Label estadoLabel;
     private final Region dot;
@@ -42,7 +47,6 @@ public class TareaMovableCell extends ListCell<Tarea> {
     private final Label ownerLabel;
     private Circle bg;
 
-    //Variables Mover cosas
     private double dragOffsetX;
     private double dragOffsetY;
     private final BorderPane root;
@@ -51,45 +55,43 @@ public class TareaMovableCell extends ListCell<Tarea> {
     private ColorInput tintInput;
     private Node lastHoveredCell;
 
-    //Constructor
+    /**
+     * Crea una celda arrastrable vinculada al contenedor raíz y al mapa de columnas del tablero.
+     *
+     * @param root      el {@link BorderPane} raíz sobre el que se renderiza el fantasma de arrastre
+     * @param columnMap mapa que asocia cada {@link Estado} con su {@link ColumnaKanban} correspondiente
+     */
     public TareaMovableCell(BorderPane root, Map<Estado, ColumnaKanban> columnMap) {
         this.root = root;
         this.columnMap = columnMap;
 
-        // Titulo
         titulo = new Label();
         titulo.getStyleClass().add("titulo-tarea");
         titulo.setMaxWidth(Double.MAX_VALUE);
         titulo.setWrapText(true);
         HBox.setHgrow(titulo, Priority.ALWAYS);
 
-//        // Color Punto Prioridad
         dot = new Region();
         dot.getStyleClass().add("prioridad-dot");
 
-        // Texto Prioridad
         estadoLabel = new Label();
         estadoLabel.getStyleClass().add("prioridad-label");
 
         HBox prioRow = new HBox(6, dot, estadoLabel);
         prioRow.setAlignment(Pos.CENTER_LEFT);
 
-        // Label Letra User
         ownerLabel = new Label("");
         bg = new Circle(14);
 
 
-        // Avatar - Dibuja o toma
         StackPane avatarPane = buildAvatarPane();
 
-        // Final de la tarea
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         HBox bottomRow = new HBox(prioRow, spacer, avatarPane);
         bottomRow.setAlignment(Pos.CENTER);
 
-        // Tarea
         card = new VBox(8, titulo, bottomRow);
         card.getStyleClass().add("task-card");
         card.setMaxWidth(Double.MAX_VALUE);
@@ -97,13 +99,17 @@ public class TareaMovableCell extends ListCell<Tarea> {
 
         setMaxWidth(Double.MAX_VALUE);
 
-        // Eventos
         this.setOnMousePressed(e -> onDragStart(e));
         this.setOnMouseDragged(e -> onDragMove(e));
         this.setOnMouseReleased(e -> onDragEnd(e));
     }
 
-    // Metodo publico para ordenar tareas para estas celdas
+    /**
+     * Devuelve una lista ordenada por prioridad ascendente a partir de una lista observable de tareas.
+     *
+     * @param source la lista observable de {@link Tarea} a ordenar
+     * @return una {@link SortedList} ordenada por prioridad
+     */
     public static SortedList<Tarea> sorted(ObservableList<Tarea> source) {
         return new SortedList<>(source,
                 Comparator.comparingInt(t ->
@@ -112,7 +118,6 @@ public class TareaMovableCell extends ListCell<Tarea> {
         );
     }
 
-    // Metodo de mostrar tareas correcto
     @Override
     protected void updateItem(Tarea tarea, boolean empty) {
         super.updateItem(tarea, empty);
@@ -124,14 +129,11 @@ public class TareaMovableCell extends ListCell<Tarea> {
             return;
         }
 
-        // Título
         titulo.setText(tarea.getNombre());
 
-        // Color asociado a prioridad
         dot.setStyle("-fx-background-color: " + tarea.getEstado().getColor() + ";");
         estadoLabel.setText(tarea.getEstado().getNombre());
 
-        // Avatar Letra
         Map<Integer, Asignacion> asignados;
         try {
             asignados = AsignacionesBDD.getAsignaciones(tarea);
@@ -179,22 +181,23 @@ public class TareaMovableCell extends ListCell<Tarea> {
         return pane;
     }
 
+    /**
+     * Inicia el arrastre de la tarjeta, genera el fantasma visual y lo añade al contenedor raíz.
+     *
+     * @param e el evento de ratón que origina el arrastre
+     */
     private void onDragStart(MouseEvent e) {
-        //Salir si no es valido
         if (getItem() == null) return;
         if (e.getButton() == MouseButton.SECONDARY) return;
 
-        // Guardado de posicion inicial
         Bounds cardBounds = card.localToScene(card.getBoundsInLocal());
         this.dragOffsetX = e.getSceneX() - cardBounds.getMinX();
         this.dragOffsetY = e.getSceneY() - cardBounds.getMinY();
 
-        // Toma una radiografia de la tarea
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         WritableImage snapshot = card.snapshot(params, null);
 
-        // Construccion de la tarea fantasma
         ghost = new ImageView(snapshot);
         ghost.setManaged(false);
         ghost.setMouseTransparent(true);
@@ -205,110 +208,58 @@ public class TareaMovableCell extends ListCell<Tarea> {
         blend.setTopInput(tintInput);
         ghost.setEffect(blend);
 
-        // Fantasma sobre la original
         Point2D rootPos = root.sceneToLocal(cardBounds.getMinX(), cardBounds.getMinY());
         ghost.setLayoutX(rootPos.getX());
         ghost.setLayoutY(rootPos.getY());
 
         root.getChildren().add(ghost);
 
-        // Transparencia original
         card.setOpacity(0.3);
     }
 
-//    private void onDragMove(MouseEvent e) {
-//        // Si el Fantasma no es Null
-//        if (ghost == null) return;
-//        if (e.getButton() == MouseButton.SECONDARY) return;
-//
-//        //Limpiar estilos
-//        if (lastHoveredCell != null) {
-//            lastHoveredCell.getStyleClass().remove("ghostChosen");
-//        }
-//
-//        // Mover el fantasma
-//        Point2D rootPos = root.sceneToLocal(
-//            e.getSceneX() - dragOffsetX,
-//            e.getSceneY() - dragOffsetY
-//        );
-//
-//        ghost.setLayoutX(rootPos.getX());
-//        ghost.setLayoutY(rootPos.getY());
-//
-//        ColumnaKanban colHover = getColumna(e.getScreenX(), e.getScreenY());
-//        if  (colHover != null) {
-//            tintInput.setPaint(Color.web(colHover.estado().getColor(), 0.4));
-//            ListCell<Tarea> tareaFocused = getHoveredListCell(colHover, e.getScreenX(), e.getScreenY());
-//            if (tareaFocused != null && tareaFocused.getItem() != null) {
-//                tareaFocused.getStyleClass().add("ghostChosen");
-//                lastHoveredCell = tareaFocused;
-//            } else {
-//                lastHoveredCell = null;
-//            }
-//        }
-//        else {
-//            tintInput.setPaint(Color.TRANSPARENT);
-//        }
-//    }
-private void onDragMove(MouseEvent e) {
-    // Si el Fantasma no es Null
-    if (ghost == null) return;
-    if (e.getButton() == MouseButton.SECONDARY) return;
+    /**
+     * Actualiza la posición del fantasma durante el arrastre y resalta la celda sobre la que se sitúa.
+     *
+     * @param e el evento de ratón durante el movimiento
+     */
+    private void onDragMove(MouseEvent e) {
+        if (ghost == null) return;
+        if (e.getButton() == MouseButton.SECONDARY) return;
 
-    // Limpiar estilos previos con seguridad
-    if (lastHoveredCell != null) {
-        lastHoveredCell.getStyleClass().remove("ghostChosen");
-        lastHoveredCell = null; // Lo reiniciamos
-    }
+        if (lastHoveredCell != null) {
+            lastHoveredCell.getStyleClass().remove("ghostChosen");
+            lastHoveredCell = null;
+        }
 
-    // Mover el fantasma
-    Point2D rootPos = root.sceneToLocal(
-            e.getSceneX() - dragOffsetX,
-            e.getSceneY() - dragOffsetY
-    );
+        Point2D rootPos = root.sceneToLocal(
+                e.getSceneX() - dragOffsetX,
+                e.getSceneY() - dragOffsetY
+        );
 
-    ghost.setLayoutX(rootPos.getX());
-    ghost.setLayoutY(rootPos.getY());
+        ghost.setLayoutX(rootPos.getX());
+        ghost.setLayoutY(rootPos.getY());
 
-    ColumnaKanban colHover = getColumna(e.getScreenX(), e.getScreenY());
-    if (colHover != null) {
-        tintInput.setPaint(Color.web(colHover.estado().getColor(), 0.4));
-        ListCell<Tarea> tareaFocused = getHoveredListCell(colHover, e.getScreenX(), e.getScreenY());
+        ColumnaKanban colHover = getColumna(e.getScreenX(), e.getScreenY());
+        if (colHover != null) {
+            tintInput.setPaint(Color.web(colHover.estado().getColor(), 0.4));
+            ListCell<Tarea> tareaFocused = getHoveredListCell(colHover, e.getScreenX(), e.getScreenY());
 
-        // Cambiado aquí: Solo añadimos el estilo visual si la celda existe
-        if (tareaFocused != null && tareaFocused.getItem() != null) {
-            tareaFocused.getStyleClass().add("ghostChosen");
-            lastHoveredCell = tareaFocused;
+            if (tareaFocused != null && tareaFocused.getItem() != null) {
+                tareaFocused.getStyleClass().add("ghostChosen");
+                lastHoveredCell = tareaFocused;
+            }
+        }
+        else {
+            tintInput.setPaint(Color.TRANSPARENT);
         }
     }
-    else {
-        tintInput.setPaint(Color.TRANSPARENT);
-    }
-}
 
-//    private void onDragEnd(MouseEvent e) {
-//        // realizar los updates en base al resultado
-//        if (ghost == null) return;
-//        if (getItem() == null) return;
-//        if (e.getButton() == MouseButton.SECONDARY) return;
-//
-//        ColumnaKanban colChosen = getColumna(e.getScreenX(), e.getScreenY());
-//        if  (colChosen != null) {
-//            ListCell<Tarea> cellChosen = getHoveredListCell(colChosen, e.getScreenX(), e.getScreenY());
-//            cellChosen.getStyleClass().remove("ghostChosen");
-//            Tarea tareaFocused = getHoveredTarea(colChosen, e.getScreenX(), e.getScreenY());
-//            moverTarea(colChosen, tareaFocused);
-//        }
-//
-//        // Adios fantasma
-//        root.getChildren().remove(ghost);
-//
-//        // Carta vuelta a ser full
-//        card.setOpacity(1);
-//    }
-
+    /**
+     * Finaliza el arrastre, mueve la tarea a la columna destino y elimina el fantasma visual.
+     *
+     * @param e el evento de ratón al soltar
+     */
     private void onDragEnd(MouseEvent e) {
-        // realizar los updates en base al resultado
         if (ghost == null) return;
         if (getItem() == null) return;
         if (e.getButton() == MouseButton.SECONDARY) return;
@@ -317,8 +268,6 @@ private void onDragMove(MouseEvent e) {
         if (colChosen != null) {
             ListCell<Tarea> cellChosen = getHoveredListCell(colChosen, e.getScreenX(), e.getScreenY());
 
-            // --- AQUÍ ESTÁ EL CAMBIO DEFENSIVO ---
-            // Solo intentamos quitar la clase si realmente se encontró una celda bajo el cursor
             if (cellChosen != null) {
                 cellChosen.getStyleClass().remove("ghostChosen");
             }
@@ -327,13 +276,18 @@ private void onDragMove(MouseEvent e) {
             moverTarea(colChosen, tareaFocused);
         }
 
-        // Adios fantasma
         root.getChildren().remove(ghost);
 
-        // Carta vuelta a ser full
         card.setOpacity(1);
     }
 
+    /**
+     * Devuelve la {@link ColumnaKanban} sobre la que se encuentra el cursor en pantalla.
+     *
+     * @param screenX coordenada X del cursor en pantalla
+     * @param screenY coordenada Y del cursor en pantalla
+     * @return la columna bajo el cursor, o {@code null} si no hay ninguna
+     */
     private ColumnaKanban getColumna(double screenX, double screenY) {
         return columnMap.values().stream()
                 .filter(col -> col.lvTareas().localToScreen(col.lvTareas().getBoundsInLocal()).contains(screenX, screenY))
@@ -341,6 +295,14 @@ private void onDragMove(MouseEvent e) {
                 .orElse(null);
     }
 
+    /**
+     * Devuelve la celda de lista sobre la que se encuentra el cursor dentro de una columna.
+     *
+     * @param colHover la columna en la que buscar
+     * @param screenX  coordenada X del cursor en pantalla
+     * @param screenY  coordenada Y del cursor en pantalla
+     * @return la {@link ListCell} bajo el cursor, o {@code null} si no hay ninguna
+     */
     private ListCell<Tarea> getHoveredListCell(ColumnaKanban colHover, double screenX, double screenY) {
         return colHover.lvTareas().lookupAll(".list-cell").stream()
                 .filter(node -> node.localToScreen(node.getBoundsInLocal()).contains(screenX, screenY))
@@ -349,6 +311,14 @@ private void onDragMove(MouseEvent e) {
                 .orElse(null);
     }
 
+    /**
+     * Devuelve la {@link Tarea} de la celda sobre la que se encuentra el cursor dentro de una columna.
+     *
+     * @param colHover la columna en la que buscar
+     * @param screenX  coordenada X del cursor en pantalla
+     * @param screenY  coordenada Y del cursor en pantalla
+     * @return la tarea bajo el cursor, o {@code null} si no hay ninguna
+     */
     private Tarea getHoveredTarea(ColumnaKanban colHover, double screenX, double screenY) {
         return colHover.lvTareas().lookupAll(".list-cell").stream()
                 .filter(node -> node.localToScreen(node.getBoundsInLocal()).contains(screenX, screenY))
@@ -358,6 +328,15 @@ private void onDragMove(MouseEvent e) {
                 .orElse(null);
     }
 
+    /**
+     * Mueve la tarea actual a la columna destino, actualizando su estado y prioridad.
+     * Si se indica una tarea de referencia, la tarea insertada adopta su prioridad;
+     * en caso contrario se coloca al final de la columna destino.
+     *
+     * @param destino     la columna a la que se mueve la tarea
+     * @param tareaChosen la tarea de referencia para determinar la posición de inserción,
+     *                    o {@code null} para insertar al final
+     */
     private void moverTarea(ColumnaKanban destino, Tarea tareaChosen) {
         if (destino != null) {
             Tarea t = getItem();
@@ -366,18 +345,16 @@ private void onDragMove(MouseEvent e) {
             if (tareaChosen != null) {
                 t.setPrioridad(tareaChosen.getPrioridad());
             } else {
-//                try {
-//                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto())+1);
-//                } catch (Exception ex) {
-//                    AppErrorHandler.manejar(ex, "getMayorPrioridad");
-//                }
-                t.setPrioridad(0);
+                try {
+                    t.setPrioridad(TareasBDD.getMayorPrioridad(t.getIdProyecto())+1);
+                } catch (Exception ex) {
+                    AppErrorHandler.manejar(ex, "getMayorPrioridad");
+                }
             }
 
             t.setEstado(destino.estado());
             partida.olTareas().remove(t);
             
-//            destino.olTareas().add(Math.max(Math.min(t.getPrioridad(), destino.olTareas().size()), 0), t);
             int indiceInsercion = Math.max(Math.min(t.getPrioridad(), destino.olTareas().size()), 0);
             destino.olTareas().add(indiceInsercion, t);
 
@@ -386,6 +363,12 @@ private void onDragMove(MouseEvent e) {
         }
     }
 
+    /**
+     * Reasigna las prioridades de todas las tareas de una columna según su posición actual
+     * y persiste los cambios en la base de datos.
+     *
+     * @param columnaEstadoKanban la columna cuyas tareas se van a actualizar
+     */
     private void actualizarLista(ColumnaKanban columnaEstadoKanban) {
         for (int i = 0; i < columnaEstadoKanban.olTareas().size(); i++) {
             columnaEstadoKanban.olTareas().get(i).setPrioridad(i);

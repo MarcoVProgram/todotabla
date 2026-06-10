@@ -16,6 +16,11 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+/**
+ * Controlador del formulario de creación de un nuevo proyecto.
+ * Persiste el proyecto en la base de datos, le asigna los integrantes temporales
+ * acumulados en {@link EstadoPrograma} y limpia la lista temporal al finalizar.
+ */
 public class ProyectoController implements Initializable{
 
     @FXML
@@ -25,20 +30,13 @@ public class ProyectoController implements Initializable{
     private DatePicker fechaProyecto;
 
     @FXML
-    private Button anadirUsuariosBtn;
-
-    @FXML
     private Node root;
 
 
-    @FXML
-    private Button crearProyecto;
-
-
-//    @FXML
-//    private Button addButtom;
-
-
+    /**
+     * Valida el formulario, inserta el proyecto en la base de datos, persiste los integrantes
+     * temporales asociados y cierra la ventana secundaria.
+     */
     @FXML
     private void guardar() {
         Proyecto proyecto = new Proyecto(
@@ -87,32 +85,25 @@ public class ProyectoController implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
-
+    /**
+     * Navega a la vista de selección de usuarios para añadir integrantes al proyecto.
+     *
+     * @throws IOException si el fichero FXML no puede cargarse
+     */
     @FXML
-    private void abrirVentanaUsuarios() { //panel usuarios
-        try {
-
-            String fxml = "usuarios-formIntegrantes.fxml";
-            String titulo = "Añadir usuarios";
-
-            Navigator.arbrirVentanaSecundaria(fxml, titulo, this.getClass());
-
-        } catch (IOException e) {
-            AppErrorHandler.manejar(e, "abrirVentanaUsuarios");
-        }
-    }
-
-    @FXML
-    private void irAUsuariosview() throws IOException { //abrir panel kanban
+    private void irAUsuariosview() throws IOException {
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formUsuarios.fxml");
     }
 
+    /**
+     * Cierra la ventana secundaria actual.
+     *
+     * @throws IOException si ocurre un error al cerrar la ventana
+     */
     @FXML
-    private void volverVentanaPrincipal() throws IOException { //abrir panel kanban
+    private void volverVentanaPrincipal() throws IOException {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.close();
     }
-
-
 }

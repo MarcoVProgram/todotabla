@@ -9,6 +9,10 @@ import javafx.scene.shape.Circle;
 
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Celda de lista que representa un registro de {@link HistorialTareas}.
+ * Muestra la fecha y hora del cambio de estado junto con el color y nombre del estado resultante.
+ */
 public class HistorialTareaCell extends ListCell<HistorialTareas> {
 
     private VBox card;
@@ -17,7 +21,9 @@ public class HistorialTareaCell extends ListCell<HistorialTareas> {
     private Circle circle;
     private Label estado;
 
-
+    /**
+     * Crea la celda e inicializa los componentes visuales y el listener de selección.
+     */
     public HistorialTareaCell() {
         this.card = new VBox(8);
         this.titulo = new Label();

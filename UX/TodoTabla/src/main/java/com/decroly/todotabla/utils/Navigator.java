@@ -7,6 +7,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Gestiona la navegación entre escenas y ventanas secundarias de la aplicación.
+ * Garantiza que solo exista una ventana secundaria abierta al mismo tiempo.
+ */
 public class Navigator {
 
     private static Stage ventanaSecundaria;
@@ -15,7 +19,14 @@ public class Navigator {
         return ventanaSecundaria;
     }
 
-    //para cambiar entre escenas de manera fácil
+    /**
+     * Sustituye el contenido de la escena actual por el de un nuevo FXML.
+     * Si el {@link Stage} no tiene escena asignada, crea una nueva.
+     *
+     * @param current el {@link Stage} cuya escena se va a reemplazar
+     * @param fxml    la ruta al fichero FXML a cargar
+     * @throws IOException si el fichero FXML no se encuentra o no puede cargarse
+     */
     public static void changeScene(Stage current, String fxml) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(Navigator.class.getResource(fxml));
@@ -30,7 +41,15 @@ public class Navigator {
         }
     }
 
-
+    /**
+     * Abre una ventana secundaria modal con el FXML indicado.
+     * Si ya hay una ventana secundaria abierta, muestra un aviso y cancela la operación.
+     *
+     * @param fxml  la ruta al fichero FXML a cargar
+     * @param title el título de la nueva ventana
+     * @param clase la clase desde la que se resuelve el recurso FXML
+     * @throws IOException si el fichero FXML no se encuentra o no puede cargarse
+     */
     public static void arbrirVentanaSecundaria(String fxml, String title, Class clase) throws IOException {
         if(ventanaSecundaria != null && ventanaSecundaria.isShowing()){
             Notificator.advertencia("Sesión no válida", "No se puede volver a abrir, hay una sesión existente");
@@ -38,11 +57,9 @@ public class Navigator {
             return;
         }
 
-        // Cargar el archivo FXML
         FXMLLoader loader = new FXMLLoader(clase.getResource(fxml));
         Parent root = loader.load();
 
-        // Crear una nueva ventana (Stage)
         ventanaSecundaria = new Stage();
         ventanaSecundaria.setTitle(title);
         ventanaSecundaria.setScene(new Scene(root));
@@ -50,9 +67,6 @@ public class Navigator {
         ventanaSecundaria.setResizable(false);
         ventanaSecundaria.setAlwaysOnTop(false);
 
-//            listViewTareas.setItems(obsTareas);
-
-        // Mostrar la ventana
         ventanaSecundaria.showAndWait();
     }
 }

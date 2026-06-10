@@ -1,0 +1,7 @@
+module:com.decroly.todotabla
+com.decroly.todotabla
+com.decroly.todotabla.model
+com.decroly.todotabla.model.sql
+com.decroly.todotabla.utils
+com.decroly.todotabla.utils.cells
+com.decroly.todotabla.utils.constants

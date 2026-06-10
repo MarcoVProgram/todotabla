@@ -8,13 +8,10 @@ import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,6 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+/**
+ * Controlador de la ventana de eliminación de tareas.
+ * Muestra las tareas del proyecto activo en una lista filtrable y permite
+ * eliminar las seleccionadas de la base de datos.
+ * El botón de borrado permanece deshabilitado mientras no haya ninguna tarea seleccionada.
+ */
 public class TareaRemoveController implements Initializable {
 
     @FXML
@@ -53,6 +56,9 @@ public class TareaRemoveController implements Initializable {
         this.buscarTareaEliminar.textProperty().addListener((obs) -> filtrarTareas());
     }
 
+    /**
+     * Carga las tareas del proyecto activo desde la base de datos y las muestra en la lista.
+     */
     private void listarTareas() {
         try {
             listaTareas = new ArrayList<>(TareasBDD.getTareas(
@@ -90,12 +96,19 @@ public class TareaRemoveController implements Initializable {
         });
     }
 
+    /**
+     * Aplica el predicado de búsqueda sobre la lista filtrada de tareas
+     * según el texto introducido en el campo de búsqueda.
+     */
     private void filtrarTareas() {
         filteredTareas.setPredicate(proyecto ->
                     this.buscarTareaEliminar.getText().isBlank() ||
                             proyecto.getNombre().toLowerCase().contains(this.buscarTareaEliminar.getText().toLowerCase()) );
     }
 
+    /**
+     * Recarga las tareas del proyecto activo desde la base de datos y refresca la vista.
+     */
     private void actualizarTareas() {
         Map<Integer, Tarea> todasTareasDelProyecto;
         try {
@@ -115,6 +128,10 @@ public class TareaRemoveController implements Initializable {
 
     }
 
+    /**
+     * Elimina de la base de datos las tareas seleccionadas en la lista
+     * y muestra una notificación con el resultado de la operación.
+     */
     @FXML
     public void removeTarea() {
         boolean estado = false;
@@ -136,5 +153,4 @@ public class TareaRemoveController implements Initializable {
             Notificator.advertencia("Borrar Tarea", "No se ha podido borrar");
         }
     }
-
 }

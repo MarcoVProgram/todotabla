@@ -9,6 +9,10 @@ import javafx.scene.layout.VBox;
 
 import java.util.Map;
 
+/**
+ * Celda de lista que representa un {@link Usuario}.
+ * Opcionalmente muestra información adicional por usuario a través de un mapa de etiquetas externas.
+ */
 public class UsuariosCell extends ListCell<Usuario> {
 
     private VBox card;
@@ -16,6 +20,9 @@ public class UsuariosCell extends ListCell<Usuario> {
     private Map<Integer, Label> additionalData;
     private Label extraInfo;
 
+    /**
+     * Crea una celda básica que muestra únicamente el nombre del usuario.
+     */
     public UsuariosCell() {
         this.card = new VBox(8);
         this.titulo = new Label();
@@ -31,6 +38,12 @@ public class UsuariosCell extends ListCell<Usuario> {
         });
     }
 
+    /**
+     * Crea una celda que muestra el nombre del usuario junto con una etiqueta adicional
+     * obtenida del mapa proporcionado.
+     *
+     * @param additionalData mapa de ID de usuario a {@link Label} con información extra a mostrar
+     */
     public UsuariosCell(Map<Integer, Label> additionalData) {
         this.card = new VBox(8);
         this.titulo = new Label();

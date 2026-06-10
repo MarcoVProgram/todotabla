@@ -1,7 +1,6 @@
 package com.decroly.todotabla;
 
 import com.decroly.todotabla.model.Integrante;
-import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Usuario;
 import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
@@ -14,10 +13,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -26,11 +23,15 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Controlador de la vista de gestión de usuarios del Kanban.
+ * Muestra los usuarios que aún no son integrantes del proyecto activo
+ * y permite incorporarlos al proyecto asignándoles un rol directamente desde esta vista.
+ */
 public class UsuariosKanbanController implements Initializable {
+
     @FXML
     public ListView<Usuario> listViewUsuarios;
-    @FXML
-    public ListView listViewIntegrantes;
 
     @FXML
     private Node root;
@@ -43,21 +44,10 @@ public class UsuariosKanbanController implements Initializable {
     @FXML
     public TextField buscarUsuario;
 
-    @FXML
-    public Button anadirBtnParticipantes;
-
-    private static Stage ventanaSecundaria;
-
-    public static Stage getVentanaSecundaria() {
-        return ventanaSecundaria;
-    }
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         actualizarUsuarios();
 
-        //==============MODIFICAR LISTVIEW USUARIOS===================
         listViewUsuarios.setCellFactory(usuarioList -> new ListCell<Usuario>() {
 
             @Override
@@ -70,19 +60,16 @@ public class UsuariosKanbanController implements Initializable {
 
                 } else {
 
-                    // Título
                     Label titulo = new Label(user.getNombre());
                     Label subTitulo = new Label(user.getApellidos());
 
                     titulo.getStyleClass().add("titulo-tarea");
                     subTitulo.getStyleClass().add("subTitulo-tarea");
 
-                    // Fecha fin
                     Label email = new Label(user.getEmail());
 
                     email.getStyleClass().add("subTitulo2-tarea");
 
-                    // Card completa
                     VBox card = new VBox(10, titulo, subTitulo, email);
 
                     card.getStyleClass().add("task-card");
@@ -94,13 +81,6 @@ public class UsuariosKanbanController implements Initializable {
 
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-//        if(ProyectoController.getTituloProyecto() != null) {
-//            ProyectoController.getAnadirUsuariosBtn().setDisable(false);
-//            ProyectoController.getCrearProyecto().setDisable(false);
-
-        //si click derecho o doble click izq, mostrar popup para seleccionar rol
-
-        //==============CREAR POPUP AL CLICKEAR USUARIO PARA AÑADIR===================
         listViewUsuarios.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
 
@@ -166,68 +146,10 @@ public class UsuariosKanbanController implements Initializable {
             }
         });
 
-//        listViewUsuarios.setOnMouseClicked(event -> {
-//
-//            Usuario seleccionado = listViewUsuarios.getSelectionModel().getSelectedItem();
-//
-//            if (seleccionado == null) return;
-//
-//            if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
-//
-//                List<String> roles = List.of(
-//                        "Product Owner",
-//                        "Scrum Master",
-//                        "Developer",
-//                        "Tester",
-//                        "Designer",
-//                        "DevOps",
-//                        "Stakeholder"
-//                );
-//
-//                ChoiceDialog<String> dialog = new ChoiceDialog<>("Developer", roles);
-//                dialog.setTitle("Seleccionar Rol");
-//                dialog.setHeaderText("Asignar rol al usuario");
-//
-//                Optional<String> result = dialog.showAndWait();
-//
-//                result.ifPresent(rol -> {
-//                    Proyecto actual = EstadoPrograma.getInstance().getProyectoActivo();
-//
-//                    try {
-//
-//                        Integrante i = new Integrante(
-//                                rol,
-//                                LocalDate.now(),
-//                                null,
-//                                seleccionado,
-//                                actual
-//                        );
-//
-//                        Notificator.exito(
-//                                "Éxito",
-//                                "Integrante añadido"
-//                        );
-//
-//                    } catch (Exception e) {
-//                        AppErrorHandler.manejar(e, "insertar integrante");
-//
-//                        Notificator.error(
-//                                "Error",
-//                                "No se pudo añadir el usuario"
-//                        );
-//                    }
-//                });
-//            }
-//        });
-        
-
-
-
-        //=================LISTA INTEGRANTES===================
         Map<Integer, Integrante> map = null;
 
         try {
-            map = IntegrantesBDD.getIntegrantes(
+            map = IntegrantesBDD.getIntegrantesActivos(
                     EstadoPrograma.getInstance().getProyectoActivo()
             );
         } catch (Exception e) {
@@ -237,8 +159,6 @@ public class UsuariosKanbanController implements Initializable {
 
         ObservableList<Integrante> obsIntegrantesList =
                 FXCollections.observableArrayList(map.values());
-
-        //===========LISTA USUARIOS================
 
         Set<Integer> idsIntegrantes = new HashSet<>();
 
@@ -262,14 +182,9 @@ public class UsuariosKanbanController implements Initializable {
 
     }
 
-//        Map<Integer, Integrante> integrantesList = IntegrantesBDD.getIntegrantes(EstadoPrograma.getInstance().getProyectoActivo());
-//        ObservableMap<Integer, Integrante> obsIntegrantesList = FXCollections.observableMap(integrantesList);
-//        else{
-////            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
-////            ProyectoController.getCrearProyecto().setDisable(true);
-//        }
-
-
+    /**
+     * Refresca la vista de la lista de usuarios.
+     */
     private void actualizarUsuarios() {
         Map<Integer, Usuario> todosUsuarios;
         try {
@@ -283,21 +198,14 @@ public class UsuariosKanbanController implements Initializable {
         }
     }
 
+    /**
+     * Navega a la vista de gestión de integrantes.
+     *
+     * @throws IOException si el fichero FXML no puede cargarse
+     */
     @FXML
-    private void volverVentanaPrincipal() throws IOException { //abrir panel kanban
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    private void irAIntegrantesview() throws IOException { //abrir panel kanban
+    private void irAIntegrantesview() throws IOException {
         Stage stage = (Stage) root.getScene().getWindow();
         Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formIntegrantes.fxml");
-    }
-
-    @FXML
-    private void irACrearProyectoView() throws IOException { //abrir panel kanban
-        Stage stage = (Stage) root.getScene().getWindow();
-        Navigator.changeScene(stage, "/com/decroly/todotabla/proyecto-form.fxml");
     }
 }

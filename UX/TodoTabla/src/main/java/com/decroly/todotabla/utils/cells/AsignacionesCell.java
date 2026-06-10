@@ -6,14 +6,20 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
+/**
+ * Celda de lista que representa una {@link Asignacion}.
+ * Muestra el nombre del usuario asignado y el período de duración de la asignación.
+ */
 public class AsignacionesCell extends ListCell<Asignacion> {
 
     private VBox card;
     private Label titulo;
     private Label extraInfo;
 
+    /**
+     * Crea la celda e inicializa los componentes visuales y el listener de selección.
+     */
     public AsignacionesCell() {
         this.card = new VBox(8);
         this.titulo = new Label();

@@ -3,15 +3,25 @@ package com.decroly.todotabla.model.sql;
 import com.decroly.todotabla.model.Integrante;
 import com.decroly.todotabla.model.Proyecto;
 import com.decroly.todotabla.model.Usuario;
-import com.decroly.todotabla.utils.AppErrorHandler;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Clase de acceso a datos para la entidad {@link Integrante}.
+ * Proporciona operaciones CRUD y consultas filtradas contra la tabla {@code integrante} de la base de datos.
+ */
 public class IntegrantesBDD {
 
+    /**
+     * Inserta un nuevo integrante en la base de datos.
+     *
+     * @param i el integrante a insertar
+     * @return {@code true} si la inserción afectó exactamente una fila, {@code false} en caso contrario
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static boolean insertar(Integrante i) throws Exception {
         boolean estado = false;
 
@@ -32,6 +42,13 @@ public class IntegrantesBDD {
         return estado;
     }
 
+    /**
+     * Actualiza el rol y la fecha de salida de un integrante existente.
+     *
+     * @param i el integrante con los datos actualizados
+     * @return {@code true} si la actualización afectó exactamente una fila, {@code false} en caso contrario
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static boolean actualizar(Integrante i) throws Exception {
         boolean estado = false;
 
@@ -65,6 +82,13 @@ public class IntegrantesBDD {
         return estado;
     }
 
+    /**
+     * Elimina un integrante de la base de datos.
+     *
+     * @param i el integrante a eliminar
+     * @return {@code true} si la eliminación afectó exactamente una fila, {@code false} en caso contrario
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static boolean borrar(Integrante i) throws Exception {
         boolean estado = false;
 
@@ -88,6 +112,12 @@ public class IntegrantesBDD {
         return estado;
     }
 
+    /**
+     * Recupera todos los integrantes almacenados en la base de datos.
+     *
+     * @return un {@link Map} ordenado de ID a {@link Integrante}
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static Map<Integer, Integrante> getIntegrantes() throws Exception {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
@@ -118,16 +148,40 @@ public class IntegrantesBDD {
         return integrantes;
     }
 
+    /**
+     * Recupera todos los integrantes pertenecientes a un proyecto concreto.
+     *
+     * @param proyecto_ID el proyecto por el que filtrar
+     * @return un {@link Map} ordenado de ID a {@link Integrante}
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static Map<Integer, Integrante> getIntegrantes(Proyecto proyecto_ID) throws Exception {
         String sql = "SELECT * FROM integrante WHERE proyecto_ID = ?;";
         return getIntegerIntegranteMap(proyecto_ID, sql);
     }
 
+    /**
+     * Recupera los integrantes activos de un proyecto, excluyendo aquellos cuya fecha de salida
+     * ya ha pasado.
+     *
+     * @param proyecto_ID el proyecto por el que filtrar
+     * @return un {@link Map} ordenado de ID a {@link Integrante} activos
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static Map<Integer, Integrante> getIntegrantesActivos(Proyecto proyecto_ID) throws Exception {
         String sql = "SELECT * FROM integrante WHERE proyecto_ID = ? AND (fecha_salida IS null OR fecha_salida > CURRENT_DATE());";
         return getIntegerIntegranteMap(proyecto_ID, sql);
     }
 
+    /**
+     * Método interno compartido que ejecuta una consulta parametrizada por proyecto
+     * y construye el mapa de integrantes resultante.
+     *
+     * @param proyecto_ID el proyecto por el que filtrar
+     * @param sql         la consulta SQL a ejecutar
+     * @return un {@link Map} ordenado de ID a {@link Integrante}
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     private static Map<Integer, Integrante> getIntegerIntegranteMap(Proyecto proyecto_ID, String sql) throws Exception {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
@@ -158,6 +212,13 @@ public class IntegrantesBDD {
         return integrantes;
     }
 
+    /**
+     * Recupera todos los integrantes asociados a un usuario concreto.
+     *
+     * @param usuario_ID el usuario por el que filtrar
+     * @return un {@link Map} ordenado de ID a {@link Integrante}
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static Map<Integer, Integrante> getIntegrantes(Usuario usuario_ID) throws Exception {
         Map<Integer, Integrante> integrantes = new LinkedHashMap<>();
 
@@ -188,6 +249,13 @@ public class IntegrantesBDD {
         return integrantes;
     }
 
+    /**
+     * Recupera un integrante concreto a partir de su ID.
+     *
+     * @param id el identificador del integrante a buscar
+     * @return el {@link Integrante} correspondiente, o {@code null} si no existe
+     * @throws Exception si ocurre un error en la conexión o en la ejecución de la consulta
+     */
     public static Integrante getIntegrante(int id) throws Exception {
         Integrante integrante = null;
 

@@ -12,16 +12,19 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
-public class TareaAddController implements Initializable { // TODO Comprobar su funcinamiento
+/**
+ * Controlador del formulario de creación de una nueva tarea.
+ * Permite introducir el nombre de la tarea, seleccionar los integrantes a asignar
+ * y persistir tanto la tarea como sus asignaciones en la base de datos.
+ * El botón de creación permanece deshabilitado mientras el campo de nombre esté vacío.
+ */
+public class TareaAddController implements Initializable {
 
-    //PESTAÑA TAREA
     @FXML
     private Button addTarea;
 
@@ -50,6 +53,9 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
         listarUsuarios();
     }
 
+    /**
+     * Carga los integrantes activos del proyecto activo y los muestra en la lista de selección.
+     */
     private void listarUsuarios() {
         listaUsuarios = FXCollections.observableList(misUsuarios);
 
@@ -77,17 +83,18 @@ public class TareaAddController implements Initializable { // TODO Comprobar su 
         listViewIntegrantes.setCellFactory(listaUsuarios -> new UsuariosCell());
     }
 
-    //--------AGREGAR TAREA-------------
+    /**
+     * Valida el formulario, inserta la tarea en estado "Pendiente" y crea las asignaciones
+     * para cada usuario seleccionado. Muestra notificaciones de éxito o error según el resultado.
+     */
     @FXML
     private void addTarea(){
 
-        //obtener valores campos
         String nombre = nombreTareaFormCrear.getText();
 
         List<Usuario> usuariosSeleccionados = listViewIntegrantes.getSelectionModel().getSelectedItems();
 
 
-        //valores extra necesarios
         Proyecto idProyecto = EstadoPrograma.getInstance().getProyectoActivo();
         int prioridad;
         try {

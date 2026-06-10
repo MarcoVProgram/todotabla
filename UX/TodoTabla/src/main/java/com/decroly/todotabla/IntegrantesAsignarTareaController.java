@@ -6,55 +6,35 @@ import com.decroly.todotabla.model.sql.IntegrantesBDD;
 import com.decroly.todotabla.model.sql.UsuariosBDD;
 import com.decroly.todotabla.utils.AppErrorHandler;
 import com.decroly.todotabla.utils.EstadoPrograma;
-import com.decroly.todotabla.utils.Navigator;
 import com.decroly.todotabla.utils.Notificator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Controlador de la ventana de selección de usuarios para añadirlos como integrantes temporales.
+ * Muestra únicamente los usuarios que aún no pertenecen al proyecto activo.
+ * Al hacer doble clic o clic secundario sobre un usuario, permite asignarle un rol
+ * y añadirlo a la lista temporal de {@link EstadoPrograma}.
+ */
 public class IntegrantesAsignarTareaController implements Initializable {
     @FXML
     public ListView<Usuario> listViewUsuarios;
-    @FXML
-    public ListView listViewIntegrantes;
-
-    @FXML
-    private Node root;
 
     List<Usuario> usuarioList = new ArrayList<>();
     ObservableList<Usuario> obsUsuarioList = FXCollections.observableList(usuarioList);
-
-
-
-    @FXML
-    public TextField buscarUsuario;
-
-    @FXML
-    public Button anadirBtnParticipantes;
-
-    private static Stage ventanaSecundaria;
-
-    public static Stage getVentanaSecundaria() {
-        return ventanaSecundaria;
-    }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         actualizarUsuarios();
 
-        //==============MODIFICAR LISTVIEW USUARIOS===================
         listViewUsuarios.setCellFactory(usuarioList -> new ListCell<Usuario>() {
 
             @Override
@@ -67,19 +47,16 @@ public class IntegrantesAsignarTareaController implements Initializable {
 
                 } else {
 
-                    // Título
                     Label titulo = new Label(user.getNombre());
                     Label subTitulo = new Label(user.getApellidos());
 
                     titulo.getStyleClass().add("titulo-tarea");
                     subTitulo.getStyleClass().add("subTitulo-tarea");
 
-                    // Fecha fin
                     Label email = new Label(user.getEmail());
 
                     email.getStyleClass().add("subTitulo2-tarea");
 
-                    // Card completa
                     VBox card = new VBox(10, titulo, subTitulo, email);
 
                     card.getStyleClass().add("task-card");
@@ -90,62 +67,6 @@ public class IntegrantesAsignarTareaController implements Initializable {
         });
 
         listViewUsuarios.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-//        if(ProyectoController.getTituloProyecto() != null) {
-//            ProyectoController.getAnadirUsuariosBtn().setDisable(false);
-//            ProyectoController.getCrearProyecto().setDisable(false);
-
-        //si click derecho o doble click izq, mostrar popup para seleccionar rol
-
-        //==============CREAR POPUP AL CLICKEAR USUARIO PARA AÑADIR===================
-//        listViewUsuarios.setOnMouseClicked(event -> {
-//            if (event.getButton() == MouseButton.SECONDARY || event.getClickCount() == 2) {
-//                //Popup combobox
-//                List<String> roles = List.of(
-//                        "Product Owner",
-//                        "Scrum Master",
-//                        "Developer",
-//                        "Tester",
-//                        "Designer",
-//                        "DevOps",
-//                        "Stakeholder"
-//                );
-//
-//                ChoiceDialog<String> dialog =
-//                        new ChoiceDialog<>("Developer", roles);
-//
-//                dialog.setTitle("Seleccionar Rol");
-//                dialog.setHeaderText("Asignar rol al usuario");
-//
-//                Optional<String> result = dialog.showAndWait();
-//
-//                result.ifPresent(rol -> {
-//                    System.out.println("Rol seleccionado: " + rol);
-//
-//
-//                    if (rol != null) {
-//                        Integrante i = new Integrante(rol, LocalDate.now(), null, listViewUsuarios.getSelectionModel().getSelectedItem(), EstadoPrograma.getInstance().getProyectoActivo());
-//                        Integrante exist = null;
-//                        try {
-//                            IntegrantesBDD.insertar(i);
-//                            exist = IntegrantesBDD.getIntegrante(i.getId());
-//
-//                        } catch (Exception e) {
-//                            e.getStackTrace();
-//                        }
-//
-//                        if (exist != null) {
-//                            Notificator.exito("Exito", "Se insertó correctamente al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-//                                    + ", al proyecto actual ");
-//
-//                        } else {
-//                            Notificator.error("Error", "Ocurrió un error inesperado al intentar insertar al usuario " + listViewUsuarios.getSelectionModel().getSelectedItem().getNombre()
-//                                    + ", al proyecto actual ");
-//                        }
-//                    }
-//                });
-//            }
-//        });
 
         listViewUsuarios.setOnMouseClicked(event -> {
 
@@ -203,9 +124,6 @@ public class IntegrantesAsignarTareaController implements Initializable {
             }
         });
 
-
-
-        //=================LISTA INTEGRANTES===================
         Map<Integer, Integrante> map = null;
 
         try {
@@ -219,8 +137,6 @@ public class IntegrantesAsignarTareaController implements Initializable {
 
         ObservableList<Integrante> obsIntegrantesList =
                 FXCollections.observableArrayList(map.values());
-
-        //===========LISTA USUARIOS================
 
         Set<Integer> idsIntegrantes = new HashSet<>();
 
@@ -244,14 +160,10 @@ public class IntegrantesAsignarTareaController implements Initializable {
 
     }
 
-//        Map<Integer, Integrante> integrantesList = IntegrantesBDD.getIntegrantes(EstadoPrograma.getInstance().getProyectoActivo());
-//        ObservableMap<Integer, Integrante> obsIntegrantesList = FXCollections.observableMap(integrantesList);
-//        else{
-////            ProyectoController.getAnadirUsuariosBtn().setDisable(true);
-////            ProyectoController.getCrearProyecto().setDisable(true);
-//        }
-
-
+    /**
+     * Refresca la vista de la lista de usuarios.
+     * Si la carga falla, la lista se deja en el estado actual sin modificar.
+     */
     private void actualizarUsuarios() {
         Map<Integer, Usuario> todosUsuarios;
         try {
@@ -263,23 +175,5 @@ public class IntegrantesAsignarTareaController implements Initializable {
         if (todosUsuarios != null) {
             listViewUsuarios.refresh();
         }
-    }
-
-    @FXML
-    private void volverVentanaPrincipal() throws IOException { //abrir panel kanban
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    private void irAIntegrantesview() throws IOException { //abrir panel kanban
-        Stage stage = (Stage) root.getScene().getWindow();
-        Navigator.changeScene(stage, "/com/decroly/todotabla/usuarios-formIntegrantes.fxml");
-    }
-
-    @FXML
-    private void irACrearProyectoView() throws IOException { //abrir panel kanban
-        Stage stage = (Stage) root.getScene().getWindow();
-        Navigator.changeScene(stage, "/com/decroly/todotabla/proyecto-form.fxml");
     }
 }

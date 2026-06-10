@@ -42,16 +42,19 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+/**
+ * Controlador principal del tablero Kanban.
+ * Genera dinámicamente una columna por cada {@link Estado} registrado en la base de datos,
+ * gestiona el arrastre de tareas entre columnas y permite filtrar tareas por nombre en tiempo real.
+ */
 public class KanBanController implements Initializable {
 
-    //Contenedor
     @FXML
     private HBox contenedorColumnas;
     
     private List<Integrante> integrantes = new ArrayList<>();
     private ObservableList<Integrante> obsIntegrantes = FXCollections.observableList(integrantes);
 
-    private static Stage ventanaTerciaria;
 
     private Proyecto proyectoSeleccionado;
     private List<Estado> estados;
@@ -86,6 +89,10 @@ public class KanBanController implements Initializable {
         actualizarTareas();
     }
 
+    /**
+     * Reconstruye todas las columnas del tablero limpiando el contenedor
+     * y regenerando una columna por cada estado disponible.
+     */
     private void actualizarTareas() {
         contenedorColumnas.getChildren().clear();
         columnMap.clear();
@@ -95,6 +102,10 @@ public class KanBanController implements Initializable {
         }
     }
 
+    /**
+     * Aplica el predicado de búsqueda sobre la {@link FilteredList} de cada columna
+     * según el texto introducido en la barra de búsqueda.
+     */
     private void filtrarTareas() {
         for (Map.Entry<Estado, ColumnaKanban> entry : columnMap.entrySet()) {
             entry.getValue().flTareas().setPredicate(tarea ->
@@ -103,6 +114,14 @@ public class KanBanController implements Initializable {
         }
     }
 
+    /**
+     * Crea y configura una columna Kanban para el estado indicado.
+     * Carga sus tareas desde la base de datos, configura el arrastre y,
+     * si el estado es "pendiente", añade un botón de creación de tarea como placeholder.
+     *
+     * @param estado el estado que representa esta columna
+     * @return la {@link ColumnaKanban} construida
+     */
     private ColumnaKanban addColumna(Estado estado) {
 
         ObservableList<Tarea> items;
@@ -124,13 +143,11 @@ public class KanBanController implements Initializable {
         listView.setOnMouseClicked(event -> {
             if (event.getButton() != MouseButton.SECONDARY && event.getClickCount() != 2) return;
 
-            //Comprobar que se hace click correctamente en la celda
             Node clickedNode = event.getPickResult().getIntersectedNode();
             while (clickedNode != null && !(clickedNode instanceof ListCell)) {
                 clickedNode = clickedNode.getParent();
             }
 
-            //Nos quedamos con la celda que sea igual / Aviso, se necesita esta selección o selecciona la superior
             if (clickedNode instanceof ListCell<?> cell && !cell.isEmpty()) {
                 Tarea selected = (Tarea) cell.getItem();
                 if (selected == null) return;
@@ -153,26 +170,30 @@ public class KanBanController implements Initializable {
         return new ColumnaKanban(estado, listView, items, filteredTareas);
     }
 
+    /**
+     * Construye visualmente la columna con su encabezado, lista de tareas y estilos,
+     * y la añade al contenedor de columnas.
+     *
+     * @param estado        el estado asociado a la columna
+     * @param items         la lista observable de tareas de la columna
+     * @param filtered      la lista filtrada aplicada sobre {@code items}
+     * @return la {@link ListView} de tareas construida
+     */
     private ListView<Tarea> constructorColumnas(Estado  estado, ObservableList<Tarea> items,
                                                 FilteredList<Tarea> filtered) {
-        // Circulo de Estado
         Circle dot = new Circle(4);
         dot.setStyle("-fx-fill: " + estado.getColor() + ";");
 
-        // Titulo con contador
         Label title = new Label(estado.getNombre() + " [" + items.size() + "]");
         title.getStyleClass().add("column-title");
 
-        // Actualización Automática
         items.addListener((ListChangeListener<Tarea>) c ->
                 title.setText(estado.getNombre() + " [" + items.size() + "]")
         );
 
-        // Titulo
         HBox titleRow = new HBox(6, dot, title);
         titleRow.setAlignment(Pos.CENTER_LEFT);
 
-        // ListView de Tarea
         ListView<Tarea> listView = new ListView<>(TareaMovableCell.sorted(filtered));
         listView.setCellFactory(lv -> new TareaMovableCell(root, columnMap));
         listView.getStyleClass().add("kanban-list");
@@ -182,7 +203,6 @@ public class KanBanController implements Initializable {
         listView.setStyle("-fx-background-color: #0b0b0b;");
         VBox.setVgrow(listView, Priority.ALWAYS);
 
-        // Columna creada
         VBox column = new VBox(titleRow, listView);
         column.getStyleClass().add("column");
         column.setStyle("-fx-background-color: #0b0b0b;");
@@ -190,15 +210,16 @@ public class KanBanController implements Initializable {
         column.setMinWidth(150);
         HBox.setHgrow(column, Priority.ALWAYS);
 
-        // Se añade a su hija
         contenedorColumnas.getChildren().add(column);
         return listView;
     }
 
 
-    //----------------DESPLAZAMIENTO ENTRE VENTANAS-------------
+    /**
+     * Navega de vuelta a la vista principal del menú.
+     */
     @FXML
-    private void returnToMain() { //abrir pantalla principal (menú)
+    private void returnToMain() {
         Stage stage = (Stage) root.getScene().getWindow();
         try {
             Navigator.changeScene(stage, "/com/decroly/todotabla/main-view.fxml");
@@ -207,6 +228,9 @@ public class KanBanController implements Initializable {
         }
     }
 
+    /**
+     * Navega a la vista de historial de la tarea actualmente seleccionada.
+     */
     @FXML
     private void abrirVentanaHistorialTareas() {
         Stage stage = (Stage) root.getScene().getWindow();
@@ -217,8 +241,11 @@ public class KanBanController implements Initializable {
         }
     }
 
+    /**
+     * Abre la ventana secundaria de creación de tarea y recarga el tablero al cerrarla.
+     */
     @FXML
-    private void abrirVentanaCrearTarea() { //panel tarea
+    private void abrirVentanaCrearTarea() {
         try {
 
             Navigator.arbrirVentanaSecundaria("tarea-view-create.fxml", "Añadir tarea", getClass());
@@ -230,8 +257,11 @@ public class KanBanController implements Initializable {
         }
     }
 
+    /**
+     * Abre la ventana secundaria de eliminación de tarea y recarga el tablero al cerrarla.
+     */
     @FXML
-    private void abrirVentanaBorrarTarea() { //panel tarea
+    private void abrirVentanaBorrarTarea() {
         try {
 
             String titulo = "Borrar tarea";
@@ -247,8 +277,11 @@ public class KanBanController implements Initializable {
         }
     }
 
+    /**
+     * Abre la ventana secundaria de gestión de integrantes del proyecto activo.
+     */
     @FXML
-    private void abrirVentanaIntegrantes() { //panel gestión usuarios
+    private void abrirVentanaIntegrantes() {
         try {
 
             String fxml = "usuarios-formIntegrantes.fxml";
@@ -259,7 +292,7 @@ public class KanBanController implements Initializable {
 
 
         } catch (IOException e) {
-            e.printStackTrace();
+            AppErrorHandler.manejar(e, "abrirVentanaIntegrantes");
         }
     }
 }

@@ -3,8 +3,19 @@ package com.decroly.todotabla.utils;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
+/**
+ * Clase de utilidad para mostrar diálogos de notificación al usuario.
+ * Todos los métodos son seguros para llamar desde cualquier hilo, delegando
+ * a {@link Platform#runLater} cuando es necesario.
+ */
 public class Notificator {
 
+    /**
+     * Muestra un diálogo de información general.
+     *
+     * @param cabecera encabezado del diálogo
+     * @param mensage  mensaje a mostrar al usuario
+     */
     public static void informar(String cabecera, String mensage) {
 
         Runnable showAlert = () -> {
@@ -27,6 +38,12 @@ public class Notificator {
         }
     }
 
+    /**
+     * Muestra un diálogo de operación completada con éxito.
+     *
+     * @param cabecera encabezado del diálogo
+     * @param mensage  mensaje a mostrar al usuario
+     */
     public static void exito(String cabecera, String mensage) {
 
         Runnable showAlert = () -> {
@@ -49,6 +66,12 @@ public class Notificator {
         }
     }
 
+    /**
+     * Muestra un diálogo de advertencia.
+     *
+     * @param cabecera encabezado del diálogo
+     * @param mensage  mensaje a mostrar al usuario
+     */
     public static void advertencia(String cabecera, String mensage) {
 
         Runnable showAlert = () -> {
@@ -71,6 +94,12 @@ public class Notificator {
         }
     }
 
+    /**
+     * Muestra un diálogo de error.
+     *
+     * @param cabecera encabezado del diálogo
+     * @param mensage  mensaje a mostrar al usuario
+     */
     public static void error(String cabecera, String mensage) {
 
         Runnable showAlert = () -> {

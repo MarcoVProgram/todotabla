@@ -5,11 +5,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
 
+/**
+ * Celda de lista que representa un {@link Proyecto}.
+ * Muestra el título del proyecto y sus fechas de inicio y cierre.
+ */
 public class ProyectosCell extends ListCell<Proyecto> {
 
     Label titulo, inicio, fin;
     VBox card;
 
+    /**
+     * Crea la celda e inicializa los componentes visuales.
+     */
     public ProyectosCell() {
         titulo = new Label();
         inicio = new Label();

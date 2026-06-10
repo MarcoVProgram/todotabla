@@ -11,8 +11,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Gestiona la conexión a la base de datos MySQL.
+ * Lee los parámetros de conexión desde un fichero de configuración {@code config.dat}
+ * ubicado en el mismo paquete que la clase.
+ */
 public class BDD {
-//    private static Connection conexion = null;
 
     private static String url;
     private static String user;
@@ -20,7 +24,16 @@ public class BDD {
 
     private static final URL configURL = BDD.class.getResource("config.dat");
 
-    //private
+    /**
+     * Crea y devuelve una nueva conexión a la base de datos.
+     * Lee la dirección, nombre de usuario y contraseña línea a línea desde {@code config.dat}.
+     *
+     * @return una {@link Connection} activa a la base de datos
+     * @throws IOException            si el fichero de configuración no se encuentra o no puede leerse
+     * @throws SQLException           si ocurre un error al establecer la conexión JDBC
+     * @throws ClassNotFoundException si el driver de MySQL no está disponible en el classpath
+     * @throws URISyntaxException     si la URL del fichero de configuración tiene formato incorrecto
+     */
     public static synchronized Connection getConnection() throws IOException, SQLException, ClassNotFoundException, URISyntaxException {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -33,29 +46,9 @@ public class BDD {
                 user = configReader.readLine();
                 password = configReader.readLine();
 
-//                if (conexion == null) {
-//                    conexion = DriverManager.getConnection(url, user, password);
-//                }
                 return DriverManager.getConnection(url, user, password);
             } catch (NullPointerException e) {
                 throw new IOException(e);
             }
     }
-/*
-    public static Connection getConnection(boolean restart) throws Exception {
-        try {
-            if (conexion != null) {
-                if (restart || !conexion.isValid(5)) {
-                    conexion = getConnection();
-                }
-            } else {
-                return getConnection();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Fallo al acceder a la base de datos",e);
-            // return null;
-        }
-        return conexion;
-    }*/
 }
